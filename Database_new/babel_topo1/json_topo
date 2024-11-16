@@ -1,0 +1,93 @@
+{
+  "nodes": {
+    "routers": [
+      {
+        "id": "r1",
+        "type": "router",
+        "interfaces": ["eth0", "eth1"]
+      },
+      {
+        "id": "r2",
+        "type": "router",
+        "interfaces": ["eth0", "eth1", "eth2"]
+      },
+      {
+        "id": "r3",
+        "type": "router",
+        "interfaces": ["eth0", "eth1"]
+      }
+    ],
+    "switches": [
+      {
+        "id": "sw1",
+        "type": "switch",
+        "description": "Local switch for r1"
+      },
+      {
+        "id": "sw2",
+        "type": "switch",
+        "description": "Connection between r1 and r2"
+      },
+      {
+        "id": "sw3",
+        "type": "switch",
+        "description": "Connection between r2 and r3"
+      },
+      {
+        "id": "sw4",
+        "type": "switch",
+        "description": "Stub switch for r3"
+      }
+    ]
+  },
+  "links": [
+    {
+      "source": "sw1",
+      "target": "r1",
+      "link_properties": {
+        "bandwidth": "1Gbps",
+        "latency": "1ms"
+      }
+    },
+    {
+      "source": "sw2",
+      "target": "r1",
+      "link_properties": {
+        "bandwidth": "1Gbps",
+        "latency": "2ms"
+      }
+    },
+    {
+      "source": "sw2",
+      "target": "r2",
+      "link_properties": {
+        "bandwidth": "10Gbps",
+        "latency": "5ms"
+      }
+    },
+    {
+      "source": "sw3",
+      "target": "r2",
+      "link_properties": {
+        "bandwidth": "10Gbps",
+        "latency": "3ms"
+      }
+    },
+    {
+      "source": "sw3",
+      "target": "r3",
+      "link_properties": {
+        "bandwidth": "10Gbps",
+        "latency": "3ms"
+      }
+    },
+    {
+      "source": "sw4",
+      "target": "r3",
+      "link_properties": {
+        "bandwidth": "1Gbps",
+        "latency": "1ms"
+      }
+    }
+  ]
+}
