@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id": "R1", "loopback": "10.254.254.1/32"},
+    {"id": "R2", "loopback": "10.254.254.2/32"},
+    {"id": "R3", "loopback": "10.254.254.3/32"},
+    {"id": "R4", "loopback": "2001:db8:1::/64"},
+    {"id": "R5", "loopback": "2001:db8:2::/64"},
+    {"id": "R6", "loopback": "10.254.254.6/32"}
+  ],
+  "links": [
+    {"source": "R1", "target": "R2", "protocol": "ospf", "ipv4_subnet": "10.254.254.6/32"},
+    {"source": "R2", "target": "R3", "protocol": "bgp", "ipv4_subnet": "10.254.254.3/32"},
+    {"source": "R3", "target": "R4", "protocol": "isis", "ipv6_subnet": "2001:db8:3::/64"},
+    {"source": "R4", "target": "R5", "protocol": "ospf6", "ipv6_subnet": "2001:db8:2::/64"},
+    {"source": "R1", "target": "R6", "protocol": "ospf", "ipv4_subnet": "10.254.254.1/32"}
+  ]
+}
