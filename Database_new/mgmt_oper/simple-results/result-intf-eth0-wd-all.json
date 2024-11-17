@@ -1,7 +1,0 @@
-{
-  "frr-zebra:evpn-mh": {
-    "df-preference": 32767,
-    "bypass": false,
-    "uplink": false
-  }
-}
