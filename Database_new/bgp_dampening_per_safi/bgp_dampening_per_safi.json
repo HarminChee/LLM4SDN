@@ -1,0 +1,78 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "r2",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "prefixes_received": [
+              {
+                "prefix": "10.10.10.10/32",
+                "status": "valid",
+                "dampened": false,
+                "history_entry": false
+              }
+            ]
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "r1",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "advertised_routes": [
+          "10.10.10.10/32"
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.1.0/24"
+    }
+  },
+  "bgp_dampening": {
+    "safi": "ipv4 unicast",
+    "r1": {
+      "dampening_parameters": {
+        "half_life": 60,
+        "reuse_penalty": 1,
+        "suppress_penalty": 1,
+        "max_suppress_time": 60,
+        "max_suppress_penalty": 2
+      },
+      "dampened_routes": [
+        {
+          "prefix": "10.10.10.10/32",
+          "history_entry": true,
+          "dampened": true,
+          "undampened_after": "120 seconds"
+        }
+      ]
+    },
+    "r2": {
+      "advertised_routes": {
+        "10.10.10.10/32": {
+          "withdraw": true,
+          "reannounce": true
+        }
+      }
+    }
+  }
+}
