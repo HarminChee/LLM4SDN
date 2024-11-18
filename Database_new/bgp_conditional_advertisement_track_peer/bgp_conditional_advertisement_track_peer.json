@@ -1,0 +1,100 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "subnet": "192.168.1.0/24",
+          "connected_to": "r2"
+        }
+      ],
+      "bgp": {
+        "neighbor": "r2",
+        "remote_as": 65000,
+        "received_routes": {
+          "172.16.255.2/32": {
+            "condition": "r2 receives 172.16.255.3/32 from r3",
+            "status": "advertised when condition is met",
+            "withdraw": "when 172.16.255.3/32 is withdrawn"
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "subnet": "192.168.1.0/24",
+          "connected_to": "r1"
+        },
+        {
+          "interface": "r2-eth1",
+          "subnet": "192.168.2.0/24",
+          "connected_to": "r3"
+        }
+      ],
+      "bgp": {
+        "neighbors": [
+          {
+            "neighbor": "r1",
+            "remote_as": 65000,
+            "advertised_routes": {
+              "172.16.255.2/32": {
+                "condition": "only if 172.16.255.3/32 is received from r3",
+                "status": "advertised",
+                "withdraw": "when 172.16.255.3/32 disappears"
+              }
+            }
+          },
+          {
+            "neighbor": "r3",
+            "remote_as": 65001,
+            "received_routes": {
+              "172.16.255.3/32": {
+                "condition": "advertised to r2",
+                "status": "advertised"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "subnet": "192.168.2.0/24",
+          "connected_to": "r2"
+        }
+      ],
+      "bgp": {
+        "neighbor": "r2",
+        "remote_as": 65001,
+        "advertised_routes": {
+          "172.16.255.3/32": {
+            "status": "advertised"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r2", "r3"],
+      "subnet": "192.168.2.0/24"
+    }
+  },
+  "bgp": {
+    "conditional_advertisement": {
+      "r2": {
+        "prefix": "172.16.255.2/32",
+        "condition": "if r2 receives 172.16.255.3/32 from r3",
+        "withdraw": "if 172.16.255.3/32 is withdrawn"
+      }
+    }
+  }
+}
