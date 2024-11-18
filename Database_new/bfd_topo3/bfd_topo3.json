@@ -1,0 +1,90 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "ipv4": "192.168.1.1/24",
+          "ipv6": "2001:db8:1::1/64",
+          "connected_to": "sw1"
+        }
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "ipv4": "192.168.2.2/24",
+          "ipv6": "2001:db8:2::2/64",
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "ipv4": "192.168.1.2/24",
+          "ipv6": "2001:db8:1::2/64",
+          "connected_to": "sw1"
+        }
+      }
+    },
+    "r3": {
+      "interfaces": {
+        "eth0": {
+          "ipv4": "192.168.3.1/24",
+          "ipv6": "2001:db8:3::1/64",
+          "connected_to": "sw3"
+        }
+      }
+    },
+    "r4": {
+      "interfaces": {
+        "eth0": {
+          "ipv4": "192.168.3.2/24",
+          "ipv6": "2001:db8:3::2/64",
+          "connected_to": "sw3"
+        },
+        "eth1": {
+          "ipv4": "192.168.4.1/24",
+          "ipv6": "2001:db8:4::1/64",
+          "connected_to": "sw4"
+        }
+      }
+    },
+    "r5": {
+      "interfaces": {
+        "eth0": {
+          "ipv4": "192.168.4.2/24",
+          "ipv6": "2001:db8:4::2/64",
+          "connected_to": "sw4"
+        }
+      }
+    },
+    "r6": {
+      "interfaces": {
+        "eth0": {
+          "ipv4": "192.168.4.3/24",
+          "ipv6": "2001:db8:4::3/64",
+          "connected_to": "sw4"
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw1": {
+      "subnet_ipv4": "192.168.1.0/24",
+      "subnet_ipv6": "2001:db8:1::/64",
+      "connected_nodes": ["r1", "r2"]
+    },
+    "sw2": {
+      "subnet_ipv4": "192.168.2.0/24",
+      "subnet_ipv6": "2001:db8:2::/64",
+      "connected_nodes": ["r2"]
+    },
+    "sw3": {
+      "subnet_ipv4": "192.168.3.0/24",
+      "subnet_ipv6": "2001:db8:3::/64",
+      "connected_nodes": ["r3", "r4"]
+    },
+    "sw4": {
+      "subnet_ipv4": "192.168.4.0/24",
+      "subnet_ipv6": "2001:db8:4::/64",
+      "connected_nodes": ["r4", "r5", "r6"]
+    }
+  }
+}
