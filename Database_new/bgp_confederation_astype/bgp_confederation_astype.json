@@ -1,0 +1,87 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "r2",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "r3",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "confederation": {
+          "confed_id": 65001,
+          "peers": ["r2", "r3"]
+        },
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "pfxRcd": 1,
+            "state": "Established",
+            "type": "internal"  // Confederation internal peer
+          },
+          "r3": {
+            "remote_as": 65003,
+            "pfxRcd": 1,
+            "state": "Established",
+            "type": "external"  // Confederation external peer
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "r1",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "confederation": {
+          "confed_id": 65001,
+          "peers": ["r1"]
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "r1",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "confederation": {
+          "confed_id": 65001,
+          "peers": ["r1"]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r1", "r3"],
+      "subnet": "192.168.2.0/24"
+    }
+  },
+  "bgp_confederation": {
+    "confed_id": 65001,
+    "member_ASes": [65001, 65002, 65003],
+    "internal_peering": ["r1-r2"],
+    "external_peering": ["r1-r3"]
+  }
+}
