@@ -1,0 +1,100 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "subnet": "192.168.1.0/24",
+          "connected_to": "r2"
+        }
+      ],
+      "bgp": {
+        "neighbor": "r2",
+        "remote_as": 65000,
+        "advertised_routes": {
+          "10.10.10.1/32": {
+            "community": "65000:1"
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "subnet": "192.168.1.0/24",
+          "connected_to": "r1"
+        },
+        {
+          "interface": "r2-eth1",
+          "subnet": "192.168.2.0/24",
+          "connected_to": "r3"
+        }
+      ],
+      "bgp": {
+        "neighbors": [
+          {
+            "neighbor": "r1",
+            "remote_as": 65000,
+            "advertised_routes": {
+              "10.10.10.1/32": {
+                "valid": true
+              },
+              "10.10.10.2/32": {
+                "valid": true
+              }
+            }
+          },
+          {
+            "neighbor": "r3",
+            "remote_as": 65001
+          }
+        ]
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "subnet": "192.168.2.0/24",
+          "connected_to": "r2"
+        }
+      ],
+      "bgp": {
+        "neighbor": "r2",
+        "remote_as": 65001
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r2", "r3"],
+      "subnet": "192.168.2.0/24"
+    }
+  },
+  "bgp": {
+    "conditional_advertisement": {
+      "r2": {
+        "prefix_lists": [
+          {
+            "name": "advertise",
+            "rules": [
+              {
+                "seq": 5,
+                "prefix": "10.10.10.1/32"
+              },
+              {
+                "seq": 10,
+                "prefix": "10.10.10.2/32"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
