@@ -1,0 +1,79 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.1/24"
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "ipv4": "192.168.7.2/24"
+        }
+      }
+    },
+    "r3": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.3/24"
+        }
+      }
+    },
+    "r4": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.4/24"
+        }
+      }
+    },
+    "r5": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.5/24"
+        }
+      }
+    },
+    "r6": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.6/24"
+        }
+      }
+    },
+    "r7": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "192.168.7.7/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_nodes": ["r1", "r2"]
+    },
+    "s2": {
+      "connected_nodes": ["r2", "r3", "r4", "r5", "r6"]
+    },
+    "s3": {
+      "connected_nodes": ["r2", "r7"]
+    }
+  }
+}
