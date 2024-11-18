@@ -1,0 +1,97 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "r2",
+          "subnet": "10.0.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "confederation": {
+          "confed_id": 65000,
+          "peers": ["r2"]
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "r1",
+          "subnet": "10.0.1.0/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "r3",
+          "subnet": "10.0.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,  // Confederation AS
+        "confederation": {
+          "confed_id": 65000,
+          "peers": ["r1", "r3"]
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "r2",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "r3-eth1",
+          "connected_to": "r4",
+          "subnet": "10.0.3.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "confederation": {
+          "confed_id": 65000,
+          "peers": ["r2", "r4"]
+        }
+      }
+    },
+    "r4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "r3",
+          "subnet": "10.0.3.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "confederation": {
+          "confed_id": 65000,
+          "peers": ["r3"]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "10.0.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r2", "r3"],
+      "subnet": "10.0.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["r3", "r4"],
+      "subnet": "10.0.3.0/24"
+    }
+  },
+  "bgp_confederation": {
+    "confed_id": 65000,
+    "member_ASes": [65001, 65002, 65003],
+    "external_peering": []
+  }
+}
