@@ -1,0 +1,102 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "default_originate": {
+                  "timer": 3600,  // Initially set to 3600 seconds
+                  "advertised_after": 10  // Reduced to 10 seconds
+                }
+              }
+            }
+          },
+          "r3": {
+            "remote_as": 65003,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "default_originate": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "received_routes": [
+                  {
+                    "prefix": "0.0.0.0/0",
+                    "next_hop": "192.168.1.1"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "default_originate": true,
+                "triggered_update": "metric adjustment"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r1", "r3"],
+      "subnet": "192.168.2.0/24"
+    }
+  }
+}
