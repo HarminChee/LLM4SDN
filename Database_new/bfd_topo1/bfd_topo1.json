@@ -1,0 +1,58 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.0.1",
+          "connected_to": "sw1"
+        }
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.2.2",
+          "connected_to": "sw3"
+        },
+        "eth1": {
+          "ip": "192.168.1.2",
+          "connected_to": "sw2"
+        },
+        "eth2": {
+          "ip": "192.168.2.2",
+          "connected_to": "sw3"
+        }
+      }
+    },
+    "r3": {
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.1",
+          "connected_to": "sw2"
+        }
+      }
+    },
+    "r4": {
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.2.1",
+          "connected_to": "sw3"
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw1": {
+      "subnet": "192.168.0.0/24",
+      "connected_nodes": ["r1"]
+    },
+    "sw2": {
+      "subnet": "192.168.1.0/24",
+      "connected_nodes": ["r2", "r3"]
+    },
+    "sw3": {
+      "subnet": "192.168.2.0/24",
+      "connected_nodes": ["r2", "r4"]
+    }
+  }
+}
