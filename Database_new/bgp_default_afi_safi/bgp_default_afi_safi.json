@@ -1,0 +1,108 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "192.168.255.254": {
+            "remote_as": "external",
+            "afi_safi": {
+              "ipv4Unicast": {
+                "enabled": true,
+                "description": "Enabled for IPv4 unicast only"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "192.168.255.254": {
+            "remote_as": "external",
+            "afi_safi": {
+              "ipv6Unicast": {
+                "enabled": true,
+                "description": "Enabled for IPv6 unicast only"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "192.168.255.254": {
+            "remote_as": "external",
+            "afi_safi": {
+              "l2VpnEvpn": {
+                "enabled": true,
+                "description": "Enabled for L2VPN EVPN only"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "192.168.255.254": {
+            "remote_as": "external",
+            "afi_safi": {
+              "ipv4Unicast": {
+                "enabled": true
+              },
+              "ipv6Unicast": {
+                "enabled": true
+              },
+              "l2VpnEvpn": {
+                "enabled": true
+              },
+              "description": "Enabled for IPv4/IPv6 unicast and L2VPN EVPN"
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2", "r3", "r4"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
