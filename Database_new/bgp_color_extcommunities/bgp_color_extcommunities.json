@@ -1,0 +1,55 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "as": 65001,
+        "peers": ["r2"],
+        "advertised_prefixes": [
+          {
+            "prefix": "10.10.10.0/24",
+            "extended_communities": [
+              "RT:80:987",
+              "Color:01:100",
+              "Color:01:200",
+              "Color:01:55555"
+            ]
+          }
+        ]
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "bgp": {
+        "as": 65002,
+        "peers": ["r1"],
+        "received_prefixes": [
+          {
+            "prefix": "10.10.10.0/24",
+            "extended_communities": [
+              "RT:80:987",
+              "Color:01:100",
+              "Color:01:200",
+              "Color:01:55555"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_nodes": ["r1", "r2"]
+    }
+  }
+}
