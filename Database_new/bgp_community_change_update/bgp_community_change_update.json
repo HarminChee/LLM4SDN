@@ -1,0 +1,51 @@
+{
+  "routers": {
+    "z1": {
+      "interfaces": [
+        { "interface": "z1-eth0", "subnet": "10.0.6.0/30", "connected_to": "y2" },
+        { "interface": "z1-eth1", "subnet": "10.0.7.0/30", "connected_to": "y3" }
+      ]
+    },
+    "y1": {
+      "interfaces": [
+        { "interface": "y1-eth0", "subnet": "10.0.2.0/30", "connected_to": "x1" },
+        { "interface": "y1-eth1", "subnet": "10.0.3.0/30", "connected_to": "y2" },
+        { "interface": "y1-eth2", "subnet": "10.0.4.0/30", "connected_to": "y3" }
+      ]
+    },
+    "y2": {
+      "interfaces": [
+        { "interface": "y2-eth0", "subnet": "10.0.3.0/30", "connected_to": "y1" },
+        { "interface": "y2-eth1", "subnet": "10.0.5.0/30", "connected_to": "y3" },
+        { "interface": "y2-eth2", "subnet": "10.0.6.0/30", "connected_to": "z1" }
+      ]
+    },
+    "y3": {
+      "interfaces": [
+        { "interface": "y3-eth0", "subnet": "10.0.4.0/30", "connected_to": "y1" },
+        { "interface": "y3-eth1", "subnet": "10.0.5.0/30", "connected_to": "y2" },
+        { "interface": "y3-eth2", "subnet": "10.0.7.0/30", "connected_to": "z1" }
+      ]
+    },
+    "x1": {
+      "interfaces": [
+        { "interface": "x1-eth0", "subnet": "10.0.1.0/30", "connected_to": "c1" },
+        { "interface": "x1-eth1", "subnet": "10.0.2.0/30", "connected_to": "y1" }
+      ]
+    },
+    "c1": {
+      "interfaces": [
+        { "interface": "c1-eth0", "subnet": "10.0.1.0/30", "connected_to": "x1" }
+      ]
+    }
+  },
+  "switches": {
+    "s1": { "connected_devices": ["c1", "x1"] },
+    "s2": { "connected_devices": ["x1", "y1"] },
+    "s3": { "connected_devices": ["y1", "y2"] },
+    "s4": { "connected_devices": ["y1", "y3"] },
+    "s5": { "connected_devices": ["y2", "y3"] },
+    "s6": { "connected_devices": ["y2", "z1"] },
+    "s7": { "connected_devices": ["y3", "z1"] }
+  }
+}
