@@ -1,0 +1,77 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "subnet": "10.10.10.0/24",
+          "connected_to": "r2"
+        }
+      ]
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "subnet": "10.10.10.0/24",
+          "connected_to": "r1"
+        },
+        {
+          "interface": "r2-eth1",
+          "subnet": "10.10.20.0/24",
+          "connected_to": "r3"
+        }
+      ],
+      "role": "DUT"
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "subnet": "10.10.20.0/24",
+          "connected_to": "r2"
+        }
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "10.10.10.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r2", "r3"],
+      "subnet": "10.10.20.0/24"
+    }
+  },
+  "bgp": {
+    "r1": {
+      "peer": "r2",
+      "as_number": 1
+    },
+    "r2": {
+      "peers": [
+        {
+          "peer": "r1",
+          "as_number": 1
+        },
+        {
+          "peer": "r3",
+          "as_number": 3
+        }
+      ],
+      "advertise_map": {
+        "exist_map": "EXIST-MAP",
+        "advertise_map": "ADV-MAP-1"
+      },
+      "non_exist_map": {
+        "non_exist_map": "EXIST-MAP",
+        "advertise_map": "ADV-MAP-1"
+      }
+    },
+    "r3": {
+      "peer": "r2",
+      "as_number": 3
+    }
+  }
+}
