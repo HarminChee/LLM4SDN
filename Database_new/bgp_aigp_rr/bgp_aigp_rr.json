@@ -1,0 +1,66 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.1/24"
+        }
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.2/24"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.2/24"
+        }
+      }
+    },
+    "r3": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.3/24"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.3/24"
+        }
+      }
+    },
+    "r4": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.4/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_nodes": ["r1", "r2"]
+    },
+    "s2": {
+      "connected_nodes": ["r1", "r3"]
+    },
+    "s3": {
+      "connected_nodes": ["r1", "r4"]
+    },
+    "s4": {
+      "connected_nodes": ["r2", "r3"]
+    }
+  }
+}
