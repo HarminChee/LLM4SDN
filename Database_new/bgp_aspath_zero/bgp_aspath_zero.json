@@ -1,0 +1,25 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.1/24"
+        }
+      }
+    },
+    "peer1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.2/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_nodes": ["r1", "peer1"]
+    }
+  }
+}
