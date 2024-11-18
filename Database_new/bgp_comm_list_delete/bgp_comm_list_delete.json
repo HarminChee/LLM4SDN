@@ -1,0 +1,54 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.255.1/24"
+        }
+      },
+      "bgp": {
+        "as": 65001,
+        "peers": ["r2"],
+        "advertised_prefixes": [
+          {
+            "prefix": "172.16.255.254/32",
+            "community": "333:333"
+          }
+        ],
+        "route_map": {
+          "name": "test",
+          "action": "permit",
+          "sequence": 10,
+          "set": {
+            "comm_list": "delete",
+            "community": "333:333"
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.255.2/24"
+        }
+      },
+      "bgp": {
+        "as": 65002,
+        "peers": ["r1"],
+        "received_prefixes": [
+          {
+            "prefix": "172.16.255.254/32",
+            "community": null  // Community stripped by r1
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_nodes": ["r1", "r2"]
+    }
+  }
+}
