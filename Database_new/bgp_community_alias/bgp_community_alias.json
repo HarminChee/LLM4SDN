@@ -1,0 +1,73 @@
+{
+  "nodes": {
+    "r1": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "as": 65001,
+        "peers": ["r2"],
+        "received_prefixes": [
+          {
+            "prefix": "172.16.16.1/32",
+            "communities": "community-r2-1 65001:2",
+            "largeCommunities": "large-community-r2-1 65001:1:2",
+            "tag": 10
+          },
+          {
+            "prefix": "172.16.16.2/32",
+            "communities": "65002:1 community-r2-2",
+            "largeCommunities": "",
+            "tag": 20
+          },
+          {
+            "prefix": "172.16.16.3/32",
+            "communities": "",
+            "largeCommunities": "",
+            "tag": 100
+          }
+        ]
+      }
+    },
+    "r2": {
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "bgp": {
+        "as": 65002,
+        "peers": ["r1"],
+        "advertised_prefixes": [
+          {
+            "prefix": "172.16.16.1/32",
+            "communities": "community-r2-1 65001:2",
+            "largeCommunities": "large-community-r2-1 65001:1:2",
+            "tag": 10
+          },
+          {
+            "prefix": "172.16.16.2/32",
+            "communities": "65002:1 community-r2-2",
+            "largeCommunities": "",
+            "tag": 20
+          },
+          {
+            "prefix": "172.16.16.3/32",
+            "communities": "",
+            "largeCommunities": "",
+            "tag": 100
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_nodes": ["r1", "r2"]
+    }
+  }
+}
