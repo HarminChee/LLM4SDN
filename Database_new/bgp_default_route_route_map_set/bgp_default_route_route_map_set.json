@@ -1,0 +1,142 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "default_originate": true,
+                "route_map": {
+                  "name": "SET_ONLY",
+                  "action": "permit",
+                  "set_operations": [
+                    {
+                      "type": "metric",
+                      "value": 123
+                    },
+                    {
+                      "type": "as-path",
+                      "prepend": "65001 65001 65001 65001"
+                    }
+                  ]
+                },
+                "advertised_routes": [
+                  {
+                    "prefix": "0.0.0.0/0",
+                    "bgpOriginatingDefaultNetwork": true,
+                    "metric": 123,
+                    "aspath": "65001 65001 65001 65001"
+                  }
+                ]
+              }
+            }
+          },
+          "r3": {
+            "remote_as": 65003,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "default_originate": true,
+                "route_map": {
+                  "name": "SET_ONLY",
+                  "action": "permit",
+                  "set_operations": [
+                    {
+                      "type": "metric",
+                      "value": 123
+                    },
+                    {
+                      "type": "as-path",
+                      "prepend": "65001 65001 65001 65001"
+                    }
+                  ]
+                },
+                "advertised_routes": [
+                  {
+                    "prefix": "0.0.0.0/0",
+                    "bgpOriginatingDefaultNetwork": true,
+                    "metric": 123,
+                    "aspath": "65001 65001 65001 65001"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "received_routes": [
+                  {
+                    "prefix": "0.0.0.0/0",
+                    "next_hop": "192.168.255.1",
+                    "metric": 123,
+                    "aspath": "65001 65001 65001 65001"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "received_routes": [
+                  {
+                    "prefix": "0.0.0.0/0",
+                    "next_hop": "192.168.255.1",
+                    "metric": 123,
+                    "aspath": "65001 65001 65001 65001"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2", "r3"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
