@@ -1,0 +1,56 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.0.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.0.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65000,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "10.0.0.0/24"
+    }
+  }
+}
