@@ -1,0 +1,270 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.0.0/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s6",
+          "subnet": "172.31.0.0/24"
+        },
+        {
+          "interface": "r1-eth2",
+          "connected_to": "s7",
+          "subnet": "172.31.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r3": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r4": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s6",
+          "subnet": "172.31.0.0/24"
+        },
+        {
+          "interface": "r3-eth1",
+          "connected_to": "s8",
+          "subnet": "192.0.2.0/24"
+        },
+        {
+          "interface": "r3-eth2",
+          "connected_to": "s9",
+          "subnet": "192.0.3.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r5": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r6": {
+            "remote_as": 65003,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s7",
+          "subnet": "172.31.2.0/24"
+        },
+        {
+          "interface": "r4-eth1",
+          "connected_to": "s10",
+          "subnet": "192.0.4.0/24"
+        },
+        {
+          "interface": "r4-eth2",
+          "connected_to": "s11",
+          "subnet": "192.0.5.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r5": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r6": {
+            "remote_as": 65003,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s8",
+          "subnet": "192.0.2.0/24"
+        },
+        {
+          "interface": "r5-eth1",
+          "connected_to": "s11",
+          "subnet": "192.0.5.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r3": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r4": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r6": {
+      "interfaces": [
+        {
+          "interface": "r6-eth0",
+          "connected_to": "s9",
+          "subnet": "192.0.3.0/24"
+        },
+        {
+          "interface": "r6-eth1",
+          "connected_to": "s10",
+          "subnet": "192.0.4.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "r3": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r4": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          },
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1"],
+      "subnet": "10.0.0.0/24"
+    },
+    "s6": {
+      "connected_devices": ["r1", "r3"],
+      "subnet": "172.31.0.0/24"
+    },
+    "s7": {
+      "connected_devices": ["r1", "r4"],
+      "subnet": "172.31.2.0/24"
+    },
+    "s8": {
+      "connected_devices": ["r3", "r5"],
+      "subnet": "192.0.2.0/24"
+    },
+    "s9": {
+      "connected_devices": ["r3", "r6"],
+      "subnet": "192.0.3.0/24"
+    },
+    "s10": {
+      "connected_devices": ["r4", "r6"],
+      "subnet": "192.0.4.0/24"
+    },
+    "s11": {
+      "connected_devices": ["r4", "r5"],
+      "subnet": "192.0.5.0/24"
+    }
+  }
+}
