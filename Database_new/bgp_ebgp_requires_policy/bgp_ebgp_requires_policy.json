@@ -1,0 +1,176 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "advertisedRoutes": {
+                  "192.168.255.1/32": {
+                    "valid": true
+                  }
+                },
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "receivedRoutes": {
+                  "192.168.255.1/32": {
+                    "valid": true
+                  }
+                },
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "r4": {
+            "remote_as": 65004,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "advertisedRoutes": {}  // No routes are advertised
+              }
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s2",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "r3": {
+            "remote_as": 65003,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "receivedRoutes": {}  // No routes are received
+              }
+            }
+          }
+        }
+      }
+    },
+    "r5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s3",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65005,
+        "neighbors": {
+          "r6": {
+            "remote_as": 65005,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "advertisedRoutes": {
+                  "192.168.255.1/32": {
+                    "valid": true
+                  }
+                },
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    },
+    "r6": {
+      "interfaces": [
+        {
+          "interface": "r6-eth0",
+          "connected_to": "s3",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65005,
+        "neighbors": {
+          "r5": {
+            "remote_as": 65005,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "bgpState": "Established",
+                "receivedRoutes": {
+                  "192.168.255.1/32": {
+                    "valid": true
+                  }
+                },
+                "peerState": "OK"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.255.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r3", "r4"],
+      "subnet": "192.168.255.0/24"
+    },
+    "s3": {
+      "connected_devices": ["r5", "r6"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
