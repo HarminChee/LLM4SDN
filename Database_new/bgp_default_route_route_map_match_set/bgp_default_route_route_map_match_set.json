@@ -1,0 +1,75 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "default_originate": {
+                  "conditional_match": {
+                    "match_prefix": "10.0.0.0/22",
+                    "advertised_routes": [
+                      {
+                        "prefix": "0.0.0.0/0",
+                        "bgpOriginatingDefaultNetwork": true
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": {
+              "ipv4Unicast": {
+                "advertised_routes": [
+                  {
+                    "prefix": "10.0.0.0/22",
+                    "next_hop": "192.168.255.2"
+                  }
+                ],
+                "received_routes": [
+                  {
+                    "prefix": "0.0.0.0/0",
+                    "next_hop": "192.168.255.1"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
