@@ -1,0 +1,152 @@
+{
+  "routers": {
+    "r1": {
+      "router_id": "10.0.255.1",
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.1.0/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "r1-eth2",
+          "connected_to": "s3",
+          "subnet": "10.0.3.0/24"
+        },
+        {
+          "interface": "r1-eth3",
+          "connected_to": "s4",
+          "subnet": "10.0.4.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 99,
+            "ip": "10.0.1.101",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer2": {
+            "remote_as": 99,
+            "ip": "10.0.1.102",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer3": {
+            "remote_as": 99,
+            "ip": "10.0.1.103",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer4": {
+            "remote_as": 99,
+            "ip": "10.0.1.104",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer5": {
+            "remote_as": 99,
+            "ip": "10.0.1.105",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer6": {
+            "remote_as": 99,
+            "ip": "10.0.2.106",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer7": {
+            "remote_as": 99,
+            "ip": "10.0.2.107",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer8": {
+            "remote_as": 99,
+            "ip": "10.0.2.108",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer9": {
+            "remote_as": 99,
+            "ip": "10.0.2.109",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer10": {
+            "remote_as": 99,
+            "ip": "10.0.2.110",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer11": {
+            "remote_as": 111,
+            "ip": "10.0.3.111",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer12": {
+            "remote_as": 112,
+            "ip": "10.0.3.112",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer13": {
+            "remote_as": 113,
+            "ip": "10.0.3.113",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer14": {
+            "remote_as": 114,
+            "ip": "10.0.3.114",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer15": {
+            "remote_as": 115,
+            "ip": "10.0.3.115",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer16": {
+            "remote_as": 116,
+            "ip": "10.0.4.116",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer17": {
+            "remote_as": 117,
+            "ip": "10.0.4.117",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer18": {
+            "remote_as": 118,
+            "ip": "10.0.4.118",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer19": {
+            "remote_as": 119,
+            "ip": "10.0.4.119",
+            "afi_safi": "ipv4Unicast"
+          },
+          "peer20": {
+            "remote_as": 120,
+            "ip": "10.0.4.120",
+            "afi_safi": "ipv4Unicast"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "peer1", "peer2", "peer3", "peer4", "peer5"],
+      "subnet": "10.0.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r1", "peer6", "peer7", "peer8", "peer9", "peer10"],
+      "subnet": "10.0.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["r1", "peer11", "peer12", "peer13", "peer14", "peer15"],
+      "subnet": "10.0.3.0/24"
+    },
+    "s4": {
+      "connected_devices": ["r1", "peer16", "peer17", "peer18", "peer19", "peer20"],
+      "subnet": "10.0.4.0/24"
+    }
+  }
+}
