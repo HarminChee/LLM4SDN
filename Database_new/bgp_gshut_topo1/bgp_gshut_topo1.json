@@ -1,0 +1,176 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": ["GSHUT"]
+          }
+        },
+        "routes": {
+          "advertised_routes": ["100.0.10.1/32"]
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.1.0/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s2",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "r2-eth2",
+          "connected_to": "s3",
+          "subnet": "10.0.3.0/24"
+        },
+        {
+          "interface": "r2-eth3",
+          "connected_to": "s4",
+          "subnet": "10.0.4.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": ["GSHUT"]
+          },
+          "R3": {
+            "remote_as": 65003,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": ["GSHUT"]
+          },
+          "R4": {
+            "remote_as": 65004,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": []
+          },
+          "R5": {
+            "remote_as": 65005,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": []
+          }
+        },
+        "routes": {
+          "advertised_routes": ["100.0.10.1/32"],
+          "received_routes": {
+            "R1": ["100.0.10.1/32"],
+            "R3": ["100.0.10.1/32"],
+            "R4": ["100.0.10.1/32"],
+            "R5": ["100.0.10.1/32"]
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "subnet": "10.0.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": ["GSHUT"]
+          }
+        },
+        "routes": {
+          "advertised_routes": ["100.0.20.1/32"]
+        }
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s3",
+          "subnet": "10.0.3.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": []
+          }
+        },
+        "routes": {
+          "advertised_routes": ["100.0.30.1/32"]
+        }
+      }
+    },
+    "R5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s4",
+          "subnet": "10.0.4.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65005,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "community_list": []
+          }
+        },
+        "routes": {
+          "advertised_routes": ["100.0.40.1/32"]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "10.0.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R2", "R3"],
+      "subnet": "10.0.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["R2", "R4"],
+      "subnet": "10.0.3.0/24"
+    },
+    "s4": {
+      "connected_devices": ["R2", "R5"],
+      "subnet": "10.0.4.0/24"
+    }
+  }
+}
