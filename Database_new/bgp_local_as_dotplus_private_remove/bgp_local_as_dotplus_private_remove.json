@@ -1,0 +1,103 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.255.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65050,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65050,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.2"
+          }
+        },
+        "routes": {
+          "advertised_routes": ["172.16.255.254/32"]
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.255.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65050,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65050,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.1"
+          },
+          "R3": {
+            "remote_as": 3000,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.3"
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.255.3/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 3000,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65050,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.2"
+          },
+          "R4": {
+            "remote_as": 3000,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.4"
+          }
+        }
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.255.4/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 3000,
+        "neighbors": {
+          "R3": {
+            "remote_as": 3000,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.3"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.255.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R3", "R4"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
