@@ -1,0 +1,84 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.12.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": ["ipv4LabeledUnicast", "ipv6LabeledUnicast"],
+            "ipv4_address": "192.168.12.2"
+          }
+        },
+        "routes": {
+          "default_originate": {
+            "ipv4": {
+              "network": "0.0.0.0/0",
+              "metric": 666,
+              "label": 0,
+              "community": "65001:65001"
+            },
+            "ipv6": {
+              "network": "::/0",
+              "metric": 666,
+              "label": 2,
+              "community": "65001:65001"
+            }
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.12.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": ["ipv4LabeledUnicast", "ipv6LabeledUnicast"],
+            "ipv4_address": "192.168.12.1"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "ipv4": {
+              "default_route": {
+                "network": "0.0.0.0/0",
+                "metric": 666,
+                "community": "65001:65001",
+                "remote_label": 0
+              }
+            },
+            "ipv6": {
+              "default_route": {
+                "network": "::/0",
+                "metric": 666,
+                "community": "65001:65001",
+                "remote_label": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.12.0/24"
+    }
+  }
+}
