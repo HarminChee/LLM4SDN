@@ -1,0 +1,102 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 10,
+        "local_ip": "10.10.10.1",
+        "bridge_name": "br10",
+        "bridge_ports": ["r1-eth0", "vxlan10"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": "l2vpn evpn",
+            "route_map": {
+              "in": "RM-EVPN-IN",
+              "out": "RM-EVPN-OUT"
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s3",
+          "subnet": "192.168.3.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 10,
+        "local_ip": "10.10.10.2",
+        "bridge_name": "br10",
+        "bridge_ports": ["r2-eth1", "vxlan10"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    }
+  },
+  "hosts": {
+    "c1": {
+      "interfaces": [
+        {
+          "interface": "c1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        }
+      ]
+    },
+    "c2": {
+      "interfaces": [
+        {
+          "interface": "c2-eth0",
+          "connected_to": "s3",
+          "subnet": "192.168.3.0/24"
+        }
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "c1"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["r2", "c2"],
+      "subnet": "192.168.3.0/24"
+    }
+  }
+}
