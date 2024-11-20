@@ -1,0 +1,157 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "local_pref": 100
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        },
+        {
+          "interface": "r2-eth2",
+          "connected_to": "s3",
+          "subnet": "192.168.3.0/24"
+        },
+        {
+          "interface": "r2-eth3",
+          "connected_to": "s4",
+          "subnet": "192.168.4.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65000,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "local_pref": 100
+          },
+          "R3": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "local_pref": 100
+          },
+          "R4": {
+            "remote_as": 65003,
+            "afi_safi": "ipv4Unicast (VRF vrf1)",
+            "graceful_shutdown": false
+          },
+          "R5": {
+            "remote_as": 65004,
+            "afi_safi": "ipv4Unicast (VRF vrf1)",
+            "graceful_shutdown": false
+          }
+        },
+        "vrfs": {
+          "vrf1": {
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false,
+            "local_pref": 100
+          }
+        }
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s3",
+          "subnet": "192.168.3.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false
+          }
+        }
+      }
+    },
+    "R5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s4",
+          "subnet": "192.168.4.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "graceful_shutdown": false
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R2", "R3"],
+      "subnet": "192.168.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["R2", "R4"],
+      "subnet": "192.168.3.0/24"
+    },
+    "s4": {
+      "connected_devices": ["R2", "R5"],
+      "subnet": "192.168.4.0/24"
+    }
+  }
+}
