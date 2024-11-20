@@ -1,0 +1,50 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv6_link_local": "fe80:1::1",
+          "subnet": "fe80::/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv6Unicast",
+            "neighbor_ipv6_link_local": "fe80:1::2"
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv6_link_local": "fe80:1::2",
+          "subnet": "fe80::/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv6Unicast",
+            "neighbor_ipv6_link_local": "fe80:1::1"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "fe80::/64"
+    }
+  }
+}
