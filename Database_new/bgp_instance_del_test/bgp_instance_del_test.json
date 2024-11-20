@@ -1,0 +1,90 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "vrf": ["vrf1", "vrf2"],
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": ["ipv4Unicast", "ipv6Unicast"],
+            "graceful_shutdown": false
+          }
+        },
+        "routes": {
+          "advertised_routes": ["10.0.1.0/24", "2001:db8:1::/64"]
+        }
+      },
+      "ospf": {
+        "area": 0,
+        "neighbors": ["R2"]
+      },
+      "ldp": {
+        "enabled": true,
+        "mpls_support": true
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s3",
+          "subnet": "192.168.3.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "vrf": ["vrf1"],
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": ["ipv4Unicast", "ipv6Unicast"],
+            "graceful_shutdown": false
+          }
+        },
+        "routes": {
+          "advertised_routes": ["10.0.2.0/24", "2001:db8:2::/64"]
+        }
+      },
+      "ospf": {
+        "area": 0,
+        "neighbors": ["R1"]
+      },
+      "ldp": {
+        "enabled": true,
+        "mpls_support": true
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R1"],
+      "subnet": "192.168.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["R2"],
+      "subnet": "192.168.3.0/24"
+    }
+  }
+}
