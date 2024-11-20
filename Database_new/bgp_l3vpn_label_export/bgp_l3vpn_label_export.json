@@ -1,0 +1,76 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.0.2.1/24",
+          "mpls_enabled": true
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "vrfs": {
+          "vrf1": {
+            "ipv4_address": "192.0.3.1/32",
+            "label_export": "auto",
+            "neighbors": {
+              "R2": {
+                "remote_as": 65002,
+                "afi_safi": "ipv4Unicast",
+                "ipv4_address": "192.0.2.2"
+              }
+            }
+          }
+        },
+        "routes": {
+          "advertised_routes": ["192.0.3.1/32"]
+        }
+      },
+      "ldp": {
+        "enabled": true,
+        "mpls_support": true
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.0.2.2/24",
+          "mpls_enabled": true
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "vrfs": {
+          "vrf1": {
+            "ipv4_address": "192.0.3.2/32",
+            "label_export": "auto",
+            "neighbors": {
+              "R1": {
+                "remote_as": 65001,
+                "afi_safi": "ipv4Unicast",
+                "ipv4_address": "192.0.2.1"
+              }
+            }
+          }
+        },
+        "routes": {
+          "advertised_routes": ["192.0.3.2/32"]
+        }
+      },
+      "ldp": {
+        "enabled": true,
+        "mpls_support": true
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.0.2.0/24"
+    }
+  }
+}
