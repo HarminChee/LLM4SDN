@@ -1,0 +1,74 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast"
+          }
+        },
+        "advertised_routes": {
+          "10.10.10.1/32": {
+            "extended_community": "rt 1.1.1.1:1"
+          },
+          "10.10.10.2/32": {
+            "extended_community": "soo 2.2.2.2:2"
+          },
+          "10.10.10.3/32": {
+            "extended_community": "nt 3.3.3.3:0"
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "route_map": {
+              "in": {
+                "name": "r1-in",
+                "rules": [
+                  {
+                    "action": "permit",
+                    "set": {
+                      "extended_community_list": {
+                        "rt": "delete",
+                        "soo": "delete",
+                        "nt": "delete"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
