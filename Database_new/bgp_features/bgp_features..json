@@ -1,0 +1,168 @@
+{
+  "routers": {
+    "R1": {
+      "as_number": 65000,
+      "interfaces": [
+        {
+          "interface": "R1-eth0",
+          "connected_to": "SW6",
+          "subnet": "192.168.6.0/24"
+        },
+        {
+          "interface": "R1-eth1",
+          "connected_to": "SW1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "R1-eth2",
+          "connected_to": "SW3",
+          "subnet": "192.168.3.0/24"
+        },
+        {
+          "interface": "R1-eth3",
+          "connected_to": "SW4",
+          "subnet": "192.168.4.0/24"
+        }
+      ]
+    },
+    "R2": {
+      "as_number": 65000,
+      "interfaces": [
+        {
+          "interface": "R2-eth0",
+          "connected_to": "SW7",
+          "subnet": "192.168.7.0/24"
+        },
+        {
+          "interface": "R2-eth1",
+          "connected_to": "SW1",
+          "subnet": "192.168.1.0/24"
+        },
+        {
+          "interface": "R2-eth2",
+          "connected_to": "SW2",
+          "subnet": "192.168.2.0/24"
+        },
+        {
+          "interface": "R2-eth3",
+          "connected_to": "SW5",
+          "subnet": "192.168.5.0/24"
+        }
+      ]
+    },
+    "R3": {
+      "as_number": 65000,
+      "interfaces": [
+        {
+          "interface": "R3-eth0",
+          "connected_to": "SW8",
+          "subnet": "192.168.8.0/24"
+        },
+        {
+          "interface": "R3-eth1",
+          "connected_to": "SW2",
+          "subnet": "192.168.2.0/24"
+        },
+        {
+          "interface": "R3-eth2",
+          "connected_to": "SW3",
+          "subnet": "192.168.3.0/24"
+        }
+      ]
+    },
+    "R4": {
+      "as_number": 65001,
+      "interfaces": [
+        {
+          "interface": "R4-eth0",
+          "connected_to": "SW9",
+          "subnet": "192.168.9.0/24"
+        },
+        {
+          "interface": "R4-eth1",
+          "connected_to": "SW4",
+          "subnet": "192.168.4.0/24"
+        }
+      ]
+    },
+    "R5": {
+      "as_number": 65002,
+      "interfaces": [
+        {
+          "interface": "R5-eth0",
+          "connected_to": "SW10",
+          "subnet": "192.168.10.0/24"
+        },
+        {
+          "interface": "R5-eth1",
+          "connected_to": "SW5",
+          "subnet": "192.168.5.0/24"
+        }
+      ]
+    }
+  },
+  "exabgp_peers": {
+    "peer1": {
+      "interface": "peer1-eth0",
+      "connected_to": "SW4",
+      "subnet": "192.168.101.0/24"
+    },
+    "peer2": {
+      "interface": "peer2-eth0",
+      "connected_to": "SW4",
+      "subnet": "192.168.101.0/24"
+    },
+    "peer3": {
+      "interface": "peer3-eth0",
+      "connected_to": "SW4",
+      "subnet": "192.168.101.0/24"
+    },
+    "peer4": {
+      "interface": "peer4-eth0",
+      "connected_to": "SW4",
+      "subnet": "192.168.101.0/24"
+    }
+  },
+  "switches": {
+    "SW1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "SW2": {
+      "connected_devices": ["R2", "R3"],
+      "subnet": "192.168.2.0/24"
+    },
+    "SW3": {
+      "connected_devices": ["R1", "R3"],
+      "subnet": "192.168.3.0/24"
+    },
+    "SW4": {
+      "connected_devices": ["R1", "R4", "peer1", "peer2", "peer3", "peer4"],
+      "subnet": "192.168.4.0/24"
+    },
+    "SW5": {
+      "connected_devices": ["R2", "R5"],
+      "subnet": "192.168.5.0/24"
+    },
+    "SW6": {
+      "connected_devices": ["R1"],
+      "subnet": "192.168.6.0/24"
+    },
+    "SW7": {
+      "connected_devices": ["R2"],
+      "subnet": "192.168.7.0/24"
+    },
+    "SW8": {
+      "connected_devices": ["R3"],
+      "subnet": "192.168.8.0/24"
+    },
+    "SW9": {
+      "connected_devices": ["R4"],
+      "subnet": "192.168.9.0/24"
+    },
+    "SW10": {
+      "connected_devices": ["R5"],
+      "subnet": "192.168.10.0/24"
+    }
+  }
+}
