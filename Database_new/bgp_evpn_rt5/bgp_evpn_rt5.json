@@ -1,0 +1,84 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.100.0/24"
+        }
+      ],
+      "vrf": {
+        "vrf_name": "r1-vrf-101",
+        "table_id": 101,
+        "interfaces": [
+          {
+            "interface": "loop101",
+            "type": "dummy",
+            "connected_to": "r1-vrf-101"
+          }
+        ]
+      },
+      "vxlan": {
+        "vxlan_id": 101,
+        "local_ip": "192.168.100.21",
+        "bridge_name": "bridge-101",
+        "bridge_ports": ["vxlan-101", "loop101"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65000,
+        "vrf": "r1-vrf-101",
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    },
+    "r2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.100.0/24"
+        }
+      ],
+      "vrf": {
+        "vrf_name": "r2-vrf-101",
+        "table_id": 101,
+        "interfaces": [
+          {
+            "interface": "bridge-101",
+            "type": "bridge",
+            "connected_to": "vxlan-101"
+          }
+        ]
+      },
+      "vxlan": {
+        "vxlan_id": 101,
+        "local_ip": "192.168.100.41",
+        "bridge_name": "bridge-101",
+        "bridge_ports": ["vxlan-101", "r2-eth0"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65000,
+        "vrf": "r2-vrf-101",
+        "neighbors": {
+          "r1": {
+            "remote_as": 65000,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "r2"],
+      "subnet": "192.168.100.0/24"
+    }
+  }
+}
