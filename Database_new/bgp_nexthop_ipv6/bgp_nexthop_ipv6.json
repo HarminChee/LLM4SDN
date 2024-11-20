@@ -1,0 +1,231 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth-sw",
+          "connected_to": "sw",
+          "ipv6_address": "fd00:0:2::1/64"
+        },
+        {
+          "interface": "r1-eth-dummy",
+          "connected_to": "sw1",
+          "ipv6_address": "fd00:1:1::1/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "RR": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::rr"
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth-sw",
+          "connected_to": "sw",
+          "ipv6_address": "fd00:0:2::2/64"
+        },
+        {
+          "interface": "r2-eth-dummy",
+          "connected_to": "sw2",
+          "ipv6_address": "fd00:1:2::1/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "RR": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::rr"
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth-sw",
+          "connected_to": "sw",
+          "ipv6_address": "fd00:0:2::3/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "RR": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::rr"
+          }
+        }
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth-sw",
+          "connected_to": "sw",
+          "ipv6_address": "fd00:0:2::4/64"
+        },
+        {
+          "interface": "r4-eth-dummy",
+          "connected_to": "sw4",
+          "ipv6_address": "fd00:1:4::1/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "RR": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::rr"
+          }
+        }
+      }
+    },
+    "R5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth-rr",
+          "connected_to": "sw-rr-r5",
+          "ipv6_address": "fd00:0:4::5/64"
+        },
+        {
+          "interface": "r5-eth-dummy",
+          "connected_to": "sw5",
+          "ipv6_address": "fd00:1:5::1/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "RR": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:4::rr"
+          }
+        }
+      }
+    },
+    "R6": {
+      "interfaces": [
+        {
+          "interface": "r6-eth-rr",
+          "connected_to": "sw-rr-r6",
+          "ipv6_address": "fd00:0:3::6/64"
+        },
+        {
+          "interface": "r6-eth-dummy",
+          "connected_to": "sw6",
+          "ipv6_address": "fd00:1:6::1/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "RR": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:3::rr"
+          }
+        }
+      }
+    },
+    "RR": {
+      "interfaces": [
+        {
+          "interface": "rr-eth-sw",
+          "connected_to": "sw",
+          "ipv6_address": "fd00:0:2::rr/64"
+        },
+        {
+          "interface": "rr-eth-r5",
+          "connected_to": "sw-rr-r5",
+          "ipv6_address": "fd00:0:4::rr/64"
+        },
+        {
+          "interface": "rr-eth-r6",
+          "connected_to": "sw-rr-r6",
+          "ipv6_address": "fd00:0:3::rr/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::1"
+          },
+          "R2": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::2"
+          },
+          "R3": {
+            "remote_as": 65001,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::3"
+          },
+          "R4": {
+            "remote_as": 65000,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:2::4"
+          },
+          "R5": {
+            "remote_as": 65002,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:4::5"
+          },
+          "R6": {
+            "remote_as": 65002,
+            "afi_safi": "ipv6Unicast",
+            "ipv6_address": "fd00:0:3::6"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw": {
+      "connected_devices": ["R1", "R2", "R3", "R4", "RR"],
+      "subnet": "fd00:0:2::/64"
+    },
+    "sw-rr-r5": {
+      "connected_devices": ["RR", "R5"],
+      "subnet": "fd00:0:4::/64"
+    },
+    "sw-rr-r6": {
+      "connected_devices": ["RR", "R6"],
+      "subnet": "fd00:0:3::/64"
+    },
+    "sw1": {
+      "connected_devices": ["R1"],
+      "subnet": "fd00:1:1::/64"
+    },
+    "sw2": {
+      "connected_devices": ["R2"],
+      "subnet": "fd00:1:2::/64"
+    },
+    "sw4": {
+      "connected_devices": ["R4"],
+      "subnet": "fd00:1:4::/64"
+    },
+    "sw5": {
+      "connected_devices": ["R5"],
+      "subnet": "fd00:1:5::/64"
+    },
+    "sw6": {
+      "connected_devices": ["R6"],
+      "subnet": "fd00:1:6::/64"
+    }
+  }
+}
