@@ -1,0 +1,364 @@
+{
+  "routers": {
+    "spine1": {
+      "interfaces": [
+        {
+          "interface": "spine1-eth0",
+          "connected_to": "leaf1",
+          "subnet": "10.0.0.0/24"
+        },
+        {
+          "interface": "spine1-eth1",
+          "connected_to": "leaf2",
+          "subnet": "10.0.1.0/24"
+        }
+      ]
+    },
+    "spine2": {
+      "interfaces": [
+        {
+          "interface": "spine2-eth0",
+          "connected_to": "leaf1",
+          "subnet": "10.0.0.0/24"
+        },
+        {
+          "interface": "spine2-eth1",
+          "connected_to": "leaf2",
+          "subnet": "10.0.1.0/24"
+        }
+      ]
+    },
+    "leaf1": {
+      "interfaces": [
+        {
+          "interface": "leaf1-eth0",
+          "connected_to": "spine1",
+          "subnet": "10.0.0.0/24"
+        },
+        {
+          "interface": "leaf1-eth1",
+          "connected_to": "spine2",
+          "subnet": "10.0.0.0/24"
+        },
+        {
+          "interface": "leaf1-eth2",
+          "connected_to": "torm11",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "leaf1-eth3",
+          "connected_to": "torm12",
+          "subnet": "10.0.3.0/24"
+        },
+        {
+          "interface": "leaf1-eth4",
+          "connected_to": "torm21",
+          "subnet": "10.0.4.0/24"
+        },
+        {
+          "interface": "leaf1-eth5",
+          "connected_to": "torm22",
+          "subnet": "10.0.5.0/24"
+        }
+      ]
+    },
+    "leaf2": {
+      "interfaces": [
+        {
+          "interface": "leaf2-eth0",
+          "connected_to": "spine1",
+          "subnet": "10.0.1.0/24"
+        },
+        {
+          "interface": "leaf2-eth1",
+          "connected_to": "spine2",
+          "subnet": "10.0.1.0/24"
+        },
+        {
+          "interface": "leaf2-eth2",
+          "connected_to": "torm11",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "leaf2-eth3",
+          "connected_to": "torm12",
+          "subnet": "10.0.3.0/24"
+        },
+        {
+          "interface": "leaf2-eth4",
+          "connected_to": "torm21",
+          "subnet": "10.0.4.0/24"
+        },
+        {
+          "interface": "leaf2-eth5",
+          "connected_to": "torm22",
+          "subnet": "10.0.5.0/24"
+        }
+      ]
+    },
+    "torm11": {
+      "interfaces": [
+        {
+          "interface": "torm11-eth0",
+          "connected_to": "leaf1",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "torm11-eth1",
+          "connected_to": "leaf2",
+          "subnet": "10.0.2.0/24"
+        },
+        {
+          "interface": "torm11-eth2",
+          "connected_to": "hostd11",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "torm11-eth3",
+          "connected_to": "hostd12",
+          "subnet": "192.168.100.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 1000,
+        "local_ip": "192.168.100.15",
+        "bridge_name": "br1000",
+        "bridge_ports": ["torm11-eth2", "torm11-eth3", "vxlan1000"],
+        "vxlan_port": 4789
+      }
+    },
+    "torm12": {
+      "interfaces": [
+        {
+          "interface": "torm12-eth0",
+          "connected_to": "leaf1",
+          "subnet": "10.0.3.0/24"
+        },
+        {
+          "interface": "torm12-eth1",
+          "connected_to": "leaf2",
+          "subnet": "10.0.3.0/24"
+        },
+        {
+          "interface": "torm12-eth2",
+          "connected_to": "hostd11",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "torm12-eth3",
+          "connected_to": "hostd12",
+          "subnet": "192.168.100.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 1000,
+        "local_ip": "192.168.100.16",
+        "bridge_name": "br1000",
+        "bridge_ports": ["torm12-eth2", "torm12-eth3", "vxlan1000"],
+        "vxlan_port": 4789
+      }
+    },
+    "torm21": {
+      "interfaces": [
+        {
+          "interface": "torm21-eth0",
+          "connected_to": "leaf1",
+          "subnet": "10.0.4.0/24"
+        },
+        {
+          "interface": "torm21-eth1",
+          "connected_to": "leaf2",
+          "subnet": "10.0.4.0/24"
+        },
+        {
+          "interface": "torm21-eth2",
+          "connected_to": "hostd21",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "torm21-eth3",
+          "connected_to": "hostd22",
+          "subnet": "192.168.100.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 1000,
+        "local_ip": "192.168.100.17",
+        "bridge_name": "br1000",
+        "bridge_ports": ["torm21-eth2", "torm21-eth3", "vxlan1000"],
+        "vxlan_port": 4789
+      }
+    },
+    "torm22": {
+      "interfaces": [
+        {
+          "interface": "torm22-eth0",
+          "connected_to": "leaf1",
+          "subnet": "10.0.5.0/24"
+        },
+        {
+          "interface": "torm22-eth1",
+          "connected_to": "leaf2",
+          "subnet": "10.0.5.0/24"
+        },
+        {
+          "interface": "torm22-eth2",
+          "connected_to": "hostd21",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "torm22-eth3",
+          "connected_to": "hostd22",
+          "subnet": "192.168.100.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 1000,
+        "local_ip": "192.168.100.18",
+        "bridge_name": "br1000",
+        "bridge_ports": ["torm22-eth2", "torm22-eth3", "vxlan1000"],
+        "vxlan_port": 4789
+      }
+    }
+  },
+  "hosts": {
+    "hostd11": {
+      "interfaces": [
+        {
+          "interface": "hostd11-eth0",
+          "connected_to": "torm11",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "hostd11-eth1",
+          "connected_to": "torm12",
+          "subnet": "192.168.100.0/24"
+        }
+      ]
+    },
+    "hostd12": {
+      "interfaces": [
+        {
+          "interface": "hostd12-eth0",
+          "connected_to": "torm11",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "hostd12-eth1",
+          "connected_to": "torm12",
+          "subnet": "192.168.100.0/24"
+        }
+      ]
+    },
+    "hostd21": {
+      "interfaces": [
+        {
+          "interface": "hostd21-eth0",
+          "connected_to": "torm21",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "hostd21-eth1",
+          "connected_to": "torm22",
+          "subnet": "192.168.100.0/24"
+        }
+      ]
+    },
+    "hostd22": {
+      "interfaces": [
+        {
+          "interface": "hostd22-eth0",
+          "connected_to": "torm21",
+          "subnet": "192.168.100.0/24"
+        },
+        {
+          "interface": "hostd22-eth1",
+          "connected_to": "torm22",
+          "subnet": "192.168.100.0/24"
+        }
+      ]
+    }
+  },
+  "switches": {
+    "sw1": {
+      "connected_devices": ["spine1", "leaf1"],
+      "subnet": "10.0.0.0/24"
+    },
+    "sw2": {
+      "connected_devices": ["spine1", "leaf2"],
+      "subnet": "10.0.1.0/24"
+    },
+    "sw3": {
+      "connected_devices": ["spine2", "leaf1"],
+      "subnet": "10.0.0.0/24"
+    },
+    "sw4": {
+      "connected_devices": ["spine2", "leaf2"],
+      "subnet": "10.0.1.0/24"
+    },
+    "sw5": {
+      "connected_devices": ["leaf1", "torm11"],
+      "subnet": "10.0.2.0/24"
+    },
+    "sw6": {
+      "connected_devices": ["leaf1", "torm12"],
+      "subnet": "10.0.3.0/24"
+    },
+    "sw7": {
+      "connected_devices": ["leaf1", "torm21"],
+      "subnet": "10.0.4.0/24"
+    },
+    "sw8": {
+      "connected_devices": ["leaf1", "torm22"],
+      "subnet": "10.0.5.0/24"
+    },
+    "sw9": {
+      "connected_devices": ["leaf2", "torm11"],
+      "subnet": "10.0.2.0/24"
+    },
+    "sw10": {
+      "connected_devices": ["leaf2", "torm12"],
+      "subnet": "10.0.3.0/24"
+    },
+    "sw11": {
+      "connected_devices": ["leaf2", "torm21"],
+      "subnet": "10.0.4.0/24"
+    },
+    "sw12": {
+      "connected_devices": ["leaf2", "torm22"],
+      "subnet": "10.0.5.0/24"
+    },
+    "sw13": {
+      "connected_devices": ["torm11", "hostd11"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw14": {
+      "connected_devices": ["torm11", "hostd12"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw15": {
+      "connected_devices": ["torm12", "hostd11"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw16": {
+      "connected_devices": ["torm12", "hostd12"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw17": {
+      "connected_devices": ["torm21", "hostd21"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw18": {
+      "connected_devices": ["torm21", "hostd22"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw19": {
+      "connected_devices": ["torm22", "hostd21"],
+      "subnet": "192.168.100.0/24"
+    },
+    "sw20": {
+      "connected_devices": ["torm22", "hostd22"],
+      "subnet": "192.168.100.0/24"
+    }
+  }
+}
