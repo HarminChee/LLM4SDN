@@ -1,0 +1,58 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "bgp_state": "Established",
+            "afi_safi": "ipv4Unicast",
+            "graceful_restart": true
+          }
+        },
+        "routes": {
+          "advertised_routes": ["172.16.255.1/32"],
+          "received_routes": ["172.16.255.2/32"]
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "subnet": "192.168.255.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "bgp_state": "Established",
+            "afi_safi": "ipv4Unicast",
+            "graceful_restart": true
+          }
+        },
+        "routes": {
+          "advertised_routes": ["172.16.255.2/32"],
+          "received_routes": ["172.16.255.1/32"]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.255.0/24"
+    }
+  }
+}
