@@ -1,0 +1,101 @@
+{
+  "routers": {
+    "PE1": {
+      "interfaces": [
+        {
+          "interface": "PE1-eth0",
+          "connected_to": "PE2",
+          "subnet": "10.100.0.0/24"
+        },
+        {
+          "interface": "PE1-eth1",
+          "connected_to": "host1",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 100,
+        "local_ip": "10.100.0.1",
+        "bridge_name": "br100",
+        "bridge_ports": ["PE1-eth1", "vxlan100"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "PE2": {
+            "remote_as": 65002,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    },
+    "PE2": {
+      "interfaces": [
+        {
+          "interface": "PE2-eth0",
+          "connected_to": "PE1",
+          "subnet": "10.100.0.0/24"
+        },
+        {
+          "interface": "PE2-eth1",
+          "connected_to": "host2",
+          "subnet": "192.168.2.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 100,
+        "local_ip": "10.100.0.2",
+        "bridge_name": "br100",
+        "bridge_ports": ["PE2-eth1", "vxlan100"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "PE1": {
+            "remote_as": 65001,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    }
+  },
+  "hosts": {
+    "host1": {
+      "interfaces": [
+        {
+          "interface": "host1-eth0",
+          "connected_to": "PE1",
+          "subnet": "192.168.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 111,
+        "advertised_routes": {
+          "ipv4": "100.0.0.21/32",
+          "ipv6": "100::21/128"
+        }
+      }
+    },
+    "host2": {
+      "interfaces": [
+        {
+          "interface": "host2-eth0",
+          "connected_to": "PE2",
+          "subnet": "192.168.2.0/24"
+        }
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["PE1", "host1"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["PE2", "host2"],
+      "subnet": "192.168.2.0/24"
+    }
+  }
+}
