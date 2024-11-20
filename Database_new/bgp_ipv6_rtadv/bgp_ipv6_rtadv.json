@@ -1,0 +1,56 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv6_address": "2001:db8:1::1/64",
+          "subnet": "2001:db8:1::/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv6Unicast",
+            "neighbor_ipv6": "2001:db8:1::2"
+          }
+        },
+        "routes": {
+          "advertised_routes": ["2001:db8:10::/64"]
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv6_address": "2001:db8:1::2/64",
+          "subnet": "2001:db8:1::/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv6Unicast",
+            "neighbor_ipv6": "2001:db8:1::1"
+          }
+        },
+        "routes": {
+          "advertised_routes": ["2001:db8:20::/64"]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "2001:db8:1::/64"
+    }
+  }
+}
