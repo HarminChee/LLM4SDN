@@ -1,0 +1,60 @@
+{
+  "routers": {
+    "r1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Flowspec"
+          }
+        }
+      }
+    }
+  },
+  "exabgp_peers": {
+    "peer1": {
+      "interfaces": [
+        {
+          "interface": "peer1-eth0",
+          "connected_to": "s1",
+          "subnet": "10.0.1.0/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "advertised_routes": {
+          "ipv4Flowspec": [
+            {
+              "destination": "3.3.3.3",
+              "next_hop": "50.0.0.2",
+              "flowspec_action": "redirect",
+              "condition": "packet-length < 200"
+            }
+          ],
+          "ipv6Flowspec": [
+            {
+              "destination": "3::3",
+              "next_hop": "50::2",
+              "flowspec_action": "redirect",
+              "condition": "packet-length < 200"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["r1", "peer1"],
+      "subnet": "10.0.1.0/24"
+    }
+  }
+}
