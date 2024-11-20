@@ -1,0 +1,116 @@
+{
+  "routers": {
+    "P1": {
+      "interfaces": [
+        {
+          "interface": "P1-eth0",
+          "connected_to": "PE1",
+          "subnet": "10.10.10.0/24"
+        },
+        {
+          "interface": "P1-eth1",
+          "connected_to": "PE2",
+          "subnet": "10.30.30.0/24"
+        }
+      ]
+    },
+    "PE1": {
+      "interfaces": [
+        {
+          "interface": "PE1-eth0",
+          "connected_to": "host1",
+          "subnet": "10.10.1.0/24"
+        },
+        {
+          "interface": "PE1-eth1",
+          "connected_to": "P1",
+          "subnet": "10.10.10.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 101,
+        "local_ip": "10.10.10.10",
+        "bridge_name": "br101",
+        "bridge_ports": ["vxlan101", "PE1-eth0"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "P1": {
+            "remote_as": 65000,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    },
+    "PE2": {
+      "interfaces": [
+        {
+          "interface": "PE2-eth0",
+          "connected_to": "P1",
+          "subnet": "10.30.30.0/24"
+        },
+        {
+          "interface": "PE2-eth1",
+          "connected_to": "host2",
+          "subnet": "10.10.1.0/24"
+        }
+      ],
+      "vxlan": {
+        "vxlan_id": 101,
+        "local_ip": "10.30.30.30",
+        "bridge_name": "br101",
+        "bridge_ports": ["vxlan101", "PE2-eth1"],
+        "vxlan_port": 4789
+      },
+      "bgp": {
+        "as_number": 65000,
+        "neighbors": {
+          "P1": {
+            "remote_as": 65000,
+            "afi_safi": "l2vpn evpn"
+          }
+        }
+      }
+    }
+  },
+  "hosts": {
+    "host1": {
+      "interfaces": [
+        {
+          "interface": "host1-eth0",
+          "connected_to": "PE1",
+          "subnet": "10.10.1.0/24"
+        }
+      ]
+    },
+    "host2": {
+      "interfaces": [
+        {
+          "interface": "host2-eth0",
+          "connected_to": "PE2",
+          "subnet": "10.10.1.0/24"
+        }
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["host1", "PE1"],
+      "subnet": "10.10.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["PE1", "P1"],
+      "subnet": "10.10.10.0/24"
+    },
+    "s3": {
+      "connected_devices": ["P1", "PE2"],
+      "subnet": "10.30.30.0/24"
+    },
+    "s4": {
+      "connected_devices": ["PE2", "host2"],
+      "subnet": "10.10.1.0/24"
+    }
+  }
+}
