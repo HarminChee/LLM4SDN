@@ -1,0 +1,108 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.1.1/24",
+          "mpls_enabled": true
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "10.0.2.1/24",
+          "mpls_enabled": true
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "vrfs": {
+          "vrf1": {
+            "ipv4_address": "192.168.10.1/32",
+            "neighbors": {
+              "R2": {
+                "remote_as": 65002,
+                "afi_safi": "ipv4Unicast",
+                "ipv4_address": "10.0.1.2"
+              }
+            }
+          }
+        },
+        "routes": {
+          "advertised_routes": ["192.168.10.0/24"]
+        }
+      },
+      "ospf": {
+        "area": 0,
+        "neighbors": [
+          {
+            "router_id": "R2",
+            "interface": "r1-eth0"
+          }
+        ]
+      },
+      "mpls": {
+        "ldp_enabled": true,
+        "networks": ["10.0.1.0/24", "10.0.2.0/24"]
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.1.2/24",
+          "mpls_enabled": true
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "10.0.2.2/24",
+          "mpls_enabled": true
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "vrfs": {
+          "vrf1": {
+            "ipv4_address": "192.168.20.1/32",
+            "neighbors": {
+              "R1": {
+                "remote_as": 65001,
+                "afi_safi": "ipv4Unicast",
+                "ipv4_address": "10.0.1.1"
+              }
+            }
+          }
+        },
+        "routes": {
+          "advertised_routes": ["192.168.20.0/24"]
+        }
+      },
+      "ospf": {
+        "area": 0,
+        "neighbors": [
+          {
+            "router_id": "R1",
+            "interface": "r2-eth0"
+          }
+        ]
+      },
+      "mpls": {
+        "ldp_enabled": true,
+        "networks": ["10.0.1.0/24", "10.0.2.0/24"]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "10.0.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "10.0.2.0/24"
+    }
+  }
+}
