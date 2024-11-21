@@ -1,0 +1,192 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "peer1",
+          "ipv4_address": "10.0.1.1/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "peer2",
+          "ipv4_address": "10.0.2.1/24"
+        },
+        {
+          "interface": "r1-eth2",
+          "connected_to": "peer3",
+          "ipv4_address": "10.0.3.1/24"
+        },
+        {
+          "interface": "r1-eth3",
+          "connected_to": "peer4",
+          "ipv4_address": "10.0.4.1/24"
+        },
+        {
+          "interface": "r1-eth4",
+          "connected_to": "R2",
+          "ipv4_address": "10.0.5.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64510,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 64499,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.1.2"
+          },
+          "peer2": {
+            "remote_as": 64499,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.2.2"
+          },
+          "peer3": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.3.2"
+          },
+          "peer4": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.4.2"
+          },
+          "R2": {
+            "remote_as": 64510,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.5.2",
+            "confederation": true
+          }
+        },
+        "routes": {
+          "advertised_routes": {
+            "203.0.113.0/30": {
+              "network": "203.0.113.0/30",
+              "next_hops": ["198.51.100.1", "198.51.100.2", "self"],
+              "multipath": true
+            },
+            "203.0.113.4/30": {
+              "network": "203.0.113.4/30",
+              "next_hops": ["198.51.100.1", "198.51.100.2"],
+              "multipath": true
+            },
+            "203.0.113.8/30": {
+              "network": "203.0.113.8/30",
+              "next_hops": ["198.51.100.10", "self"],
+              "multipath": false
+            }
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "R1",
+          "ipv4_address": "10.0.5.2/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "peer2",
+          "ipv4_address": "10.0.2.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64510,
+        "confederation": {
+          "identifier": 64510,
+          "peers": ["R1"]
+        },
+        "neighbors": {
+          "R1": {
+            "remote_as": 64510,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.5.1"
+          },
+          "peer2": {
+            "remote_as": 64499,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.2.2"
+          }
+        }
+      }
+    },
+    "peer1": {
+      "interfaces": [
+        {
+          "interface": "peer1-eth0",
+          "connected_to": "R1",
+          "ipv4_address": "10.0.1.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64499,
+        "advertised_routes": {
+          "203.0.113.0/30": {
+            "network": "203.0.113.0/30",
+            "next_hop": "198.51.100.1"
+          }
+        }
+      }
+    },
+    "peer2": {
+      "interfaces": [
+        {
+          "interface": "peer2-eth0",
+          "connected_to": "R2",
+          "ipv4_address": "10.0.2.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64499,
+        "advertised_routes": {
+          "203.0.113.0/30": {
+            "network": "203.0.113.0/30",
+            "next_hop": "198.51.100.2"
+          },
+          "203.0.113.4/30": {
+            "network": "203.0.113.4/30",
+            "next_hop": "198.51.100.2"
+          }
+        }
+      }
+    },
+    "peer3": {
+      "interfaces": [
+        {
+          "interface": "peer3-eth0",
+          "connected_to": "R1",
+          "ipv4_address": "10.0.3.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "advertised_routes": {
+          "203.0.113.8/30": {
+            "network": "203.0.113.8/30",
+            "next_hop": "self"
+          }
+        }
+      }
+    },
+    "peer4": {
+      "interfaces": [
+        {
+          "interface": "peer4-eth0",
+          "connected_to": "R1",
+          "ipv4_address": "10.0.4.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "advertised_routes": {
+          "203.0.113.8/30": {
+            "network": "203.0.113.8/30",
+            "next_hop": "self"
+          }
+        }
+      }
+    }
+  }
+}
