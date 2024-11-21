@@ -1,0 +1,115 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.1/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.2.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.2"
+          },
+          "R3": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.2.2"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "192.0.2.8/32": {
+              "paths": [
+                {
+                  "next_hop": "192.0.2.2",
+                  "metric": 20,
+                  "multipath": true
+                },
+                {
+                  "next_hop": "192.0.2.3",
+                  "metric": 20,
+                  "multipath": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.1"
+          }
+        },
+        "routes": {
+          "advertised_routes": {
+            "192.0.2.8/32": {
+              "next_hop": "192.0.2.2",
+              "metric": 20
+            }
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.2.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.2.1"
+          }
+        },
+        "routes": {
+          "advertised_routes": {
+            "192.0.2.8/32": {
+              "next_hop": "192.0.2.3",
+              "metric": 20
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R1", "R3"],
+      "subnet": "192.168.2.0/24"
+    }
+  }
+}
