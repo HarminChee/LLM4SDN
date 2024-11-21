@@ -1,0 +1,90 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.1/24",
+          "ipv6_address": "2001:db8:1::1/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": ["ipv4Unicast", "ipv6Unicast"],
+            "ipv4_address": "192.168.1.2",
+            "ipv6_address": "2001:db8:1::2"
+          }
+        },
+        "routes": {
+          "received_routes": []
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.2/24",
+          "ipv6_address": "2001:db8:1::2/64"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": ["ipv4Unicast", "ipv6Unicast"],
+            "ipv4_address": "192.168.1.1",
+            "ipv6_address": "2001:db8:1::1"
+          }
+        },
+        "prefix_lists": {
+          "r1-2": {
+            "ipv4": [
+              {
+                "seq": 5,
+                "action": "permit",
+                "prefix": "10.10.10.10/32"
+              }
+            ],
+            "ipv6": [
+              {
+                "seq": 5,
+                "action": "permit",
+                "prefix": "2001:db8:10::10/128"
+              }
+            ]
+          }
+        },
+        "routes": {
+          "advertised_routes": {
+            "ipv4": [
+              "10.10.10.10/32",
+              "10.10.10.20/32",
+              "10.10.10.30/32",
+              "10.10.10.40/32"
+            ],
+            "ipv6": [
+              "2001:db8:10::10/128",
+              "2001:db8:10::20/128",
+              "2001:db8:10::30/128",
+              "2001:db8:10::40/128"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet_ipv4": "192.168.1.0/24",
+      "subnet_ipv6": "2001:db8:1::/64"
+    }
+  }
+}
