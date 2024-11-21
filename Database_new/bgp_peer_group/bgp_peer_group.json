@@ -1,0 +1,100 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.255.1/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.251.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "peer_groups": {
+          "PG": {
+            "neighbors": ["192.168.255.2", "192.168.255.3"],
+            "afi_safi": "ipv4Unicast"
+          },
+          "PG1": {
+            "neighbors": ["192.168.251.2"],
+            "afi_safi": "ipv4Unicast"
+          }
+        },
+        "advertised_routes": {
+          "192.168.255.0/24": {
+            "network": "192.168.255.0/24",
+            "valid": true,
+            "best": true
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.255.2/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.251.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "peer_groups": ["PG", "PG1"],
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": ["192.168.255.1", "192.168.251.1"]
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.255.3/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R1": {
+            "peer_groups": ["PG"],
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.255.1"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "192.168.255.0/24": {
+              "network": "192.168.255.0/24",
+              "valid": true,
+              "best": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2", "R3"],
+      "subnet": "192.168.255.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.251.0/24"
+    }
+  }
+}
