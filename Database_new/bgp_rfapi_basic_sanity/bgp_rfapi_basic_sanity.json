@@ -1,0 +1,124 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.2"
+          }
+        },
+        "advertised_routes": [
+          {
+            "prefix": "10.0.0.0/24",
+            "as_path": "65001"
+          }
+        ]
+      },
+      "ospf": {
+        "router_id": "1.1.1.1",
+        "networks": [
+          {
+            "prefix": "192.168.1.0/24",
+            "area": 0
+          }
+        ]
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.2/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.2.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.1"
+          },
+          "R3": {
+            "remote_as": 65003,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.2.2"
+          }
+        }
+      },
+      "ospf": {
+        "router_id": "2.2.2.2",
+        "networks": [
+          {
+            "prefix": "192.168.1.0/24",
+            "area": 0
+          },
+          {
+            "prefix": "192.168.2.0/24",
+            "area": 0
+          }
+        ]
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.2.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.2.1"
+          }
+        },
+        "advertised_routes": [
+          {
+            "prefix": "20.0.0.0/24",
+            "as_path": "65003"
+          }
+        ]
+      },
+      "ospf": {
+        "router_id": "3.3.3.3",
+        "networks": [
+          {
+            "prefix": "192.168.2.0/24",
+            "area": 0
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R2", "R3"],
+      "subnet": "192.168.2.0/24"
+    }
+  }
+}
