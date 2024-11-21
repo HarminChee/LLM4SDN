@@ -1,0 +1,84 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64512,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 64513,
+            "afi_safi": "ipv4LabeledUnicast",
+            "ipv4_address": "10.0.0.101"
+          },
+          "peer2": {
+            "remote_as": 64514,
+            "afi_safi": "ipv4LabeledUnicast",
+            "ipv4_address": "10.0.0.102"
+          }
+        },
+        "advertised_routes": [
+          {
+            "prefix": "3.0.0.1/32",
+            "remote_label": 800001,
+            "label_index": 1,
+            "advertised_to": ["peer1", "peer2"]
+          },
+          {
+            "prefix": "3.0.0.2/32",
+            "remote_label": 800002,
+            "label_index": 2,
+            "advertised_to": ["peer1", "peer2"]
+          }
+        ]
+      }
+    },
+    "peer1": {
+      "interfaces": [
+        {
+          "interface": "peer1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.101/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64513,
+        "advertised_routes": [
+          {
+            "prefix": "3.0.0.1/32",
+            "remote_label": 800001
+          }
+        ]
+      }
+    },
+    "peer2": {
+      "interfaces": [
+        {
+          "interface": "peer2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.102/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64514,
+        "advertised_routes": [
+          {
+            "prefix": "3.0.0.2/32",
+            "remote_label": 800002
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "peer1", "peer2"],
+      "subnet": "10.0.0.0/24"
+    }
+  }
+}
