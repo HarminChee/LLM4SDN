@@ -1,0 +1,100 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 65003,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.0.254"
+          },
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.0.2"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "192.168.100.101/32": {
+              "valid": true,
+              "atomicAggregate": true,
+              "community": "65001:101"
+            },
+            "192.168.100.102/32": {
+              "valid": true,
+              "originatorId": null,
+              "community": "65001:102"
+            }
+          },
+          "discarded_attributes": ["atomic-aggregate", "community"]
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.0.1"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "192.168.100.101/32": {
+              "valid": true,
+              "aigpMetric": null
+            }
+          }
+        }
+      }
+    },
+    "peer1": {
+      "interfaces": [
+        {
+          "interface": "peer1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.254/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "advertised_routes": {
+          "192.168.100.101/32": {
+            "valid": true,
+            "atomicAggregate": true,
+            "community": "65001:101"
+          },
+          "192.168.100.102/32": {
+            "valid": true,
+            "originatorId": null,
+            "community": "65001:102"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2", "peer1"],
+      "subnet": "10.0.0.0/24"
+    }
+  }
+}
