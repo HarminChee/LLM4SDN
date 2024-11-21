@@ -1,0 +1,157 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.2.1/24"
+        },
+        {
+          "interface": "r1-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.3.1/24"
+        },
+        {
+          "interface": "r1-eth2",
+          "connected_to": "s3",
+          "ipv4_address": "192.168.4.1/24"
+        },
+        {
+          "interface": "r1-eth3",
+          "connected_to": "s4",
+          "ipv4_address": "192.168.5.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "ipv4_address": "192.168.2.2",
+            "local_role": "provider",
+            "remote_role": "customer"
+          },
+          "R3": {
+            "remote_as": 65003,
+            "ipv4_address": "192.168.3.2",
+            "local_role": "provider",
+            "remote_role": "peer"
+          },
+          "R4": {
+            "remote_as": 65004,
+            "ipv4_address": "192.168.4.2",
+            "local_role": "provider",
+            "remote_role": "undefined"
+          },
+          "R5": {
+            "remote_as": 65005,
+            "ipv4_address": "192.168.5.2",
+            "local_role": "provider",
+            "remote_role": "undefined",
+            "strict_mode": true
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.2.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.2.1",
+            "local_role": "customer",
+            "remote_role": "provider"
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.3.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.3.1",
+            "local_role": "peer",
+            "remote_role": "provider"
+          }
+        }
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s3",
+          "ipv4_address": "192.168.4.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.4.1",
+            "local_role": "undefined",
+            "remote_role": "provider"
+          }
+        }
+      }
+    },
+    "R5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s4",
+          "ipv4_address": "192.168.5.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65005,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.5.1",
+            "local_role": "undefined",
+            "remote_role": "provider",
+            "strict_mode": true
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "192.168.2.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R1", "R3"],
+      "subnet": "192.168.3.0/24"
+    },
+    "s3": {
+      "connected_devices": ["R1", "R4"],
+      "subnet": "192.168.4.0/24"
+    },
+    "s4": {
+      "connected_devices": ["R1", "R5"],
+      "subnet": "192.168.5.0/24"
+    }
+  }
+}
