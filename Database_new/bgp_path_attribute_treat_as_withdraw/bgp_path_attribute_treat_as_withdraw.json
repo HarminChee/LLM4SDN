@@ -1,0 +1,74 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.0.2"
+          }
+        },
+        "advertised_routes": {
+          "10.10.10.10/32": {
+            "network": "10.10.10.10/32",
+            "atomicAggregate": true
+          },
+          "10.10.10.20/32": {
+            "network": "10.10.10.20/32",
+            "atomicAggregate": false
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "10.0.0.1"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "10.10.10.10/32": {
+              "network": "10.10.10.10/32",
+              "atomicAggregate": true,
+              "valid": false,
+              "withdrawn": true
+            },
+            "10.10.10.20/32": {
+              "network": "10.10.10.20/32",
+              "atomicAggregate": false,
+              "valid": true,
+              "withdrawn": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2"],
+      "subnet": "10.0.0.0/24"
+    }
+  }
+}
