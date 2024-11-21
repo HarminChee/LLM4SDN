@@ -1,0 +1,260 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.0.2.1/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "provider",
+            "remote_role": "customer"
+          }
+        },
+        "advertised_routes": ["192.0.2.1/32"]
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.0.2.2/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "peer",
+            "remote_role": "peer"
+          }
+        },
+        "advertised_routes": ["192.0.2.2/32"]
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s3",
+          "ipv4_address": "192.0.2.3/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "customer",
+            "remote_role": "provider"
+          }
+        },
+        "advertised_routes": ["192.0.2.3/32"]
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s4",
+          "ipv4_address": "192.0.2.4/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          }
+        },
+        "advertised_routes": ["192.0.2.4/32"]
+      }
+    },
+    "R5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s5",
+          "ipv4_address": "192.0.2.5/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65005,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          }
+        },
+        "advertised_routes": ["192.0.2.5/32"]
+      }
+    },
+    "R6": {
+      "interfaces": [
+        {
+          "interface": "r6-eth0",
+          "connected_to": "s6",
+          "ipv4_address": "192.0.2.6/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65006,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          }
+        },
+        "advertised_routes": ["192.0.2.6/32"]
+      }
+    },
+    "R7": {
+      "interfaces": [
+        {
+          "interface": "r7-eth0",
+          "connected_to": "s7",
+          "ipv4_address": "192.0.2.7/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65007,
+        "neighbors": {
+          "R10": {
+            "remote_as": 65100,
+            "ipv4_address": "192.0.2.10",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          }
+        },
+        "advertised_routes": ["192.0.2.7/32"]
+      }
+    },
+    "R10": {
+      "interfaces": [
+        {
+          "interface": "r10-eth1",
+          "connected_to": "s1",
+          "ipv4_address": "192.0.2.10/32"
+        },
+        {
+          "interface": "r10-eth2",
+          "connected_to": "s2",
+          "ipv4_address": "192.0.2.10/32"
+        },
+        {
+          "interface": "r10-eth3",
+          "connected_to": "s3",
+          "ipv4_address": "192.0.2.10/32"
+        },
+        {
+          "interface": "r10-eth4",
+          "connected_to": "s4",
+          "ipv4_address": "192.0.2.10/32"
+        },
+        {
+          "interface": "r10-eth5",
+          "connected_to": "s5",
+          "ipv4_address": "192.0.2.10/32"
+        },
+        {
+          "interface": "r10-eth6",
+          "connected_to": "s6",
+          "ipv4_address": "192.0.2.10/32"
+        },
+        {
+          "interface": "r10-eth7",
+          "connected_to": "s7",
+          "ipv4_address": "192.0.2.10/32"
+        }
+      ],
+      "bgp": {
+        "as_number": 65100,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.0.2.1",
+            "local_role": "customer",
+            "remote_role": "provider"
+          },
+          "R2": {
+            "remote_as": 65002,
+            "ipv4_address": "192.0.2.2",
+            "local_role": "peer",
+            "remote_role": "peer"
+          },
+          "R3": {
+            "remote_as": 65003,
+            "ipv4_address": "192.0.2.3",
+            "local_role": "provider",
+            "remote_role": "customer"
+          },
+          "R4": {
+            "remote_as": 65004,
+            "ipv4_address": "192.0.2.4",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          },
+          "R5": {
+            "remote_as": 65005,
+            "ipv4_address": "192.0.2.5",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          },
+          "R6": {
+            "remote_as": 65006,
+            "ipv4_address": "192.0.2.6",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          },
+          "R7": {
+            "remote_as": 65007,
+            "ipv4_address": "192.0.2.7",
+            "local_role": "undefined",
+            "remote_role": "undefined"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R10"]
+    },
+    "s2": {
+      "connected_devices": ["R2", "R10"]
+    },
+    "s3": {
+      "connected_devices": ["R3", "R10"]
+    },
+    "s4": {
+      "connected_devices": ["R4", "R10"]
+    },
+    "s5": {
+      "connected_devices": ["R5", "R10"]
+    },
+    "s6": {
+      "connected_devices": ["R6", "R10"]
+    },
+    "s7": {
+      "connected_devices": ["R7", "R10"]
+    }
+  }
+}
