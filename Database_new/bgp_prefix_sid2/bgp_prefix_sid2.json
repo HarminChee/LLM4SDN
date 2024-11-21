@@ -1,0 +1,63 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64512,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 64513,
+            "afi_safi": "ipv6VPN",
+            "ipv4_address": "10.0.0.101"
+          }
+        },
+        "received_routes": [
+          {
+            "prefix": "2001:1::/64",
+            "nexthop": "10.0.0.101",
+            "label": 1001
+          },
+          {
+            "prefix": "2001:2::/64",
+            "nexthop": "10.0.0.101",
+            "label": 1002
+          }
+        ]
+      }
+    },
+    "peer1": {
+      "interfaces": [
+        {
+          "interface": "peer1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "10.0.0.101/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 64513,
+        "advertised_routes": [
+          {
+            "prefix": "2001:1::/64",
+            "label": 1001
+          },
+          {
+            "prefix": "2001:2::/64",
+            "label": 1002
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "peer1"],
+      "subnet": "10.0.0.0/24"
+    }
+  }
+}
