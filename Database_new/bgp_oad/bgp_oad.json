@@ -1,0 +1,192 @@
+{
+  "routers": {
+    "R1": {
+      "interfaces": [
+        {
+          "interface": "r1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.2",
+            "ebgp_oad": true
+          },
+          "R4": {
+            "remote_as": 65004,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.4",
+            "ebgp_oad": false
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "10.10.10.10/32": [
+              {
+                "path": "65002 65003",
+                "local_preference": 123,
+                "peer": "R2"
+              },
+              {
+                "path": "65004 65005",
+                "local_preference": 123,
+                "peer": "R4",
+                "bestpath": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    "R2": {
+      "interfaces": [
+        {
+          "interface": "r2-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.2/24"
+        },
+        {
+          "interface": "r2-eth1",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.2.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65002,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.1",
+            "ebgp_oad": true
+          },
+          "R3": {
+            "remote_as": 65003,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.2.2"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "10.10.10.10/32": {
+              "path": "65003",
+              "local_preference": 123,
+              "peer": "R3"
+            }
+          }
+        }
+      }
+    },
+    "R3": {
+      "interfaces": [
+        {
+          "interface": "r3-eth0",
+          "connected_to": "s2",
+          "ipv4_address": "192.168.2.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65003,
+        "neighbors": {
+          "R2": {
+            "remote_as": 65002,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.2.1"
+          }
+        },
+        "routes": {
+          "advertised_routes": {
+            "10.10.10.10/32": {
+              "path": "65003",
+              "local_preference": 123
+            }
+          }
+        }
+      }
+    },
+    "R4": {
+      "interfaces": [
+        {
+          "interface": "r4-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.1.4/24"
+        },
+        {
+          "interface": "r4-eth1",
+          "connected_to": "s3",
+          "ipv4_address": "192.168.3.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65004,
+        "neighbors": {
+          "R1": {
+            "remote_as": 65001,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.1.1"
+          },
+          "R5": {
+            "remote_as": 65005,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.3.2"
+          }
+        },
+        "routes": {
+          "received_routes": {
+            "10.10.10.10/32": {
+              "path": "65005",
+              "local_preference": 123,
+              "peer": "R5"
+            }
+          }
+        }
+      }
+    },
+    "R5": {
+      "interfaces": [
+        {
+          "interface": "r5-eth0",
+          "connected_to": "s3",
+          "ipv4_address": "192.168.3.2/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65005,
+        "neighbors": {
+          "R4": {
+            "remote_as": 65004,
+            "afi_safi": "ipv4Unicast",
+            "ipv4_address": "192.168.3.1"
+          }
+        },
+        "routes": {
+          "advertised_routes": {
+            "10.10.10.10/32": {
+              "path": "65005",
+              "local_preference": 123
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["R1", "R2", "R4"],
+      "subnet": "192.168.1.0/24"
+    },
+    "s2": {
+      "connected_devices": ["R2", "R3"],
+      "subnet": "192.168.2.0/24"
+    },
+    "s3": {
+      "connected_devices": ["R4", "R5"],
+      "subnet": "192.168.3.0/24"
+    }
+  }
+}
