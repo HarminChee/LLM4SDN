@@ -1,0 +1,27 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "r2", "type": "router" },
+    { "id": "s1", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] }
+  ],
+  "bgp_sessions": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "parameters": {
+        "local_as": 65001,
+        "peer_as": 65001,
+        "passive": true,
+        "tcp_mss": 300
+      }
+    }
+  ],
+  "tcp_mss": {
+    "r1": { "neighbor": "192.168.1.2", "configured": 300, "synced": 288 },
+    "r2": { "neighbor": "192.168.1.1", "configured": 0, "synced": 288 }
+  }
+}
