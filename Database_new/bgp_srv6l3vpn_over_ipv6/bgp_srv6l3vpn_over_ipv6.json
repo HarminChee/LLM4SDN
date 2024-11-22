@@ -1,0 +1,90 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "vrfs": ["vrf10", "vrf20"],
+      "interfaces": [
+        {"name": "r1-eth0", "ip": "2001:db8:1::1/64", "connected_to": "r2"},
+        {"name": "r1-eth1", "ip": "2001:db8:2::1/64", "connected_to": "r3"},
+        {"name": "r1-eth2", "ip": "2001:db8:10::1/64", "connected_to": "c11", "vrf": "vrf10"},
+        {"name": "r1-eth3", "ip": "2001:db8:20::1/64", "connected_to": "c12", "vrf": "vrf20"}
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "bgp_asn": 65002,
+      "vrfs": ["vrf10", "vrf20"],
+      "interfaces": [
+        {"name": "r2-eth0", "ip": "2001:db8:1::2/64", "connected_to": "r1"},
+        {"name": "r2-eth1", "ip": "2001:db8:30::1/64", "connected_to": "c21", "vrf": "vrf10"},
+        {"name": "r2-eth2", "ip": "2001:db8:40::1/64", "connected_to": "c22", "vrf": "vrf20"}
+      ]
+    },
+    {
+      "id": "r3",
+      "type": "router",
+      "bgp_asn": 65003,
+      "vrfs": ["vrf10", "vrf20"],
+      "interfaces": [
+        {"name": "r3-eth0", "ip": "2001:db8:2::2/64", "connected_to": "r1"},
+        {"name": "r3-eth1", "ip": "2001:db8:50::1/64", "connected_to": "c31", "vrf": "vrf10"},
+        {"name": "r3-eth2", "ip": "2001:db8:60::1/64", "connected_to": "c32", "vrf": "vrf20"}
+      ]
+    },
+    {
+      "id": "c11",
+      "type": "router",
+      "interfaces": [
+        {"name": "c11-eth0", "ip": "2001:db8:10::2/64", "connected_to": "r1"}
+      ]
+    },
+    {
+      "id": "c12",
+      "type": "router",
+      "interfaces": [
+        {"name": "c12-eth0", "ip": "2001:db8:20::2/64", "connected_to": "r1"}
+      ]
+    },
+    {
+      "id": "c21",
+      "type": "router",
+      "interfaces": [
+        {"name": "c21-eth0", "ip": "2001:db8:30::2/64", "connected_to": "r2"}
+      ]
+    },
+    {
+      "id": "c22",
+      "type": "router",
+      "interfaces": [
+        {"name": "c22-eth0", "ip": "2001:db8:40::2/64", "connected_to": "r2"}
+      ]
+    },
+    {
+      "id": "c31",
+      "type": "router",
+      "interfaces": [
+        {"name": "c31-eth0", "ip": "2001:db8:50::2/64", "connected_to": "r3"}
+      ]
+    },
+    {
+      "id": "c32",
+      "type": "router",
+      "interfaces": [
+        {"name": "c32-eth0", "ip": "2001:db8:60::2/64", "connected_to": "r3"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "r1", "destination": "r2", "via": "direct", "subnet": "2001:db8:1::/64"},
+    {"source": "r1", "destination": "r3", "via": "direct", "subnet": "2001:db8:2::/64"},
+    {"source": "r1", "destination": "c11", "via": "direct", "subnet": "2001:db8:10::/64"},
+    {"source": "r1", "destination": "c12", "via": "direct", "subnet": "2001:db8:20::/64"},
+    {"source": "r2", "destination": "c21", "via": "direct", "subnet": "2001:db8:30::/64"},
+    {"source": "r2", "destination": "c22", "via": "direct", "subnet": "2001:db8:40::/64"},
+    {"source": "r3", "destination": "c31", "via": "direct", "subnet": "2001:db8:50::/64"},
+    {"source": "r3", "destination": "c32", "via": "direct", "subnet": "2001:db8:60::/64"}
+  ]
+}
