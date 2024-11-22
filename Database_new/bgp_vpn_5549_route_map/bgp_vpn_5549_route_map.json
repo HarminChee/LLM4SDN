@@ -1,0 +1,64 @@
+{
+  "nodes": [
+    { "id": "cpe1", "type": "router" },
+    { "id": "pe1", "type": "router" },
+    { "id": "pe2", "type": "router" },
+    { "id": "cpe2", "type": "router" },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" },
+    { "id": "s3", "type": "switch" }
+  ],
+  "links": [
+    { "source": "cpe1", "target": "s1", "interfaces": ["cpe1:eth0", "s1:port1"] },
+    { "source": "pe1", "target": "s1", "interfaces": ["pe1:eth0", "s1:port2"] },
+    { "source": "pe1", "target": "s2", "interfaces": ["pe1:eth1", "s2:port1"] },
+    { "source": "pe2", "target": "s2", "interfaces": ["pe2:eth0", "s2:port2"] },
+    { "source": "pe2", "target": "s3", "interfaces": ["pe2:eth1", "s3:port1"] },
+    { "source": "cpe2", "target": "s3", "interfaces": ["cpe2:eth0", "s3:port2"] }
+  ],
+  "vrfs": [
+    {
+      "router": "pe1",
+      "vrfs": [
+        { "name": "RED", "table_id": 1001, "interfaces": ["pe1-eth0"] }
+      ]
+    },
+    {
+      "router": "pe2",
+      "vrfs": [
+        { "name": "RED", "table_id": 1001, "interfaces": ["pe2-eth1"] }
+      ]
+    }
+  ],
+  "bgp_sessions": [
+    {
+      "source": "pe1",
+      "target": "pe2",
+      "parameters": {
+        "local_as": 65001,
+        "peer_as": 65002,
+        "vpn": true
+      }
+    },
+    {
+      "source": "cpe1",
+      "target": "pe1",
+      "parameters": {
+        "local_as": 65010,
+        "peer_as": 65001
+      }
+    },
+    {
+      "source": "cpe2",
+      "target": "pe2",
+      "parameters": {
+        "local_as": 65020,
+        "peer_as": 65002
+      }
+    }
+  ],
+  "mpls": {
+    "enabled_on": ["pe1:eth0", "pe2:eth1"]
+  },
+  "ipv4_forwarding": ["pe1", "pe2"]
+}
