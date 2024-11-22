@@ -1,0 +1,59 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "r2", "type": "router" },
+    { "id": "ce1", "type": "client" },
+    { "id": "ce2", "type": "client" },
+    { "id": "ce3", "type": "client" },
+    { "id": "ce4", "type": "client" },
+    { "id": "ce5", "type": "client" },
+    { "id": "ce6", "type": "client" }
+  ],
+  "links": [
+    { "source": "r1", "target": "r2", "interfaces": ["r1:eth0", "r2:eth0"] },
+    { "source": "ce1", "target": "r1", "interfaces": ["ce1:eth0", "r1:eth1"] },
+    { "source": "ce2", "target": "r2", "interfaces": ["ce2:eth0", "r2:eth1"] },
+    { "source": "ce3", "target": "r1", "interfaces": ["ce3:eth0", "r1:eth2"] },
+    { "source": "ce4", "target": "r2", "interfaces": ["ce4:eth0", "r2:eth2"] },
+    { "source": "ce5", "target": "r1", "interfaces": ["ce5:eth0", "r1:eth3"] },
+    { "source": "ce6", "target": "r2", "interfaces": ["ce6:eth0", "r2:eth3"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { "name": "vrf10", "table": 10, "interfaces": ["eth1", "eth2"] },
+        { "name": "vrf20", "table": 20, "interfaces": ["eth3"] }
+      ]
+    },
+    {
+      "router": "r2",
+      "vrfs": [
+        { "name": "vrf10", "table": 10, "interfaces": ["eth1"] },
+        { "name": "vrf20", "table": 20, "interfaces": ["eth2", "eth3"] }
+      ]
+    }
+  ],
+  "commands": {
+    "r1": [
+      "sysctl net.vrf.strict_mode=1",
+      "ip link add vrf10 type vrf table 10",
+      "ip link set vrf10 up",
+      "ip link add vrf20 type vrf table 20",
+      "ip link set vrf20 up",
+      "ip link set eth1 master vrf10",
+      "ip link set eth2 master vrf10",
+      "ip link set eth3 master vrf20"
+    ],
+    "r2": [
+      "sysctl net.vrf.strict_mode=1",
+      "ip link add vrf10 type vrf table 10",
+      "ip link set vrf10 up",
+      "ip link add vrf20 type vrf table 20",
+      "ip link set vrf20 up",
+      "ip link set eth1 master vrf10",
+      "ip link set eth2 master vrf20",
+      "ip link set eth3 master vrf20"
+    ]
+  }
+}
