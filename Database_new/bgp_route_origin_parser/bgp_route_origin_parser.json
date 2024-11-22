@@ -1,0 +1,39 @@
+{
+  "routers": {
+    "PE1": {
+      "interfaces": [
+        {
+          "interface": "pe1-eth0",
+          "connected_to": "s1",
+          "ipv4_address": "192.168.2.1/24"
+        }
+      ],
+      "bgp": {
+        "as_number": 65001,
+        "address_families": {
+          "ipv4_unicast": {
+            "neighbors": [
+              {
+                "ipv4_address": "192.168.2.1",
+                "soo": {
+                  "max_valid_value": "4294967295:65",
+                  "invalid_value": "4294967296:65"
+                },
+                "rt": {
+                  "max_valid_value": "4294967295:65",
+                  "invalid_value": "4294967296:65"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "connected_devices": ["PE1"],
+      "subnet": "192.168.2.0/24"
+    }
+  }
+}
