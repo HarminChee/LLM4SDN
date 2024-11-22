@@ -1,0 +1,24 @@
+{
+  "nodes": [
+    {
+      "id": "pe1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "vrfs": ["vrf10", "vrf20"],
+      "interfaces": [
+        {"name": "pe1-eth0", "ip": "192.168.10.1/24", "connected_to": "ce1", "vrf": "vrf10"}
+      ]
+    },
+    {
+      "id": "ce1",
+      "type": "router",
+      "bgp_asn": 65002,
+      "interfaces": [
+        {"name": "ce1-eth0", "ip": "192.168.10.2/24", "connected_to": "pe1"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "pe1", "destination": "ce1", "via": "direct", "subnet": "192.168.10.0/24"}
+  ]
+}
