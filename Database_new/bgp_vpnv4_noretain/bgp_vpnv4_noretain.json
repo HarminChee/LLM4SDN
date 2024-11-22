@@ -1,0 +1,59 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65500 },
+    { "id": "r2", "type": "router", "as": 65501 },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" },
+    { "id": "s3", "type": "switch" },
+    { "id": "s4", "type": "switch" },
+    { "id": "s5", "type": "switch" },
+    { "id": "s6", "type": "switch" },
+    { "id": "s7", "type": "switch" },
+    { "id": "s8", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] },
+    { "source": "r1", "target": "s2", "interfaces": ["r1:eth1", "s2:port1"] },
+    { "source": "r2", "target": "s3", "interfaces": ["r2:eth1", "s3:port1"] },
+    { "source": "r1", "target": "s5", "interfaces": ["r1:eth2", "s5:port1"] },
+    { "source": "r2", "target": "s6", "interfaces": ["r2:eth2", "s6:port1"] },
+    { "source": "r1", "target": "s7", "interfaces": ["r1:eth3", "s7:port1"] },
+    { "source": "r2", "target": "s8", "interfaces": ["r2:eth3", "s8:port1"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { "name": "vrf1", "table_id": 10, "interfaces": ["r1-eth1"] },
+        { "name": "vrf2", "table_id": 20, "interfaces": ["r1-eth2"] },
+        { "name": "vrf3", "table_id": 30, "interfaces": ["r1-eth3"] },
+        { "name": "vrf4", "table_id": 40, "interfaces": ["r1-eth4"] }
+      ]
+    },
+    {
+      "router": "r2",
+      "vrfs": [
+        { "name": "vrf1", "table_id": 10, "interfaces": ["r2-eth1"] },
+        { "name": "vrf2", "table_id": 20, "interfaces": ["r2-eth2"] },
+        { "name": "vrf3", "table_id": 30, "interfaces": ["r2-eth3"] },
+        { "name": "vrf4", "table_id": 40, "interfaces": ["r2-eth4"] }
+      ]
+    }
+  ],
+  "mpls": {
+    "enabled_on": ["r1:eth0", "r2:eth0", "r1:eth1", "r2:eth1", "r1:eth2", "r2:eth2"]
+  },
+  "bgp_sessions": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "parameters": {
+        "local_as": 65500,
+        "peer_as": 65501,
+        "vpnv4_enabled": true
+      }
+    }
+  ],
+  "ipv4_forwarding": ["r1", "r2"]
+}
