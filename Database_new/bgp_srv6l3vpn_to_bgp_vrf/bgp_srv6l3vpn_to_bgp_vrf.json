@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "vrfs": ["vrf10", "vrf20"],
+      "interfaces": [
+        {"name": "r1-eth0", "ip": "2001::1/64", "connected_to": "r2"},
+        {"name": "r1-eth1", "ip": "2001:1::1/64", "connected_to": "ce1", "vrf": "vrf10"},
+        {"name": "r1-eth2", "ip": "2001:3::1/64", "connected_to": "ce3", "vrf": "vrf10"},
+        {"name": "r1-eth3", "ip": "2001:5::1/64", "connected_to": "ce5", "vrf": "vrf20"}
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "bgp_asn": 65002,
+      "vrfs": ["vrf10", "vrf20"],
+      "interfaces": [
+        {"name": "r2-eth0", "ip": "2001::2/64", "connected_to": "r1"},
+        {"name": "r2-eth1", "ip": "2001:2::1/64", "connected_to": "ce2", "vrf": "vrf10"},
+        {"name": "r2-eth2", "ip": "2001:4::1/64", "connected_to": "ce4", "vrf": "vrf20"},
+        {"name": "r2-eth3", "ip": "2001:6::1/64", "connected_to": "ce6", "vrf": "vrf20"}
+      ]
+    },
+    {
+      "id": "ce1",
+      "type": "router",
+      "interfaces": [
+        {"name": "ce1-eth0", "ip": "2001:1::2/64", "connected_to": "r1"}
+      ]
+    },
+    {
+      "id": "ce2",
+      "type": "router",
+      "interfaces": [
+        {"name": "ce2-eth0", "ip": "2001:2::2/64", "connected_to": "r2"}
+      ]
+    },
+    {
+      "id": "ce3",
+      "type": "router",
+      "interfaces": [
+        {"name": "ce3-eth0", "ip": "2001:3::2/64", "connected_to": "r1"}
+      ]
+    },
+    {
+      "id": "ce4",
+      "type": "router",
+      "interfaces": [
+        {"name": "ce4-eth0", "ip": "2001:4::2/64", "connected_to": "r2"}
+      ]
+    },
+    {
+      "id": "ce5",
+      "type": "router",
+      "interfaces": [
+        {"name": "ce5-eth0", "ip": "2001:5::2/64", "connected_to": "r1"}
+      ]
+    },
+    {
+      "id": "ce6",
+      "type": "router",
+      "interfaces": [
+        {"name": "ce6-eth0", "ip": "2001:6::2/64", "connected_to": "r2"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "r1", "destination": "r2", "via": "direct", "subnet": "2001::/64"},
+    {"source": "r1", "destination": "ce1", "via": "direct", "subnet": "2001:1::/64"},
+    {"source": "r1", "destination": "ce3", "via": "direct", "subnet": "2001:3::/64"},
+    {"source": "r1", "destination": "ce5", "via": "direct", "subnet": "2001:5::/64"},
+    {"source": "r2", "destination": "ce2", "via": "direct", "subnet": "2001:2::/64"},
+    {"source": "r2", "destination": "ce4", "via": "direct", "subnet": "2001:4::/64"},
+    {"source": "r2", "destination": "ce6", "via": "direct", "subnet": "2001:6::/64"}
+  ]
+}
