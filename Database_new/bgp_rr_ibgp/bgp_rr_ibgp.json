@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "tor1",
+      "type": "router",
+      "subnets": ["192.168.1.0/24", "192.168.2.0/24"]
+    },
+    {
+      "id": "tor2",
+      "type": "router",
+      "subnets": ["192.168.3.0/24", "192.168.4.0/24"]
+    },
+    {
+      "id": "spine1",
+      "type": "router",
+      "subnets": ["192.168.2.0/24", "192.168.4.0/24"]
+    },
+    {
+      "id": "sw1",
+      "type": "switch",
+      "links": [
+        {"node": "tor1", "interface": "swp1"}
+      ]
+    },
+    {
+      "id": "sw2",
+      "type": "switch",
+      "links": [
+        {"node": "tor1", "interface": "swp2"},
+        {"node": "spine1", "interface": "swp1"}
+      ]
+    },
+    {
+      "id": "sw3",
+      "type": "switch",
+      "links": [
+        {"node": "tor2", "interface": "swp1"}
+      ]
+    },
+    {
+      "id": "sw4",
+      "type": "switch",
+      "links": [
+        {"node": "tor2", "interface": "swp2"},
+        {"node": "spine1", "interface": "swp2"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "tor1", "destination": "spine1", "subnet": "192.168.2.0/24"},
+    {"source": "tor2", "destination": "spine1", "subnet": "192.168.4.0/24"}
+  ]
+}
