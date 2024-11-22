@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "r2",
+      "type": "router",
+      "bgp_asn": 65002,
+      "interfaces": [
+        {"name": "r2-eth0", "ip": "192.168.12.2/24", "connected_to": "s1"}
+      ],
+      "snmp": {
+        "enabled": true,
+        "community": "public",
+        "version": "2c"
+      }
+    },
+    {
+      "id": "rr",
+      "type": "router",
+      "bgp_asn": 65004,
+      "interfaces": [
+        {"name": "rr-eth0", "ip": "192.168.12.4/24", "connected_to": "s1"}
+      ],
+      "snmp": {
+        "enabled": true,
+        "community": "public",
+        "version": "2c"
+      }
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s1-eth1", "connected_to": "r2"},
+        {"name": "s1-eth2", "connected_to": "rr"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "r2", "destination": "rr", "via": "s1", "subnet": "192.168.12.0/24"}
+  ]
+}
