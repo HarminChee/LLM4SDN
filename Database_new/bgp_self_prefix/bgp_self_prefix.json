@@ -1,0 +1,42 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "interfaces": [
+        {"name": "r1-eth0", "ip": "10.0.0.1/24", "connected_to": "s1"}
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "bgp_asn": 65002,
+      "interfaces": [
+        {"name": "r2-eth0", "ip": "10.0.0.2/24", "connected_to": "s1"}
+      ]
+    },
+    {
+      "id": "r3",
+      "type": "router",
+      "bgp_asn": 65003,
+      "interfaces": [
+        {"name": "r3-eth0", "ip": "10.0.0.3/24", "connected_to": "s1"}
+      ]
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s1-eth1", "connected_to": "r1"},
+        {"name": "s1-eth2", "connected_to": "r2"},
+        {"name": "s1-eth3", "connected_to": "r3"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "r1", "destination": "s1", "subnet": "10.0.0.0/24"},
+    {"source": "r2", "destination": "s1", "subnet": "10.0.0.0/24"},
+    {"source": "r3", "destination": "s1", "subnet": "10.0.0.0/24"}
+  ]
+}
