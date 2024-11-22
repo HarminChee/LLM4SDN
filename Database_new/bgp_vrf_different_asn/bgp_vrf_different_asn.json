@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65000 },
+    { "id": "s1", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { 
+          "name": "default", 
+          "table_id": 254, 
+          "as": 65000, 
+          "interfaces": ["r1-eth0"] 
+        },
+        { 
+          "name": "vrf100", 
+          "table_id": 1001, 
+          "as": 65100, 
+          "interfaces": ["r1-eth0"] 
+        }
+      ]
+    }
+  ],
+  "bgp_instances": [
+    {
+      "router": "r1",
+      "vrf": "default",
+      "local_as": 65000,
+      "routes": [
+        { "prefix": "192.168.1.0/24", "next_hop_interface": "vrf100" }
+      ]
+    },
+    {
+      "router": "r1",
+      "vrf": "vrf100",
+      "local_as": 65100,
+      "routes": [
+        { "prefix": "192.168.1.0/24", "exported_to": "default" }
+      ]
+    }
+  ],
+  "ipv4_forwarding": ["r1"]
+}
