@@ -1,0 +1,59 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "interfaces": [
+        {"name": "r1-eth0", "ip": "192.168.1.1/24", "connected_to": "s1"}
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "bgp_asn": 65002,
+      "interfaces": [
+        {"name": "r2-eth0", "ip": "192.168.1.2/24", "connected_to": "s1"},
+        {"name": "r2-eth1", "ip": "192.168.2.1/24", "connected_to": "s2"}
+      ]
+    },
+    {
+      "id": "r3",
+      "type": "router",
+      "bgp_asn": 65003,
+      "interfaces": [
+        {"name": "r3-eth0", "ip": "192.168.2.2/24", "connected_to": "s2"}
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "router",
+      "bgp_asn": 65004,
+      "interfaces": [
+        {"name": "r4-eth0", "ip": "192.168.3.1/24", "connected_to": "s1"}
+      ]
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s1-eth1", "connected_to": "r1"},
+        {"name": "s1-eth2", "connected_to": "r2"},
+        {"name": "s1-eth3", "connected_to": "r4"}
+      ]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s2-eth1", "connected_to": "r2"},
+        {"name": "s2-eth2", "connected_to": "r3"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "r1", "destination": "r2", "via": "s1", "subnet": "192.168.1.0/24"},
+    {"source": "r2", "destination": "r3", "via": "s2", "subnet": "192.168.2.0/24"},
+    {"source": "r4", "destination": "r2", "via": "s1", "subnet": "192.168.3.0/24"}
+  ]
+}
