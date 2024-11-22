@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65500 }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { "name": "vrf1", "table_id": 10, "routes": ["192.168.100.100/32"] },
+        { "name": "vrf2", "table_id": 20, "imported_routes": ["vrf1"] }
+      ]
+    }
+  ],
+  "bgp_instances": [
+    {
+      "router": "r1",
+      "vrf": "vrf1",
+      "local_as": 65500,
+      "route_targets": {
+        "export": ["65500:11990"],
+        "import": []
+      }
+    },
+    {
+      "router": "r1",
+      "vrf": "vrf2",
+      "local_as": 65500,
+      "route_targets": {
+        "export": [],
+        "import": ["65500:11990"]
+      }
+    }
+  ],
+  "route_maps": [
+    {
+      "name": "rm",
+      "permit": [
+        {
+          "sequence": 10,
+          "set": { "extcommunity_rt": ["65500:10100"] }
+        }
+      ]
+    }
+  ]
+}
