@@ -1,0 +1,93 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "r2", "type": "router" },
+    { "id": "r3", "type": "router" },
+    { "id": "r4", "type": "router" },
+    { "id": "r5", "type": "router" },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" },
+    { "id": "s3", "type": "switch" },
+    { "id": "s4", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] },
+    { "source": "r2", "target": "s2", "interfaces": ["r2:eth1", "s2:port1"] },
+    { "source": "r3", "target": "s2", "interfaces": ["r3:eth0", "s2:port2"] },
+    { "source": "r2", "target": "s3", "interfaces": ["r2:eth2", "s3:port1"] },
+    { "source": "r4", "target": "s3", "interfaces": ["r4:eth0", "s3:port2"] },
+    { "source": "r2", "target": "s4", "interfaces": ["r2:eth3", "s4:port1"] },
+    { "source": "r5", "target": "s4", "interfaces": ["r5:eth0", "s4:port2"] }
+  ],
+  "bgp_sessions": [
+    {
+      "source": "r2",
+      "target": "r1",
+      "parameters": {
+        "local_as": 65002,
+        "peer_as": 65001,
+        "update_delay": 20
+      }
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "parameters": {
+        "local_as": 65002,
+        "peer_as": 65003,
+        "update_delay": 20
+      }
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "parameters": {
+        "local_as": 65002,
+        "peer_as": 65004,
+        "update_delay": 20
+      }
+    },
+    {
+      "source": "r2",
+      "target": "r5",
+      "parameters": {
+        "local_as": 65002,
+        "peer_as": 65005,
+        "vrf": "vrf1",
+        "update_delay": 20,
+        "establish_wait": 10
+      }
+    }
+  ],
+  "events": [
+    {
+      "action": "shutdown_bgp_neighbor",
+      "node": "r1",
+      "neighbor": "r2"
+    },
+    {
+      "action": "clear_bgp_neighbors",
+      "node": "r2"
+    },
+    {
+      "action": "check_route_install",
+      "node": "r2",
+      "route": "172.16.253.254/32",
+      "after_max_delay": true
+    },
+    {
+      "action": "set_global_update_delay",
+      "node": "r2",
+      "parameters": {
+        "max_delay": 20,
+        "establish_wait": 10
+      }
+    },
+    {
+      "action": "check_vrf_update_delay",
+      "node": "r2",
+      "vrf": "vrf1"
+    }
+  ]
+}
