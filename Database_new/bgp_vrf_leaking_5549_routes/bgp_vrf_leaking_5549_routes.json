@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    { "id": "pe1", "type": "router", "as": 65000 },
+    { "id": "ce1", "type": "router", "as": 65100 }
+  ],
+  "links": [
+    { "source": "pe1", "target": "ce1", "interfaces": ["pe1:eth0", "ce1:eth0"] }
+  ],
+  "vrfs": [
+    {
+      "router": "pe1",
+      "vrfs": [
+        { 
+          "name": "vrf10", 
+          "table_id": 10, 
+          "interfaces": ["pe1-eth0"] 
+        },
+        { 
+          "name": "vrf20", 
+          "table_id": 20, 
+          "interfaces": [] 
+        }
+      ]
+    }
+  ],
+  "bgp_instances": [
+    {
+      "router": "pe1",
+      "vrf": "vrf10",
+      "local_as": 65000,
+      "routes": [
+        { "prefix": "192.168.1.0/24", "next_hop": "ce1" }
+      ]
+    },
+    {
+      "router": "pe1",
+      "vrf": "vrf20",
+      "local_as": 65000,
+      "routes": [
+        { "prefix": "192.168.1.0/24", "imported_from": "vrf10" }
+      ]
+    }
+  ],
+  "ipv4_forwarding": ["pe1", "ce1"]
+}
