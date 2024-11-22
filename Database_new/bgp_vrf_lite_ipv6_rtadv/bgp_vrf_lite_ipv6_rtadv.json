@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65000 },
+    { "id": "r2", "type": "router", "as": 65001 },
+    { "id": "s1", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        {
+          "name": "r1-cust1",
+          "table_id": 1001,
+          "interfaces": ["r1-eth0", "r1-loop1"]
+        }
+      ]
+    },
+    {
+      "router": "r2",
+      "vrfs": [
+        {
+          "name": "r2-cust1",
+          "table_id": 1001,
+          "interfaces": ["r2-eth0", "r2-loop1"]
+        }
+      ]
+    }
+  ],
+  "bgp_instances": [
+    {
+      "router": "r1",
+      "vrf": "r1-cust1",
+      "local_as": 65000,
+      "routes": [
+        { "prefix": "2001:db8:1::/64", "next_hop": "r2" }
+      ]
+    },
+    {
+      "router": "r2",
+      "vrf": "r2-cust1",
+      "local_as": 65001,
+      "routes": [
+        { "prefix": "2001:db8:2::/64", "next_hop": "r1" }
+      ]
+    }
+  ],
+  "ipv4_forwarding": ["r1", "r2"],
+  "ipv6_forwarding": ["r1", "r2"]
+}
