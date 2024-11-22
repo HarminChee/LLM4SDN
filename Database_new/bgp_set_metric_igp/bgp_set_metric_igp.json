@@ -1,0 +1,96 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "interfaces": [
+        {"name": "r1-eth0", "ip": "10.0.0.1/24", "connected_to": "s1"},
+        {"name": "r1-eth1", "ip": "10.0.1.1/24", "connected_to": "s2"}
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "bgp_asn": 65002,
+      "interfaces": [
+        {"name": "r2-eth0", "ip": "10.0.0.2/24", "connected_to": "s1"},
+        {"name": "r2-eth1", "ip": "10.1.0.1/24", "connected_to": "s3"}
+      ]
+    },
+    {
+      "id": "r3",
+      "type": "router",
+      "bgp_asn": 65003,
+      "interfaces": [
+        {"name": "r3-eth0", "ip": "10.0.1.2/24", "connected_to": "s2"},
+        {"name": "r3-eth1", "ip": "10.1.1.1/24", "connected_to": "s4"}
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "router",
+      "bgp_asn": 65004,
+      "interfaces": [
+        {"name": "r4-eth0", "ip": "10.1.0.2/24", "connected_to": "s3"},
+        {"name": "r4-eth1", "ip": "10.1.1.2/24", "connected_to": "s4"},
+        {"name": "r4-eth2", "ip": "10.2.0.1/24", "connected_to": "s5"}
+      ]
+    },
+    {
+      "id": "r5",
+      "type": "router",
+      "bgp_asn": 65005,
+      "interfaces": [
+        {"name": "r5-eth0", "ip": "10.2.0.2/24", "connected_to": "s5"}
+      ]
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s1-eth1", "connected_to": "r1"},
+        {"name": "s1-eth2", "connected_to": "r2"}
+      ]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s2-eth1", "connected_to": "r1"},
+        {"name": "s2-eth2", "connected_to": "r3"}
+      ]
+    },
+    {
+      "id": "s3",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s3-eth1", "connected_to": "r2"},
+        {"name": "s3-eth2", "connected_to": "r4"}
+      ]
+    },
+    {
+      "id": "s4",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s4-eth1", "connected_to": "r3"},
+        {"name": "s4-eth2", "connected_to": "r4"}
+      ]
+    },
+    {
+      "id": "s5",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s5-eth1", "connected_to": "r4"},
+        {"name": "s5-eth2", "connected_to": "r5"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "r1", "destination": "r2", "via": "s1", "subnet": "10.0.0.0/24"},
+    {"source": "r1", "destination": "r3", "via": "s2", "subnet": "10.0.1.0/24"},
+    {"source": "r2", "destination": "r4", "via": "s3", "subnet": "10.1.0.0/24"},
+    {"source": "r3", "destination": "r4", "via": "s4", "subnet": "10.1.1.0/24"},
+    {"source": "r4", "destination": "r5", "via": "s5", "subnet": "10.2.0.0/24"}
+  ]
+}
