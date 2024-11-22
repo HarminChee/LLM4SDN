@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65000 },
+    { "id": "peer1", "type": "exabgp_peer", "as": 65001 },
+    { "id": "s1", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "peer1", "target": "s1", "interfaces": ["peer1:eth0", "s1:port2"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        {
+          "name": "public",
+          "table_id": 1001,
+          "interfaces": ["r1-eth0"]
+        }
+      ]
+    }
+  ],
+  "bgp_instances": [
+    {
+      "router": "r1",
+      "vrf": "public",
+      "local_as": 65000,
+      "peers": [
+        { 
+          "peer": "peer1", 
+          "peer_ip": "10.0.0.2", 
+          "remote_as": 65001, 
+          "md5_password": "testpassword", 
+          "address_families": ["ipv4Unicast"]
+        }
+      ]
+    },
+    {
+      "router": "peer1",
+      "local_as": 65001,
+      "peers": [
+        { 
+          "peer": "r1", 
+          "peer_ip": "10.0.0.1", 
+          "remote_as": 65000, 
+          "md5_password": "testpassword", 
+          "address_families": ["ipv4Unicast"]
+        }
+      ]
+    }
+  ],
+  "ipv4_forwarding": ["r1", "peer1"]
+}
