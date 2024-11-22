@@ -1,0 +1,154 @@
+// P4 Program for MPLS L3VPN Topology
+
+#include <core.p4>
+#include <v1model.p4>
+
+// Header definitions
+header ethernet_t {
+    bit<48> dstAddr;
+    bit<48> srcAddr;
+    bit<16> etherType;
+}
+
+header ipv4_t {
+    bit<4>  version;
+    bit<4>  ihl;
+    bit<8>  diffserv;
+    bit<16> totalLen;
+    bit<16> identification;
+    bit<3>  flags;
+    bit<13> fragOffset;
+    bit<8>  ttl;
+    bit<8>  protocol;
+    bit<16> hdrChecksum;
+    bit<32> srcAddr;
+    bit<32> dstAddr;
+}
+
+header mpls_t {
+    bit<20> label;
+    bit<3>  exp;
+    bit<1>  bottomOfStack;
+    bit<8>  ttl;
+}
+
+// Metadata definitions
+struct metadata_t {
+    bit<9> egress_port;
+}
+
+// Parser
+parser MyParser(packet_in pkt, out ethernet_t eth, out ipv4_t ipv4, out mpls_t mpls) {
+    state start {
+        pkt.extract(eth);
+        transition select(eth.etherType) {
+            0x0800: parse_ipv4;  // IPv4
+            0x8847: parse_mpls; // MPLS Unicast
+            default: accept;
+        }
+    }
+    state parse_ipv4 {
+        pkt.extract(ipv4);
+        transition accept;
+    }
+    state parse_mpls {
+        pkt.extract(mpls);
+        transition accept;
+    }
+}
+
+// Match-Action Tables
+table mac_forward {
+    key = {
+        hdr.ethernet.dstAddr: exact;  // Match on destination MAC address
+    }
+    actions = {
+        mac_forward_action;
+        drop;
+    }
+    size = 512;
+    default_action = drop;
+}
+
+table ipv4_lpm {
+    key = {
+        hdr.ipv4.dstAddr: lpm;  // Longest prefix match
+    }
+    actions = {
+        ipv4_forward_action;
+        drop;
+    }
+    size = 1024;
+    default_action = drop;
+}
+
+table mpls_forward {
+    key = {
+        hdr.mpls.label: exact;  // Match MPLS label
+    }
+    actions = {
+        mpls_forward_action;
+        drop;
+    }
+    size = 512;
+    default_action = drop;
+}
+
+// Actions
+action mac_forward_action(bit<9> port) {
+    standard_metadata.egress_spec = port;
+}
+
+action ipv4_forward_action(bit<48> dst_mac, bit<9> port) {
+    hdr.ethernet.dstAddr = dst_mac;
+    hdr.ethernet.srcAddr = smac;
+    standard_metadata.egress_spec = port;
+}
+
+action mpls_forward_action(bit<20> new_label, bit<9> port) {
+    hdr.mpls.label = new_label;
+    standard_metadata.egress_spec = port;
+}
+
+action drop() {
+    mark_to_drop();
+}
+
+// Control Logic
+control ingress {
+    apply {
+        // Apply L2 forwarding
+        mac_forward.apply();
+
+        // Apply L3 forwarding
+        ipv4_lpm.apply();
+
+        // Apply MPLS forwarding
+        mpls_forward.apply();
+    }
+}
+
+control egress {
+    apply {
+        // Add egress-specific processing, if needed
+    }
+}
+
+// Deparser
+control MyDeparser(packet_out pkt, in ethernet_t eth, in ipv4_t ipv4, in mpls_t mpls) {
+    apply {
+        pkt.emit(eth);
+        pkt.emit(ipv4);
+        pkt.emit(mpls);
+    }
+}
+
+// Main Pipeline
+control MyIngress(packet_in pkt, packet_out pkt_out, inout ethernet_t eth, inout ipv4_t ipv4, inout mpls_t mpls) {
+    MyParser();
+    ingress();
+    egress();
+}
+
+// Instantiate the pipeline
+V1Switch(MyIngress(), MyDeparser()) main;
