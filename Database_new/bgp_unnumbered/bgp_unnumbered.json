@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "r2", "type": "router" },
+    { "id": "s1", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] }
+  ],
+  "bgp_sessions": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "parameters": {
+        "local_as": 65001,
+        "peer_as": 65002,
+        "unnumbered": true
+      }
+    }
+  ],
+  "events": [
+    {
+      "action": "shutdown_interface",
+      "node": "r1",
+      "interface": "eth0"
+    },
+    {
+      "action": "remove_bgp_neighbor",
+      "node": "r1",
+      "neighbor": "r2"
+    },
+    {
+      "action": "validate_bgp_stability",
+      "node": "r1",
+      "check": "nexthop_cache"
+    }
+  ]
+}
