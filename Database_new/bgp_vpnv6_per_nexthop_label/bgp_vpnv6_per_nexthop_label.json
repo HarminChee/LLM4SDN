@@ -1,0 +1,91 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65500 },
+    { "id": "r2", "type": "router", "as": 65501 },
+    { "id": "r11", "type": "router", "as": 65500 },
+    { "id": "r12", "type": "router", "as": 65500 },
+    { "id": "r13", "type": "router", "as": 65500 },
+    { "id": "r14", "type": "router", "as": 65500 },
+    { "id": "rr", "type": "route-reflector", "as": 65500 },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" },
+    { "id": "s3", "type": "switch" },
+    { "id": "s4", "type": "switch" },
+    { "id": "s5", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] },
+    { "source": "r1", "target": "s2", "interfaces": ["r1:eth1", "s2:port1"] },
+    { "source": "r11", "target": "s2", "interfaces": ["r11:eth0", "s2:port2"] },
+    { "source": "r12", "target": "s2", "interfaces": ["r12:eth0", "s2:port3"] },
+    { "source": "rr", "target": "s2", "interfaces": ["rr:eth0", "s2:port4"] },
+    { "source": "r2", "target": "s3", "interfaces": ["r2:eth1", "s3:port1"] },
+    { "source": "r1", "target": "s4", "interfaces": ["r1:eth2", "s4:port1"] },
+    { "source": "r13", "target": "s4", "interfaces": ["r13:eth0", "s4:port2"] },
+    { "source": "r1", "target": "s5", "interfaces": ["r1:eth3", "s5:port1"] },
+    { "source": "r14", "target": "s5", "interfaces": ["r14:eth0", "s5:port2"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { "name": "vrf1", "table_id": 10, "interfaces": ["r1-eth1", "r1-eth2"] }
+      ]
+    },
+    {
+      "router": "r2",
+      "vrfs": [
+        { "name": "vrf1", "table_id": 10, "interfaces": ["r2-eth1"] }
+      ]
+    }
+  ],
+  "mpls": {
+    "enabled_on": ["r1:eth0", "r2:eth0", "r1:eth1", "r1:eth2", "r2:eth1"]
+  },
+  "bgp_sessions": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "parameters": {
+        "local_as": 65500,
+        "peer_as": 65501,
+        "vpnv6_enabled": true
+      }
+    },
+    {
+      "source": "r1",
+      "target": "rr",
+      "parameters": {
+        "local_as": 65500,
+        "peer_as": 65500,
+        "route_reflector": true
+      }
+    },
+    {
+      "source": "rr",
+      "target": "r11",
+      "parameters": {
+        "local_as": 65500,
+        "peer_as": 65500
+      }
+    },
+    {
+      "source": "rr",
+      "target": "r12",
+      "parameters": {
+        "local_as": 65500,
+        "peer_as": 65500
+      }
+    },
+    {
+      "source": "r1",
+      "target": "r13",
+      "parameters": {
+        "local_as": 65500,
+        "peer_as": 65500
+      }
+    }
+  ],
+  "ipv6_forwarding": ["r1", "r2", "r11", "r12", "r13", "r14"]
+}
