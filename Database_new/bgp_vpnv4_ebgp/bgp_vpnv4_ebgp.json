@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65500 },
+    { "id": "r2", "type": "router", "as": 65501 },
+    { "id": "r3", "type": "router", "as": 65502 },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" },
+    { "id": "s3", "type": "switch" },
+    { "id": "s4", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] },
+    { "source": "r3", "target": "s1", "interfaces": ["r3:eth0", "s1:port3"] },
+    { "source": "r1", "target": "s2", "interfaces": ["r1:eth1", "s2:port1"] },
+    { "source": "r2", "target": "s3", "interfaces": ["r2:eth1", "s3:port1"] },
+    { "source": "r3", "target": "s4", "interfaces": ["r3:eth1", "s4:port1"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { "name": "VRF1", "table_id": 10, "interfaces": ["r1-eth1"] }
+      ]
+    },
+    {
+      "router": "r2",
+      "vrfs": [
+        { "name": "VRF1", "table_id": 10, "interfaces": ["r2-eth1"] }
+      ]
+    },
+    {
+      "router": "r3",
+      "vrfs": [
+        { "name": "VRF1", "table_id": 10, "interfaces": ["r3-eth1"] }
+      ]
+    }
+  ],
+  "bgp_sessions": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "parameters": { "local_as": 65500, "peer_as": 65501, "vpnv4_enabled": true }
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "parameters": { "local_as": 65501, "peer_as": 65502, "vpnv4_enabled": true }
+    }
+  ],
+  "mpls": {
+    "enabled_on": ["r1:eth0", "r2:eth0", "r3:eth0"]
+  },
+  "ipv4_forwarding": ["r1", "r2", "r3"]
+}
