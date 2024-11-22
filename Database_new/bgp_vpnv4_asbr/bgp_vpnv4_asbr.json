@@ -1,0 +1,62 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "as": 65500 },
+    { "id": "r2", "type": "router", "as": 65500 },
+    { "id": "r3", "type": "router", "as": 65501 },
+    { "id": "rr100", "type": "router", "as": 65500, "role": "route-reflector" },
+    { "id": "rs200", "type": "router", "as": 65502, "role": "route-server" },
+    { "id": "h1", "type": "host", "ip": "172.31.0.10" },
+    { "id": "h2", "type": "host", "ip": "172.31.1.10" },
+    { "id": "h3", "type": "host", "ip": "172.31.2.10" },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" },
+    { "id": "s3", "type": "switch" },
+    { "id": "s4", "type": "switch" },
+    { "id": "s5", "type": "switch" },
+    { "id": "s6", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] },
+    { "source": "rr100", "target": "s1", "interfaces": ["rr100:eth0", "s1:port3"] },
+    { "source": "r1", "target": "s2", "interfaces": ["r1:eth1", "s2:port1"] },
+    { "source": "h1", "target": "s2", "interfaces": ["h1:eth0", "s2:port2"] },
+    { "source": "r2", "target": "s3", "interfaces": ["r2:eth1", "s3:port1"] },
+    { "source": "r3", "target": "s3", "interfaces": ["r3:eth0", "s3:port2"] },
+    { "source": "rs200", "target": "s3", "interfaces": ["rs200:eth0", "s3:port3"] },
+    { "source": "r3", "target": "s4", "interfaces": ["r3:eth1", "s4:port1"] },
+    { "source": "h2", "target": "s4", "interfaces": ["h2:eth0", "s4:port2"] },
+    { "source": "r3", "target": "s5", "interfaces": ["r3:eth2", "s5:port1"] },
+    { "source": "h3", "target": "s5", "interfaces": ["h3:eth0", "s5:port2"] },
+    { "source": "r3", "target": "s6", "interfaces": ["r3:eth3", "s6:port1"] }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        { "name": "VRF1", "table_id": 10, "interfaces": ["r1-eth1"] }
+      ]
+    },
+    {
+      "router": "r3",
+      "vrfs": [
+        { "name": "VRF1", "table_id": 10, "interfaces": ["r3-eth1", "r3-eth2", "r3-eth3"] }
+      ]
+    }
+  ],
+  "bgp_sessions": [
+    { "source": "r1", "target": "rr100", "parameters": { "local_as": 65500, "peer_as": 65500 } },
+    { "source": "r2", "target": "rr100", "parameters": { "local_as": 65500, "peer_as": 65500 } },
+    { "source": "r2", "target": "r3", "parameters": { "local_as": 65500, "peer_as": 65501, "ebgp": true } },
+    { "source": "r3", "target": "rs200", "parameters": { "local_as": 65501, "peer_as": 65502 } }
+  ],
+  "mpls": {
+    "enabled_on": ["r1:eth0", "r2:eth0", "r2:eth1", "r3:eth0"]
+  },
+  "ipv4_forwarding": ["r1", "r2", "r3"],
+  "hosts": [
+    { "host": "h1", "connected_to": "VRF1" },
+    { "host": "h2", "connected_to": "VRF1" },
+    { "host": "h3", "connected_to": "VRF1" }
+  ]
+}
