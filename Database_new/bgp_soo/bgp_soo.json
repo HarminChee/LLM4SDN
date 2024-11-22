@@ -1,0 +1,82 @@
+{
+  "nodes": [
+    {
+      "id": "cpe1",
+      "type": "router",
+      "bgp_asn": 65011,
+      "interfaces": [
+        {"name": "cpe1-eth0", "ip": "192.168.1.1/24", "connected_to": "s1"},
+        {"name": "cpe1-eth1", "ip": "192.168.4.1/24", "connected_to": "s4"}
+      ]
+    },
+    {
+      "id": "cpe2",
+      "type": "router",
+      "bgp_asn": 65012,
+      "interfaces": [
+        {"name": "cpe2-eth0", "ip": "192.168.2.1/24", "connected_to": "s3"},
+        {"name": "cpe2-eth1", "ip": "192.168.4.2/24", "connected_to": "s4"}
+      ]
+    },
+    {
+      "id": "pe1",
+      "type": "router",
+      "bgp_asn": 65001,
+      "vrfs": ["RED"],
+      "interfaces": [
+        {"name": "pe1-eth0", "ip": "192.168.1.2/24", "connected_to": "s1"},
+        {"name": "pe1-eth1", "ip": "192.168.3.1/24", "connected_to": "s2"}
+      ],
+      "mpls_enabled": true
+    },
+    {
+      "id": "pe2",
+      "type": "router",
+      "bgp_asn": 65001,
+      "vrfs": ["RED"],
+      "interfaces": [
+        {"name": "pe2-eth0", "ip": "192.168.3.2/24", "connected_to": "s2"},
+        {"name": "pe2-eth1", "ip": "192.168.2.2/24", "connected_to": "s3"}
+      ],
+      "mpls_enabled": true
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s1-eth1", "connected_to": "cpe1"},
+        {"name": "s1-eth2", "connected_to": "pe1"}
+      ]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s2-eth1", "connected_to": "pe1"},
+        {"name": "s2-eth2", "connected_to": "pe2"}
+      ]
+    },
+    {
+      "id": "s3",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s3-eth1", "connected_to": "pe2"},
+        {"name": "s3-eth2", "connected_to": "cpe2"}
+      ]
+    },
+    {
+      "id": "s4",
+      "type": "switch",
+      "interfaces": [
+        {"name": "s4-eth1", "connected_to": "cpe1"},
+        {"name": "s4-eth2", "connected_to": "cpe2"}
+      ]
+    }
+  ],
+  "links": [
+    {"source": "cpe1", "destination": "pe1", "via": "s1", "subnet": "192.168.1.0/24"},
+    {"source": "pe1", "destination": "pe2", "via": "s2", "subnet": "192.168.3.0/24"},
+    {"source": "pe2", "destination": "cpe2", "via": "s3", "subnet": "192.168.2.0/24"},
+    {"source": "cpe1", "destination": "cpe2", "via": "s4", "subnet": "192.168.4.0/24"}
+  ]
+}
