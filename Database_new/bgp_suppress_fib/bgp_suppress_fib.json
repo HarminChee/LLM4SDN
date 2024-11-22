@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "r2", "type": "router" },
+    { "id": "r3", "type": "router" },
+    { "id": "s1", "type": "switch" },
+    { "id": "s2", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interfaces": ["r1:eth0", "s1:port1"] },
+    { "source": "r2", "target": "s1", "interfaces": ["r2:eth0", "s1:port2"] },
+    { "source": "r2", "target": "s2", "interfaces": ["r2:eth1", "s2:port1"] },
+    { "source": "r3", "target": "s2", "interfaces": ["r3:eth0", "s2:port2"] }
+  ],
+  "bgp_sessions": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "parameters": {
+        "local_as": 100,
+        "peer_as": 100,
+        "ipv4_enabled": true,
+        "ipv6_enabled": false
+      }
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "parameters": {
+        "local_as": 100,
+        "peer_as": 100,
+        "ipv4_enabled": true,
+        "ipv6_enabled": false
+      }
+    }
+  ],
+  "routing_policies": [
+    {
+      "router": "r2",
+      "policy": "Static route has higher administrative distance for 40.0.0.0/8"
+    },
+    {
+      "router": "r2",
+      "policy": "Allow AS path for 192.168.1.1/32"
+    }
+  ],
+  "commands": {
+    "r2": [
+      "ip route 40.0.0.0/8 10.0.0.10",
+      "bgp allow-as-in 192.168.1.1/32"
+    ]
+  }
+}
