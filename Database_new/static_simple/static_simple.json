@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {"id": "r1", "vrfs": [{"name": "red", "table_id": 10}]}
+  ],
+  "links": [
+    {"source": "r1", "target": "s1", "interface": "r1-eth0"},
+    {"source": "r1", "target": "s2", "interface": "r1-eth1"}
+  ],
+  "loopbacks": [
+    {"router": "r1", "interface": "lo-red", "vrf": "red"}
+  ],
+  "static_routes": [
+    {
+      "router": "r1",
+      "vrf": "red",
+      "routes": [
+        {"destination": "10.0.0.0/8", "next_hop": "102.0.0.2", "interface": "r1-eth1"},
+        {"destination": "20.0.0.0/8", "next_hop": "blackhole"}
+      ]
+    },
+    {
+      "router": "r1",
+      "routes": [
+        {"destination": "101.0.0.2/32", "next_hop": "101.0.0.2", "interface": "r1-eth0"},
+        {"destination": "2001::/48", "next_hop": "2101::2", "interface": "r1-eth0"}
+      ]
+    }
+  ]
+}
