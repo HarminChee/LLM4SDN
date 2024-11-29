@@ -1,0 +1,29 @@
+{
+  "topology": {
+    "routers": {
+      "r1": {
+        "connected_switches": ["sw1", "sw2"]
+      },
+      "r2": {
+        "connected_switches": ["sw2", "sw3"]
+      },
+      "r3": {
+        "connected_switches": ["sw3", "sw4"]
+      }
+    },
+    "switches": {
+      "sw1": {
+        "connected_routers": ["r1"]
+      },
+      "sw2": {
+        "connected_routers": ["r1", "r2"]
+      },
+      "sw3": {
+        "connected_routers": ["r2", "r3"]
+      },
+      "sw4": {
+        "connected_routers": ["r3"]
+      }
+    }
+  }
+}
