@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": []
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "interfaces": []
+    },
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": [
+        { "name": "r1-eth0", "vrf": "default" },
+        { "name": "r1-eth1", "vrf": "red" },
+        { "name": "lo-red", "vrf": "red" }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": "s1",
+      "source_intf": null,
+      "target": "r1",
+      "target_intf": "r1-eth0"
+    },
+    {
+      "source": "s2",
+      "source_intf": null,
+      "target": "r1",
+      "target_intf": "r1-eth1"
+    }
+  ],
+  "vrfs": [
+    {
+      "name": "red",
+      "id": 10,
+      "interfaces": [
+        "r1-eth1",
+        "lo-red"
+      ]
+    }
+  ]
+}
