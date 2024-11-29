@@ -1,0 +1,64 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "loopback": "192.168.100.1",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.100.1/24",
+          "connected_to": "sw1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "links": [
+        { "node": "r1", "interface": "eth0" }
+      ]
+    }
+  },
+  "routes": {
+    "sharp_routes": [
+      {
+        "prefix": "4.5.6.7/32",
+        "nexthop": "192.168.100.2",
+        "instance": 1
+      },
+      {
+        "prefix": "4.5.6.8/32",
+        "nexthop": "192.168.100.2",
+        "instance": 3
+      },
+      {
+        "prefix": "4.5.6.9/32",
+        "nexthop": "192.168.100.3",
+        "instance": 4
+      },
+      {
+        "prefix": "4.5.6.10/32",
+        "nexthop": "192.168.100.2",
+        "instance": 1
+      },
+      {
+        "prefix": "4.5.6.11/32",
+        "nexthop": "192.168.100.2",
+        "instance": 3
+      },
+      {
+        "prefix": "4.5.6.12/32",
+        "nexthop": "192.168.100.2",
+        "instance": 4
+      }
+    ]
+  },
+  "ospf": {
+    "instances": {
+      "3": {
+        "redistribute": ["sharp"],
+        "default_information_originate": true
+      }
+    }
+  }
+}
