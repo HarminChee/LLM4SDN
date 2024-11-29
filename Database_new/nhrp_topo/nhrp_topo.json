@@ -1,0 +1,102 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "r1-eth0": {
+          "ip": "10.1.1.1/24",
+          "connected_to": "s1"
+        },
+        "r1-gre0": {
+          "ip": "10.255.255.1/32",
+          "type": "GRE Tunnel"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "r2-eth0": {
+          "ip": "10.2.1.2/24",
+          "connected_to": "s2"
+        },
+        "r2-gre0": {
+          "ip": "10.255.255.2/32",
+          "type": "GRE Tunnel"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "r3-eth0": {
+          "ip": "10.2.1.3/24",
+          "connected_to": "s2"
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "r4-eth0": {
+          "ip": "10.1.1.4/24",
+          "connected_to": "s1"
+        },
+        "r4-gre0": {
+          "ip": "10.255.255.4/32",
+          "type": "GRE Tunnel"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "links": [
+        { "node": "r1", "interface": "r1-eth0" },
+        { "node": "r4", "interface": "r4-eth0" }
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "links": [
+        { "node": "r2", "interface": "r2-eth0" },
+        { "node": "r3", "interface": "r3-eth0" }
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "links": [
+        { "node": "r2", "interface": "r2-eth0" }
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "links": [
+        { "node": "r1", "interface": "r1-eth0" }
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "links": [
+        { "node": "r4", "interface": "r4-eth0" }
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "src_interface": "r1-gre0",
+      "destination": "r2",
+      "dst_interface": "r2-gre0",
+      "type": "GRE Tunnel"
+    },
+    {
+      "source": "r1",
+      "src_interface": "r1-gre0",
+      "destination": "r4",
+      "dst_interface": "r4-gre0",
+      "type": "GRE Tunnel"
+    }
+  ]
+}
