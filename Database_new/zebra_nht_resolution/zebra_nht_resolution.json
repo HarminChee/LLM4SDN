@@ -1,0 +1,30 @@
+{
+  "nodes": [
+    {"id": "r1"}
+  ],
+  "links": [
+    {"source": "r1", "target": "sw1", "interface": "r1-eth0", "type": "switch"}
+  ],
+  "routes": [
+    {
+      "router": "r1",
+      "static_routes": [
+        {"destination": "2.2.2.0/24", "next_hop": {"interface": "r1-eth0"}}
+      ],
+      "sharp_routes": [
+        {"destination": "2.2.2.32/32", "next_hop": {"ip": "2.2.2.32", "metric": 1}},
+        {"destination": "2.2.2.31/32", "next_hop": {"ip": "2.2.2.32", "metric": 1}}
+      ]
+    }
+  ],
+  "nexthop_tracking": {
+    "router": "r1",
+    "tracked_nexthops": [
+      {
+        "nexthop": "2.2.2.32",
+        "resolved_via": "static",
+        "interface": "r1-eth0"
+      }
+    ]
+  }
+}
