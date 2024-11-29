@@ -1,0 +1,37 @@
+{
+  "routers": [
+    { "name": "RT0", "interfaces": ["eth-RT1", "eth-RT5"], "loopback": "10.255.0.1/24" },
+    { "name": "RT1", "interfaces": ["eth-RT0", "eth-RT2", "eth-RT4", "eth-RT5"] },
+    { "name": "RT2", "interfaces": ["eth-RT1", "eth-RT3", "eth-RT6"] },
+    { "name": "RT3", "interfaces": ["eth-RT2", "eth-RT4", "eth-RT7", "eth-RT9"] },
+    { "name": "RT4", "interfaces": ["eth-RT1", "eth-RT3", "eth-RT8"] },
+    { "name": "RT5", "interfaces": ["eth-RT0", "eth-RT1", "eth-RT6", "eth-RT8"] },
+    { "name": "RT6", "interfaces": ["eth-RT2", "eth-RT5", "eth-RT7"] },
+    { "name": "RT7", "interfaces": ["eth-RT3", "eth-RT6", "eth-RT8", "eth-RT9"] },
+    { "name": "RT8", "interfaces": ["eth-RT4", "eth-RT5", "eth-RT7"] },
+    { "name": "RT9", "interfaces": ["eth-RT3", "eth-RT7"], "loopback": "10.255.9.1/24" }
+  ],
+  "links": [
+    { "source": "RT0", "interface": "eth-RT1", "destination": "RT1", "interface": "eth-RT0" },
+    { "source": "RT0", "interface": "eth-RT5", "destination": "RT5", "interface": "eth-RT0" },
+    { "source": "RT1", "interface": "eth-RT2", "destination": "RT2", "interface": "eth-RT1" },
+    { "source": "RT1", "interface": "eth-RT4", "destination": "RT4", "interface": "eth-RT1" },
+    { "source": "RT1", "interface": "eth-RT5", "destination": "RT5", "interface": "eth-RT1" },
+    { "source": "RT2", "interface": "eth-RT3", "destination": "RT3", "interface": "eth-RT2" },
+    { "source": "RT2", "interface": "eth-RT6", "destination": "RT6", "interface": "eth-RT2" },
+    { "source": "RT3", "interface": "eth-RT4", "destination": "RT4", "interface": "eth-RT3" },
+    { "source": "RT3", "interface": "eth-RT7", "destination": "RT7", "interface": "eth-RT3" },
+    { "source": "RT3", "interface": "eth-RT9", "destination": "RT9", "interface": "eth-RT3" },
+    { "source": "RT4", "interface": "eth-RT8", "destination": "RT8", "interface": "eth-RT4" },
+    { "source": "RT5", "interface": "eth-RT6", "destination": "RT6", "interface": "eth-RT5" },
+    { "source": "RT5", "interface": "eth-RT8", "destination": "RT8", "interface": "eth-RT5" },
+    { "source": "RT6", "interface": "eth-RT7", "destination": "RT7", "interface": "eth-RT6" },
+    { "source": "RT7", "interface": "eth-RT8", "destination": "RT8", "interface": "eth-RT7" },
+    { "source": "RT7", "interface": "eth-RT9", "destination": "RT9", "interface": "eth-RT7" }
+  ],
+  "flex_algorithms": [
+    { "id": 128, "description": "Flex-Algo 128" },
+    { "id": 129, "description": "Flex-Algo 129" },
+    { "id": 130, "description": "Flex-Algo 130", "include-any": ["blue"] }
+  ]
+}
