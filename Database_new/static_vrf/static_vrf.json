@@ -1,0 +1,38 @@
+{
+  "nodes": [
+    {"id": "r1", "vrfs": [
+      {"name": "red", "table_id": 10, "interfaces": ["r1-eth0"]},
+      {"name": "blue", "table_id": 20, "interfaces": ["r1-eth1"]}
+    ]}
+  ],
+  "links": [
+    {"source": "r1", "target": "s1", "interface": "r1-eth0"},
+    {"source": "r1", "target": "s2", "interface": "r1-eth1"}
+  ],
+  "static_routes": [
+    {
+      "router": "r1",
+      "vrf": null,
+      "routes": [
+        {"destination": "198.51.100.1", "next_hops": ["192.0.2.2", "192.0.2.130"]},
+        {"destination": "198.51.100.2", "next_hops": ["r1-eth0", "r1-eth1"]}
+      ]
+    },
+    {
+      "router": "r1",
+      "vrf": "red",
+      "routes": [
+        {"destination": "203.0.113.1", "next_hops": ["192.0.2.130"]},
+        {"destination": "203.0.113.2", "next_hops": ["r1-eth1"]}
+      ]
+    },
+    {
+      "router": "r1",
+      "vrf": "blue",
+      "routes": [
+        {"destination": "203.0.113.129", "next_hops": ["192.0.2.2"]},
+        {"destination": "203.0.113.130", "next_hops": ["r1-eth0"]}
+      ]
+    }
+  ]
+}
