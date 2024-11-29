@@ -1,0 +1,30 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": []
+    },
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": []
+    }
+  ],
+  "links": [
+    {
+      "source": "s1",
+      "source_intf": null,
+      "target": "r1",
+      "target_intf": null
+    }
+  ],
+  "routes": [
+    {
+      "prefix_range": "10.0.0.0/8",
+      "count": 2500,
+      "next_hop": "10.0.0.1",
+      "interface": "r1-eth0"
+    }
+  ]
+}
