@@ -1,0 +1,57 @@
+{
+  "nodes": [
+    {"id": "r1"}
+  ],
+  "links": [
+    {"source": "r1", "target": "s1", "interface": "r1-eth0", "type": "switch"},
+    {"source": "r1", "target": "s2", "interface": "r1-eth1", "type": "switch"},
+    {"source": "r1", "target": "s3", "interface": "r1-eth2", "type": "switch"},
+    {"source": "r1", "target": "s4", "interface": "r1-eth3", "type": "switch"},
+    {"source": "r1", "target": "s5", "interface": "r1-eth4", "type": "switch"},
+    {"source": "r1", "target": "s6", "interface": "r1-eth5", "type": "switch"},
+    {"source": "r1", "target": "s7", "interface": "r1-eth6", "type": "switch"},
+    {"source": "r1", "target": "s8", "interface": "r1-eth7", "type": "switch"}
+  ],
+  "routes": [
+    {
+      "router": "r1",
+      "static_routes": [
+        {"destination": "10.100.100.100/32", "next_hop": {"ip": "192.168.216.3"}},
+        {"destination": "10.100.100.101/32", "next_hop": {"ip": "10.0.0.44"}}
+      ],
+      "sharp_routes": [
+        {"destination": "10.0.0.0/32", "next_hop": {"ip": "192.168.216.3", "metric": 500}}
+      ],
+      "kernel_routes": [
+        {"destination": "4.5.1.0/24", "next_hop": {"ip": "192.168.210.2", "interface": "r1-eth0"}},
+        {"destination": "4.5.2.0/24", "next_hop": {"ip": "192.168.211.2", "interface": "r1-eth1"}},
+        {"destination": "4.5.3.0/24", "next_hop": {"ip": "192.168.212.2", "interface": "r1-eth2"}},
+        {"destination": "4.5.3.0/24", "next_hop": {"ip": "192.168.213.2", "interface": "r1-eth3"}}
+      ]
+    }
+  ],
+  "vrfs": [
+    {
+      "router": "r1",
+      "vrfs": [
+        {"name": "RED", "table_id": 1, "interfaces": ["r1-eth0"]}
+      ]
+    }
+  ],
+  "route_maps": [
+    {
+      "name": "static",
+      "rules": [
+        {"action": "permit", "sequence": 10, "set": {"src": "192.168.215.1"}}
+      ]
+    },
+    {
+      "name": "sharp",
+      "rules": [
+        {"action": "permit", "sequence": 10, "match": {"ip": "10"}, "set": {"src": "192.168.214.1"}},
+        {"action": "permit", "sequence": 20, "set": {"src": "192.168.213.1"}},
+        {"action": "deny", "sequence": 5, "match": {"ip": "5"}}
+      ]
+    }
+  ]
+}
