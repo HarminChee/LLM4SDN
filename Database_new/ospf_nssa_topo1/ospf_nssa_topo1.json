@@ -1,0 +1,85 @@
+{
+  "nodes": {
+    "rt1": {
+      "type": "router",
+      "router_id": "1.1.1.1",
+      "interfaces": {
+        "eth-rt2": {
+          "ip": "10.0.1.1/24",
+          "connected_to": "s1"
+        }
+      }
+    },
+    "rt2": {
+      "type": "router",
+      "router_id": "2.2.2.2",
+      "interfaces": {
+        "eth-rt1": {
+          "ip": "10.0.1.2/24",
+          "connected_to": "s1"
+        },
+        "eth-rt3": {
+          "ip": "10.0.2.1/24",
+          "connected_to": "s2"
+        },
+        "eth-rt4": {
+          "ip": "10.0.3.1/24",
+          "connected_to": "s3"
+        }
+      }
+    },
+    "rt3": {
+      "type": "router",
+      "router_id": "3.3.3.3",
+      "interfaces": {
+        "eth-rt2": {
+          "ip": "10.0.2.2/24",
+          "connected_to": "s2"
+        }
+      }
+    },
+    "rt4": {
+      "type": "router",
+      "router_id": "4.4.4.4",
+      "interfaces": {
+        "eth-rt2": {
+          "ip": "10.0.3.2/24",
+          "connected_to": "s3"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "links": [
+        { "node": "rt1", "interface": "eth-rt2" },
+        { "node": "rt2", "interface": "eth-rt1" }
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "links": [
+        { "node": "rt2", "interface": "eth-rt3" },
+        { "node": "rt3", "interface": "eth-rt2" }
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "links": [
+        { "node": "rt2", "interface": "eth-rt4" },
+        { "node": "rt4", "interface": "eth-rt2" }
+      ]
+    }
+  },
+  "ospf": {
+    "areas": {
+      "0.0.0.0": ["rt1", "rt2"],
+      "1.0.0.0": ["rt2", "rt3", "rt4"]
+    },
+    "nssa": {
+      "area": "1.0.0.0",
+      "default_information_originate": true
+    }
+  }
+}
