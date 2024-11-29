@@ -1,0 +1,134 @@
+{
+  "vrfs": {
+    "blue": {
+      "subnets": ["192.168.100.0/24", "192.168.101.0/24"],
+      "pim_rp": "r11",
+      "hosts": {
+        "h1": {
+          "type": "host",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.100.10",
+              "connected_to": "sw1"
+            }
+          },
+          "role": "receiver",
+          "group": "239.100.0.1"
+        },
+        "h2": {
+          "type": "host",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.101.2",
+              "connected_to": "sw2"
+            }
+          },
+          "role": "source",
+          "group": "239.100.0.1"
+        }
+      },
+      "routers": {
+        "r1": {
+          "type": "router",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.100.1",
+              "connected_to": "sw1",
+              "vrf": "blue"
+            },
+            "eth1": {
+              "ip": "192.168.101.1",
+              "connected_to": "sw2",
+              "vrf": "blue"
+            }
+          }
+        },
+        "r11": {
+          "type": "router",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.101.11",
+              "connected_to": "sw2"
+            }
+          },
+          "role": "PIM RP"
+        }
+      },
+      "switches": {
+        "sw1": {
+          "type": "switch",
+          "connected_to": ["h1", "r1"]
+        },
+        "sw2": {
+          "type": "switch",
+          "connected_to": ["h2", "r1", "r11"]
+        }
+      }
+    },
+    "red": {
+      "subnets": ["192.168.100.0/24", "192.168.101.0/24"],
+      "pim_rp": "r12",
+      "hosts": {
+        "h3": {
+          "type": "host",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.100.20",
+              "connected_to": "sw3"
+            }
+          },
+          "role": "receiver",
+          "group": "239.100.0.1"
+        },
+        "h4": {
+          "type": "host",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.101.4",
+              "connected_to": "sw4"
+            }
+          },
+          "role": "source",
+          "group": "239.100.0.1"
+        }
+      },
+      "routers": {
+        "r1": {
+          "type": "router",
+          "interfaces": {
+            "eth2": {
+              "ip": "192.168.100.1",
+              "connected_to": "sw3",
+              "vrf": "red"
+            },
+            "eth3": {
+              "ip": "192.168.101.1",
+              "connected_to": "sw4",
+              "vrf": "red"
+            }
+          }
+        },
+        "r12": {
+          "type": "router",
+          "interfaces": {
+            "eth0": {
+              "ip": "192.168.101.12",
+              "connected_to": "sw4"
+            }
+          },
+          "role": "PIM RP"
+        }
+      },
+      "switches": {
+        "sw3": {
+          "type": "switch",
+          "connected_to": ["h3", "r1"]
+        },
+        "sw4": {
+          "type": "switch",
+          "connected_to": ["h4", "r1", "r12"]
+        }
+      }
+    }
+  }
+}
