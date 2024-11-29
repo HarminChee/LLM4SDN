@@ -1,0 +1,68 @@
+{
+  "nodes": [
+    {
+      "id": "nhs1",
+      "type": "router",
+      "interfaces": [
+        { "name": "nhs1-eth0", "ip": "192.168.1.1/24" },
+        { "name": "nhs1-gre0", "ip": "172.16.1.1/32" }
+      ]
+    },
+    {
+      "id": "nhs2",
+      "type": "router",
+      "interfaces": [
+        { "name": "nhs2-eth0", "ip": "192.168.1.2/24" },
+        { "name": "nhs2-gre0", "ip": "172.16.1.2/32" }
+      ]
+    },
+    {
+      "id": "nhs3",
+      "type": "router",
+      "interfaces": [
+        { "name": "nhs3-eth0", "ip": "192.168.1.3/24" },
+        { "name": "nhs3-gre0", "ip": "172.16.1.3/32" }
+      ]
+    },
+    {
+      "id": "nhc1",
+      "type": "router",
+      "interfaces": [
+        { "name": "nhc1-eth0", "ip": "192.168.2.4/24" },
+        { "name": "nhc1-gre0", "ip": "172.16.1.4/32" }
+      ]
+    },
+    {
+      "id": "nhc2",
+      "type": "router",
+      "interfaces": [
+        { "name": "nhc2-eth0", "ip": "192.168.2.5/24" },
+        { "name": "nhc2-gre0", "ip": "172.16.1.5/32" }
+      ]
+    },
+    {
+      "id": "router",
+      "type": "router",
+      "interfaces": [
+        { "name": "router-eth0", "ip": "192.168.1.6/24" },
+        { "name": "router-eth1", "ip": "192.168.2.6/24" }
+      ]
+    },
+    {
+      "id": "host",
+      "type": "host",
+      "interfaces": [
+        { "name": "host-eth0", "ip": "10.4.4.7/24", "gateway": "10.4.4.1" }
+      ]
+    }
+  ],
+  "links": [
+    { "source": "nhs1", "source_intf": "nhs1-eth0", "target": "router", "target_intf": "router-eth0" },
+    { "source": "nhs2", "source_intf": "nhs2-eth0", "target": "router", "target_intf": "router-eth0" },
+    { "source": "nhs3", "source_intf": "nhs3-eth0", "target": "router", "target_intf": "router-eth0" },
+    { "source": "router", "source_intf": "router-eth1", "target": "nhc1", "target_intf": "nhc1-eth0" },
+    { "source": "router", "source_intf": "router-eth1", "target": "nhc2", "target_intf": "nhc2-eth0" },
+    { "source": "nhc1", "source_intf": "nhc1-eth0", "target": "host", "target_intf": "host-eth0" },
+    { "source": "nhc2", "source_intf": "nhc2-eth0", "target": "host", "target_intf": "host-eth0" }
+  ]
+}
