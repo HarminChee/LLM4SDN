@@ -1,0 +1,84 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "router_id": "10.0.255.1",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.1.1/24",
+          "ipv6": "2001:db8:1::1/64",
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "ip": "10.0.3.1/24",
+          "ipv6": "2001:db8:3::1/64",
+          "connected_to": "s3"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "router_id": "10.0.255.2",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.2.1/24",
+          "ipv6": "2001:db8:2::1/64",
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "ip": "10.0.3.3/24",
+          "ipv6": "2001:db8:3::3/64",
+          "connected_to": "s3"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "router_id": "10.0.255.3",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.2.2/24",
+          "ipv6": "2001:db8:2::2/64",
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "ip": "10.0.10.1/24",
+          "ipv6": "2001:db8:100::1/64",
+          "connected_to": "s4"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "links": [
+        { "node": "r1", "interface": "eth0" }
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "links": [
+        { "node": "r2", "interface": "eth0" },
+        { "node": "r3", "interface": "eth0" }
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "links": [
+        { "node": "r1", "interface": "eth1" },
+        { "node": "r2", "interface": "eth1" }
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "links": [
+        { "node": "r3", "interface": "eth1" }
+      ]
+    }
+  },
+  "ospf": {
+    "area": "0.0.0.0",
+    "routers": ["r1", "r2", "r3"]
+  }
+}
