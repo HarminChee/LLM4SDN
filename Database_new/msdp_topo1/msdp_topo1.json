@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": [
+        { "name": "r1-eth0", "ip": "192.168.1.1/24" },
+        { "name": "r1-eth1", "ip": "192.168.10.1/24" }
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "interfaces": [
+        { "name": "r2-eth0", "ip": "192.168.1.2/24" },
+        { "name": "r2-eth1", "ip": "192.168.2.1/24" }
+      ]
+    },
+    {
+      "id": "r3",
+      "type": "router",
+      "interfaces": [
+        { "name": "r3-eth0", "ip": "192.168.2.2/24" },
+        { "name": "r3-eth1", "ip": "192.168.3.1/24" }
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "router",
+      "interfaces": [
+        { "name": "r4-eth0", "ip": "192.168.2.2/24" },
+        { "name": "r4-eth1", "ip": "192.168.4.1/24" }
+      ]
+    },
+    {
+      "id": "h1",
+      "type": "host",
+      "interfaces": [
+        { "name": "h1-eth0", "ip": "192.168.4.100/24", "gateway": "192.168.4.1" }
+      ]
+    },
+    {
+      "id": "h2",
+      "type": "host",
+      "interfaces": [
+        { "name": "h2-eth0", "ip": "192.168.10.100/24", "gateway": "192.168.10.1" }
+      ]
+    },
+    {
+      "id": "h3",
+      "type": "host",
+      "interfaces": [
+        { "name": "h3-eth0", "ip": "192.168.4.120/24", "gateway": "192.168.4.1" }
+      ]
+    }
+  ],
+  "links": [
+    { "source": "r1", "source_intf": "r1-eth0", "target": "r2", "target_intf": "r2-eth0" },
+    { "source": "r1", "source_intf": "r1-eth1", "target": "h2", "target_intf": "h2-eth0" },
+    { "source": "r2", "source_intf": "r2-eth1", "target": "r3", "target_intf": "r3-eth0" },
+    { "source": "r3", "source_intf": "r3-eth1", "target": "r4", "target_intf": "r4-eth0" },
+    { "source": "r4", "source_intf": "r4-eth1", "target": "h1", "target_intf": "h1-eth0" },
+    { "source": "r4", "source_intf": "r4-eth1", "target": "h3", "target_intf": "h3-eth0" }
+  ]
+}
