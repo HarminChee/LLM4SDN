@@ -1,0 +1,77 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "fc00:0:0:1::1/64",
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "ip": "fc00:5:0:0::1/64",
+          "connected_to": "sw2"
+        }
+      },
+      "role": "main_router",
+      "protocols": ["RIPng"]
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "fc00:5:0:0::2/64",
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "ip": "fc00:6:0:0::1/62",
+          "connected_to": "sw3"
+        }
+      },
+      "role": "ripng_router",
+      "protocols": ["RIPng"]
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "fc00::7/128",
+          "connected_to": "sw4"
+        },
+        "eth1": {
+          "ip": "fc00:6:0:0::2/62",
+          "connected_to": "sw3"
+        }
+      },
+      "role": "ripng_router",
+      "protocols": ["RIPng"]
+    }
+  },
+  "links": {
+    "sw1": {
+      "type": "switch",
+      "subnet": "fc00:0:0:1::/64",
+      "connected_to": ["r1"]
+    },
+    "sw2": {
+      "type": "switch",
+      "subnet": "fc00:5:0:0::/64",
+      "connected_to": ["r1", "r2"]
+    },
+    "sw3": {
+      "type": "switch",
+      "subnet": "fc00:6:0:0::/62",
+      "connected_to": ["r2", "r3"]
+    },
+    "sw4": {
+      "type": "switch",
+      "subnet": "fc00::7/128",
+      "connected_to": ["r3"]
+    }
+  },
+  "routes": {
+    "fc00:7:1111::/64": {
+      "origin": "static",
+      "next_hops": ["r3"]
+    }
+  }
+}
