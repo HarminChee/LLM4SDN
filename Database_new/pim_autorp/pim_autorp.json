@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "role": "AutoRP_Announcer" },
+    { "id": "r2", "type": "router", "role": "AutoRP_Receiver" },
+    { "id": "s1-2", "type": "switch", "links": [{ "node": "r1" }, { "node": "r2" }] }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1-2", "interface": "r1-eth0" },
+    { "source": "r2", "target": "s1-2", "interface": "r2-eth0" }
+  ]
+}
