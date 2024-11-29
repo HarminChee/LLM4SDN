@@ -1,0 +1,147 @@
+{
+  "nodes": [
+    {
+      "id": "rt1",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt2", "connected_to": "s1" },
+        { "name": "eth-rt3", "connected_to": "s3" },
+        { "name": "eth-rt4", "connected_to": "s4" },
+        { "name": "eth-rt5", "connected_to": "s5" },
+        { "name": "eth-rt6", "connected_to": "s6" }
+      ]
+    },
+    {
+      "id": "rt2",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt1", "connected_to": "s1" },
+        { "name": "eth-rt3", "connected_to": "s2" },
+        { "name": "eth-rt7", "connected_to": "s7" }
+      ]
+    },
+    {
+      "id": "rt3",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt1", "connected_to": "s3" },
+        { "name": "eth-rt2", "connected_to": "s2" },
+        { "name": "eth-rt7", "connected_to": "s8" }
+      ]
+    },
+    {
+      "id": "rt4",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt1", "connected_to": "s4" },
+        { "name": "eth-rt7", "connected_to": "s9" }
+      ]
+    },
+    {
+      "id": "rt5",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt1", "connected_to": "s5" },
+        { "name": "eth-rt7", "connected_to": "s10" }
+      ]
+    },
+    {
+      "id": "rt6",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt1", "connected_to": "s6" },
+        { "name": "eth-rt7", "connected_to": "s11" }
+      ]
+    },
+    {
+      "id": "rt7",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt2", "connected_to": "s7" },
+        { "name": "eth-rt3", "connected_to": "s8" },
+        { "name": "eth-rt4", "connected_to": "s9" },
+        { "name": "eth-rt5", "connected_to": "s10" },
+        { "name": "eth-rt6", "connected_to": "s11" }
+      ]
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "connected_routers": ["rt1", "rt2"]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "connected_routers": ["rt2", "rt3"]
+    },
+    {
+      "id": "s3",
+      "type": "switch",
+      "connected_routers": ["rt1", "rt3"]
+    },
+    {
+      "id": "s4",
+      "type": "switch",
+      "connected_routers": ["rt1", "rt4"]
+    },
+    {
+      "id": "s5",
+      "type": "switch",
+      "connected_routers": ["rt1", "rt5"]
+    },
+    {
+      "id": "s6",
+      "type": "switch",
+      "connected_routers": ["rt1", "rt6"]
+    },
+    {
+      "id": "s7",
+      "type": "switch",
+      "connected_routers": ["rt2", "rt7"]
+    },
+    {
+      "id": "s8",
+      "type": "switch",
+      "connected_routers": ["rt3", "rt7"]
+    },
+    {
+      "id": "s9",
+      "type": "switch",
+      "connected_routers": ["rt4", "rt7"]
+    },
+    {
+      "id": "s10",
+      "type": "switch",
+      "connected_routers": ["rt5", "rt7"]
+    },
+    {
+      "id": "s11",
+      "type": "switch",
+      "connected_routers": ["rt6", "rt7"]
+    }
+  ],
+  "links": [
+    { "source": "rt1", "destination": "s1", "interface": "eth-rt2" },
+    { "source": "rt2", "destination": "s1", "interface": "eth-rt1" },
+    { "source": "rt2", "destination": "s2", "interface": "eth-rt3" },
+    { "source": "rt3", "destination": "s2", "interface": "eth-rt2" },
+    { "source": "rt1", "destination": "s3", "interface": "eth-rt3" },
+    { "source": "rt3", "destination": "s3", "interface": "eth-rt1" },
+    { "source": "rt1", "destination": "s4", "interface": "eth-rt4" },
+    { "source": "rt4", "destination": "s4", "interface": "eth-rt1" },
+    { "source": "rt1", "destination": "s5", "interface": "eth-rt5" },
+    { "source": "rt5", "destination": "s5", "interface": "eth-rt1" },
+    { "source": "rt1", "destination": "s6", "interface": "eth-rt6" },
+    { "source": "rt6", "destination": "s6", "interface": "eth-rt1" },
+    { "source": "rt2", "destination": "s7", "interface": "eth-rt7" },
+    { "source": "rt7", "destination": "s7", "interface": "eth-rt2" },
+    { "source": "rt3", "destination": "s8", "interface": "eth-rt7" },
+    { "source": "rt7", "destination": "s8", "interface": "eth-rt3" },
+    { "source": "rt4", "destination": "s9", "interface": "eth-rt7" },
+    { "source": "rt7", "destination": "s9", "interface": "eth-rt4" },
+    { "source": "rt5", "destination": "s10", "interface": "eth-rt7" },
+    { "source": "rt7", "destination": "s10", "interface": "eth-rt5" },
+    { "source": "rt6", "destination": "s11", "interface": "eth-rt7" },
+    { "source": "rt7", "destination": "s11", "interface": "eth-rt6" }
+  ]
+}
