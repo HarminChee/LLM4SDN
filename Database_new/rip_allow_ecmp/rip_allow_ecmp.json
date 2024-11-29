@@ -1,0 +1,67 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.1",
+          "connected_to": "s1"
+        }
+      },
+      "role": "sender"
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.2",
+          "connected_to": "s1"
+        }
+      },
+      "role": "next-hop"
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.3",
+          "connected_to": "s1"
+        }
+      },
+      "role": "next-hop"
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.4",
+          "connected_to": "s1"
+        }
+      },
+      "role": "next-hop"
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.5",
+          "connected_to": "s1"
+        }
+      },
+      "role": "receiver"
+    }
+  },
+  "links": {
+    "s1": {
+      "type": "switch",
+      "connected_to": ["r1", "r2", "r3", "r4", "r5"]
+    }
+  },
+  "routes": {
+    "10.10.10.1/32": {
+      "origin": "r1",
+      "next_hops": ["r2", "r3", "r4"],
+      "allow_ecmp": true
+    }
+  }
+}
