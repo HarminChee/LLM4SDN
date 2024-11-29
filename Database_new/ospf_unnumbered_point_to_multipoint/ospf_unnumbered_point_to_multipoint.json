@@ -1,0 +1,64 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router"
+    },
+    {
+      "id": "r2",
+      "type": "router"
+    },
+    {
+      "id": "r3",
+      "type": "router"
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "links": [
+        {
+          "node": "r1",
+          "interface": "r1-eth0"
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "links": [
+        {
+          "node": "r2",
+          "interface": "r2-eth0"
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "type": "switch",
+      "links": [
+        {
+          "node": "r3",
+          "interface": "r3-eth0"
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "type": "switch",
+      "links": [
+        {
+          "node": "r1",
+          "interface": "r1-eth1"
+        },
+        {
+          "node": "r2",
+          "interface": "r2-eth1"
+        },
+        {
+          "node": "r3",
+          "interface": "r3-eth1"
+        }
+      ]
+    }
+  ]
+}
