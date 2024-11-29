@@ -1,0 +1,45 @@
+{
+  "routers": [
+    {
+      "id": "R1",
+      "interfaces": [
+        {"name": "r1-eth0", "subnet": "10.0.0.0/24"},
+        {"name": "r1-eth1", "subnet": "10.0.1.0/24"},
+        {"name": "r1-eth1", "subnet": "2001:db8:1::/64"}
+      ]
+    },
+    {
+      "id": "R2",
+      "interfaces": [
+        {"name": "r2-eth0", "subnet": "10.0.0.0/24"},
+        {"name": "r2-eth1", "subnet": "10.0.1.0/24"},
+        {"name": "r2-eth2", "subnet": "10.0.3.0/24"},
+        {"name": "r2-eth3", "subnet": "10.0.4.0/24"}
+      ]
+    },
+    {
+      "id": "R3",
+      "interfaces": [
+        {"name": "r3-eth0", "subnet": "10.0.3.0/24"},
+        {"name": "r3-eth1", "subnet": "2001:db8:5::/64"}
+      ]
+    },
+    {
+      "id": "R4",
+      "interfaces": [
+        {"name": "r4-eth0", "subnet": "10.0.4.0/24"},
+        {"name": "r4-eth1", "subnet": "2001:db8:5::/64"}
+      ]
+    }
+  ],
+  "links": [
+    {"from": "R1", "to": "R2", "subnet": "10.0.0.0/24"},
+    {"from": "R1", "to": "R2", "subnet": "10.0.1.0/24"},
+    {"from": "R2", "to": "R3", "subnet": "10.0.3.0/24"},
+    {"from": "R2", "to": "R4", "subnet": "10.0.4.0/24"},
+    {"from": "R3", "to": "R4", "subnet": "2001:db8:5::/64"}
+  ],
+  "ipv6_links": [
+    {"from": "R1", "to": "R2", "subnet": "2001:db8:1::/64"}
+  ]
+}
