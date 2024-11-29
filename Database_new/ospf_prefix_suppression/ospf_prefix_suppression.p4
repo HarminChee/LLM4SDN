@@ -1,0 +1,97 @@
+// Define headers
+header ethernet_t {
+    bit<48> dstAddr;
+    bit<48> srcAddr;
+    bit<16> etherType;
+}
+
+header ipv4_t {
+    bit<4>  version;
+    bit<4>  ihl;
+    bit<8>  diffserv;
+    bit<16> totalLen;
+    bit<16> identification;
+    bit<3>  flags;
+    bit<13> fragOffset;
+    bit<8>  ttl;
+    bit<8>  protocol;
+    bit<16> hdrChecksum;
+    bit<32> srcAddr;
+    bit<32> dstAddr;
+}
+
+// Define parsers
+parser MyParser(packet_in packet,
+                out headers_t hdr,
+                inout metadata_t meta,
+                inout standard_metadata_t standard_metadata) {
+    state start {
+        packet.extract(hdr.ethernet);
+        transition select(hdr.ethernet.etherType) {
+            0x0800: parse_ipv4;
+            default: accept;
+        }
+    }
+    state parse_ipv4 {
+        packet.extract(hdr.ipv4);
+        transition accept;
+    }
+}
+
+// Define tables
+table ipv4_lpm {
+    key = {
+        hdr.ipv4.dstAddr: lpm;
+    }
+    actions = {
+        drop;
+        ipv4_forward;
+    }
+    size = 1024;
+    default_action = drop();
+}
+
+// Define actions
+action drop() {
+    mark_to_drop();
+}
+
+action ipv4_forward(bit<48> dstAddr, bit<9> port) {
+    modify_field(hdr.ethernet.dstAddr, dstAddr);
+    modify_field(standard_metadata.egress_spec, port);
+}
+
+// Define control blocks
+control MyIngress(inout headers_t hdr,
+                  inout metadata_t meta,
+                  inout standard_metadata_t standard_metadata) {
+    apply(ipv4_lpm);
+}
+
+// Define deparser
+control MyDeparser(packet_out packet, in headers_t hdr) {
+    apply {
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.ipv4);
+    }
+}
+
+// Main control block
+control MySwitch(packet_in packet,
+                 packet_out packet,
+                 inout headers_t hdr,
+                 inout metadata_t meta,
+                 inout standard_metadata_t standard_metadata) {
+    MyParser() parser;
+    MyIngress() ingress;
+    MyDeparser() deparser;
+
+    apply {
+        parser.apply(packet, hdr, meta, standard_metadata);
+        ingress.apply(hdr, meta, standard_metadata);
+        deparser.apply(packet, hdr);
+    }
+}
+
+// Instantiate the pipeline
+MySwitch() main;
