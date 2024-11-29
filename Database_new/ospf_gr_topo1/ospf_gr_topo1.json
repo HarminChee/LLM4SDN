@@ -1,0 +1,158 @@
+{
+  "nodes": {
+    "rt1": {
+      "type": "router",
+      "loopback": "1.1.1.1",
+      "interfaces": {
+        "eth-rt2": {
+          "ip": "10.0.1.1/24",
+          "connected_to": "s1"
+        },
+        "stub1": {
+          "ip": null,
+          "connected_to": "s2"
+        }
+      }
+    },
+    "rt2": {
+      "type": "router",
+      "loopback": "2.2.2.2",
+      "interfaces": {
+        "eth-rt1": {
+          "ip": "10.0.1.2/24",
+          "connected_to": "s1"
+        },
+        "eth-rt3": {
+          "ip": "10.0.2.1/24",
+          "connected_to": "s3"
+        }
+      }
+    },
+    "rt3": {
+      "type": "router",
+      "loopback": "3.3.3.3",
+      "interfaces": {
+        "eth-rt2": {
+          "ip": "10.0.2.2/24",
+          "connected_to": "s3"
+        },
+        "eth-rt4": {
+          "ip": "10.0.3.1/24",
+          "connected_to": "s4"
+        },
+        "eth-rt6": {
+          "ip": "10.0.4.1/24",
+          "connected_to": "s5"
+        }
+      }
+    },
+    "rt4": {
+      "type": "router",
+      "loopback": "4.4.4.4",
+      "interfaces": {
+        "eth-rt3": {
+          "ip": "10.0.3.2/24",
+          "connected_to": "s4"
+        },
+        "eth-rt5": {
+          "ip": "10.0.5.1/24",
+          "connected_to": "s6"
+        }
+      }
+    },
+    "rt5": {
+      "type": "router",
+      "loopback": "5.5.5.5",
+      "interfaces": {
+        "eth-rt4": {
+          "ip": "10.0.5.2/24",
+          "connected_to": "s6"
+        }
+      }
+    },
+    "rt6": {
+      "type": "router",
+      "loopback": "6.6.6.6",
+      "interfaces": {
+        "eth-rt3": {
+          "ip": "10.0.4.2/24",
+          "connected_to": "s5"
+        },
+        "eth-rt7": {
+          "ip": "10.0.6.1/24",
+          "connected_to": "s7"
+        }
+      }
+    },
+    "rt7": {
+      "type": "router",
+      "loopback": "7.7.7.7",
+      "interfaces": {
+        "eth-rt6": {
+          "ip": "10.0.6.2/24",
+          "connected_to": "s7"
+        },
+        "stub1": {
+          "ip": null,
+          "connected_to": "s8"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "links": [
+        { "node": "rt1", "interface": "eth-rt2" },
+        { "node": "rt2", "interface": "eth-rt1" }
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "links": [
+        { "node": "rt1", "interface": "stub1" }
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "links": [
+        { "node": "rt2", "interface": "eth-rt3" },
+        { "node": "rt3", "interface": "eth-rt2" }
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "links": [
+        { "node": "rt3", "interface": "eth-rt4" },
+        { "node": "rt4", "interface": "eth-rt3" }
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "links": [
+        { "node": "rt3", "interface": "eth-rt6" },
+        { "node": "rt6", "interface": "eth-rt3" }
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "links": [
+        { "node": "rt4", "interface": "eth-rt5" },
+        { "node": "rt5", "interface": "eth-rt4" }
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "links": [
+        { "node": "rt6", "interface": "eth-rt7" },
+        { "node": "rt7", "interface": "eth-rt6" }
+      ]
+    },
+    "s8": {
+      "type": "switch",
+      "links": [
+        { "node": "rt7", "interface": "stub1" }
+      ]
+    }
+  }
+}
