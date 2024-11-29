@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router", "ip": "1.1.1.1" },
+    { "id": "r2", "type": "router", "ip": "2.2.2.2" },
+    { "id": "r3", "type": "router", "ip": "3.3.3.3" },
+    { "id": "r4", "type": "router", "ip": "4.4.4.4" },
+    { "id": "sw0", "type": "switch" },
+    { "id": "sw1", "type": "switch" },
+    { "id": "sw2", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "sw0", "interface": "r1-eth0", "subnet": "10.0.1.0/24", "ip": "10.0.1.1" },
+    { "source": "r2", "target": "sw0", "interface": "r2-eth0", "subnet": "10.0.1.0/24", "ip": "10.0.1.2" },
+    { "source": "r2", "target": "sw1", "interface": "r2-eth1", "subnet": "10.0.2.0/24", "ip": "10.0.2.2" },
+    { "source": "r2", "target": "sw2", "interface": "r2-eth2", "subnet": "10.0.3.0/24", "ip": "10.0.3.2" },
+    { "source": "r3", "target": "sw1", "interface": "r3-eth0", "subnet": "10.0.2.0/24", "ip": "10.0.2.3" },
+    { "source": "r3", "target": "sw2", "interface": "r3-eth1", "subnet": "10.0.3.0/24", "ip": "10.0.3.3" },
+    { "source": "r4", "target": "sw1", "interface": "r4-eth0", "subnet": "10.0.2.0/24", "ip": "10.0.2.4" }
+  ]
+}
