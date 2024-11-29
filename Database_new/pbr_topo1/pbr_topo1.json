@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "sw1", "type": "switch", "links": [{ "node": "r1", "interface": "r1-eth0" }] },
+    { "id": "sw2", "type": "switch", "links": [{ "node": "r1", "interface": "r1-eth1" }] },
+    { "id": "sw3", "type": "switch", "links": [{ "node": "r1", "interface": "r1-eth2" }] },
+    { "id": "sw4", "type": "switch", "links": [{ "node": "r1", "interface": "r1-eth3" }] },
+    { "id": "sw5", "type": "switch", "links": [{ "node": "r1", "interface": "r1-eth4" }] }
+  ],
+  "links": [
+    { "source": "r1", "target": "sw1", "interface": "r1-eth0" },
+    { "source": "r1", "target": "sw2", "interface": "r1-eth1" },
+    { "source": "r1", "target": "sw3", "interface": "r1-eth2" },
+    { "source": "r1", "target": "sw4", "interface": "r1-eth3" },
+    { "source": "r1", "target": "sw5", "interface": "r1-eth4" }
+  ]
+}
