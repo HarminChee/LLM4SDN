@@ -1,0 +1,38 @@
+{
+  "nodes": [
+    {"id": "r1"},
+    {"id": "r2"},
+    {"id": "r3"},
+    {"id": "r4"},
+    {"id": "r5"},
+    {"id": "r6"},
+    {"id": "r7"}
+  ],
+  "links": [
+    {"source": "r1", "target": "r2", "interface": "s1"},
+    {"source": "r2", "target": "r3", "interface": "s2"},
+    {"source": "r3", "target": "r4", "interface": "s3"},
+    {"source": "r4", "target": "r5", "interface": "s4"},
+    {"source": "r5", "target": "r6", "interface": "s5"},
+    {"source": "r6", "target": "r7", "interface": "s6"}
+  ],
+  "protocols": [
+    {"router": "r1", "protocol": "ospf"},
+    {"router": "r2", "protocol": "ospf"},
+    {"router": "r3", "protocol": ["ospf", "isis"]},
+    {"router": "r4", "protocol": "isis"},
+    {"router": "r5", "protocol": ["ospf", "isis"]},
+    {"router": "r6", "protocol": "ospf"},
+    {"router": "r7", "protocol": "ospf"}
+  ],
+  "mpls": {
+    "enabled_routers": ["r1", "r2", "r3", "r4", "r5", "r6", "r7"],
+    "platform_labels": 100000
+  },
+  "bgp": {
+    "enabled_routers": ["r1", "r3", "r5", "r7"],
+    "sessions": [
+      {"peer1": "r1", "peer2": "r7", "state": "Established"}
+    ]
+  }
+}
