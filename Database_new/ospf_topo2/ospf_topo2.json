@@ -1,0 +1,69 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "router_id": "192.0.2.1",
+      "ipv6_router_id": "2001:db8::1",
+      "interfaces": {
+        "eth1": {"ip": "192.0.2.1/24", "ipv6": "2001:db8::1/64", "link": "r1-r2-eth1"},
+        "eth2": {"ip": "192.0.2.1/24", "ipv6": "2001:db8::1/64", "link": "r1-r2-eth2"},
+        "eth3": {"ip": "192.0.2.1/24", "ipv6": "2001:db8::1/64", "link": "r1-r4"}
+      }
+    },
+    "r2": {
+      "type": "router",
+      "router_id": "192.0.2.2",
+      "ipv6_router_id": "2001:db8::2",
+      "interfaces": {
+        "eth1": {"ip": "192.0.2.2/24", "ipv6": "2001:db8::2/64", "link": "r1-r2-eth1"},
+        "eth2": {"ip": "192.0.2.2/24", "ipv6": "2001:db8::2/64", "link": "r1-r2-eth2"},
+        "eth3": {"ip": "192.0.2.2/24", "ipv6": "2001:db8::2/64", "link": "r2-r3"}
+      }
+    },
+    "r3": {
+      "type": "router",
+      "router_id": "192.0.2.3",
+      "ipv6_router_id": "2001:db8::3",
+      "interfaces": {
+        "eth2": {"ip": "192.0.2.3/24", "ipv6": "2001:db8::3/64", "link": "r3-r4-eth2"},
+        "eth3": {"ip": "192.0.2.3/24", "ipv6": "2001:db8::3/64", "link": "r2-r3"}
+      }
+    },
+    "r4": {
+      "type": "router",
+      "router_id": "192.0.2.4",
+      "ipv6_router_id": "2001:db8::4",
+      "interfaces": {
+        "eth1": {"ip": "192.0.2.4/24", "ipv6": "2001:db8::4/64", "link": "r1-r4"},
+        "eth2": {"ip": "192.0.2.4/24", "ipv6": "2001:db8::4/64", "link": "r3-r4-eth2"},
+        "eth3": {"ip": "192.0.2.4/24", "ipv6": "2001:db8::4/64", "link": "r3-r4-eth3"}
+      }
+    }
+  },
+  "links": {
+    "r1-r2-eth1": {
+      "type": "link",
+      "connected_nodes": ["r1", "r2"]
+    },
+    "r1-r2-eth2": {
+      "type": "link",
+      "connected_nodes": ["r1", "r2"]
+    },
+    "r1-r4": {
+      "type": "link",
+      "connected_nodes": ["r1", "r4"]
+    },
+    "r2-r3": {
+      "type": "link",
+      "connected_nodes": ["r2", "r3"]
+    },
+    "r3-r4-eth2": {
+      "type": "link",
+      "connected_nodes": ["r3", "r4"]
+    },
+    "r3-r4-eth3": {
+      "type": "link",
+      "connected_nodes": ["r3", "r4"]
+    }
+  }
+}
