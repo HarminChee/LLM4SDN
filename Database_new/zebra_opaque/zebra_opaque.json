@@ -1,0 +1,43 @@
+{
+  "nodes": [
+    {"id": "r1"},
+    {"id": "r2"},
+    {"id": "r3"},
+    {"id": "r4"}
+  ],
+  "links": [
+    {"source": "r1", "target": "s1", "interface": "r1-eth0", "type": "switch"},
+    {"source": "r2", "target": "s1", "interface": "r2-eth0", "type": "switch"},
+    {"source": "r3", "target": "s2", "interface": "r3-eth0", "type": "switch"},
+    {"source": "r4", "target": "s2", "interface": "r4-eth0", "type": "switch"}
+  ],
+  "routes": [
+    {
+      "router": "r1",
+      "bgp_routes": [
+        {
+          "destination": "192.168.1.0/24",
+          "communities": ["65002:1", "65002:2"],
+          "large_communities": ["65002:1:1", "65002:2:1"]
+        }
+      ]
+    },
+    {
+      "router": "r3",
+      "ospf_routes": [
+        {
+          "destination": "192.168.1.0/24",
+          "path_type": "Intra-Area",
+          "area_id": "0.0.0.0"
+        }
+      ],
+      "ospf6_routes": [
+        {
+          "destination": "2001:db8:1::/64",
+          "path_type": "Intra-Area",
+          "area_id": "0.0.0.0"
+        }
+      ]
+    }
+  ]
+}
