@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    { "id": "R1", "ip": "10.0.255.1" },
+    { "id": "R2", "ip": "10.0.255.2" },
+    { "id": "R3", "ip": "10.0.255.3" },
+    { "id": "R4", "ip": "10.0.255.4" }
+  ],
+  "links": [
+    { "source": "R1", "target": "R2", "interface": "r1-eth0", "subnet": "10.0.0.0/24" },
+    { "source": "R1", "target": "R2", "interface": "r1-eth1", "subnet": "10.0.1.0/24" },
+    { "source": "R2", "target": "R3", "interface": "r2-eth2", "subnet": "10.0.3.0/24" },
+    { "source": "R2", "target": "R4", "interface": "r2-eth3", "subnet": "10.0.4.0/24" },
+    { "source": "R3", "target": "R4", "interface": "r3-eth1", "subnet": "10.0.5.0/24" }
+  ],
+  "ipv6_links": [
+    { "source": "R1", "target": "R2", "interface": "r1-eth0", "subnet": "2001:db8:0::/64" },
+    { "source": "R2", "target": "R3", "interface": "r2-eth2", "subnet": "2001:db8:3::/64" },
+    { "source": "R3", "target": "R4", "interface": "r3-eth1", "subnet": "2001:db8:5::/64" }
+  ]
+}
