@@ -1,0 +1,77 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.1",
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "ip": "193.1.1.1",
+          "connected_to": "sw2"
+        }
+      },
+      "role": "main_router",
+      "protocols": ["RIPv2"]
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "193.1.1.2",
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "ip": "193.1.2.1",
+          "connected_to": "sw3"
+        }
+      },
+      "role": "rip_router",
+      "protocols": ["RIPv1"]
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.3.1",
+          "connected_to": "sw4"
+        },
+        "eth1": {
+          "ip": "193.1.2.2",
+          "connected_to": "sw3"
+        }
+      },
+      "role": "rip_router",
+      "protocols": ["RIPv1"]
+    }
+  },
+  "links": {
+    "sw1": {
+      "type": "switch",
+      "subnet": "192.168.1.0/24",
+      "connected_to": ["r1"]
+    },
+    "sw2": {
+      "type": "switch",
+      "subnet": "193.1.1.0/26",
+      "connected_to": ["r1", "r2"]
+    },
+    "sw3": {
+      "type": "switch",
+      "subnet": "193.1.2.0/24",
+      "connected_to": ["r2", "r3"]
+    },
+    "sw4": {
+      "type": "switch",
+      "subnet": "192.168.3.0/24",
+      "connected_to": ["r3"]
+    }
+  },
+  "routes": {
+    "192.168.2.0/24": {
+      "origin": "static",
+      "next_hops": ["r1"]
+    }
+  }
+}
