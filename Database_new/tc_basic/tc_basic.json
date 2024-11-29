@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    {"id": "r1"},
+    {"id": "r2"}
+  ],
+  "links": [
+    {"source": "r1", "target": "r2", "interface": "r1-eth0", "type": "p2p"},
+    {"source": "r1", "target": "s1", "interface": "r1-eth1", "type": "switch"},
+    {"source": "r2", "target": "s2", "interface": "r2-eth1", "type": "switch"}
+  ],
+  "traffic_control": {
+    "router": "r1",
+    "interface": "r1-eth0",
+    "filters": [
+      {
+        "source": "192.168.100.0/24",
+        "destination": "192.168.101.0/24",
+        "ip_protocol": "tcp",
+        "src_port": 8000,
+        "dst_port": 8001,
+        "rate": "20mbit"
+      }
+    ]
+  }
+}
