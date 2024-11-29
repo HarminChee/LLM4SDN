@@ -1,0 +1,68 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.12.12/24",
+          "ipv6": "2000:1:1:12::12/64",
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "ip": "192.168.13.13/24",
+          "ipv6": "2000:1:1:13::13/64",
+          "connected_to": "s2"
+        },
+        "eth2": {
+          "ip": "192.168.14.14/24",
+          "ipv6": "2000:1:1:14::14/64",
+          "connected_to": "s3"
+        },
+        "lo": {
+          "ip": "1.1.1.1/32",
+          "ipv6": "2000:1:1:1::1/128",
+          "connected_to": null
+        }
+      },
+      "role": "main_router",
+      "protocols": ["BGP", "ISIS", "SNMP"]
+    }
+  },
+  "links": {
+    "s1": {
+      "type": "switch",
+      "subnet": {
+        "ipv4": "192.168.12.0/24",
+        "ipv6": "2000:1:1:12::/64"
+      },
+      "connected_to": ["r1"]
+    },
+    "s2": {
+      "type": "switch",
+      "subnet": {
+        "ipv4": "192.168.13.0/24",
+        "ipv6": "2000:1:1:13::/64"
+      },
+      "connected_to": ["r1"]
+    },
+    "s3": {
+      "type": "switch",
+      "subnet": {
+        "ipv4": "192.168.14.0/24",
+        "ipv6": "2000:1:1:14::/64"
+      },
+      "connected_to": ["r1"]
+    }
+  },
+  "snmp": {
+    "agent": {
+      "router": "r1",
+      "ip": "1.1.1.1",
+      "version": "2c",
+      "community": "public"
+    },
+    "oids": {
+      "bgpVersion": "10"
+    }
+  }
+}
