@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "R1", "type": "router", "interfaces": [{ "name": "r1-eth0", "ip": "10.0.1.1/24" }] },
+    { "id": "R2", "type": "router", "interfaces": [
+        { "name": "r2-eth0", "ip": "10.0.1.2/24" },
+        { "name": "r2-eth1", "ip": "10.0.2.2/24" },
+        { "name": "r2-eth2", "ip": "10.0.3.2/24" }
+      ] 
+    },
+    { "id": "R3", "type": "router", "interfaces": [
+        { "name": "r3-eth0", "ip": "10.0.2.3/24" },
+        { "name": "r3-eth1", "ip": "10.0.3.3/24" }
+      ] 
+    },
+    { "id": "R4", "type": "router", "interfaces": [{ "name": "r4-eth0", "ip": "10.0.2.4/24" }] }
+  ],
+  "links": [
+    { "source": "R1", "source_intf": "r1-eth0", "target": "R2", "target_intf": "r2-eth0" },
+    { "source": "R2", "source_intf": "r2-eth1", "target": "R3", "target_intf": "r3-eth0" },
+    { "source": "R2", "source_intf": "r2-eth2", "target": "R3", "target_intf": "r3-eth1" },
+    { "source": "R3", "source_intf": "r3-eth0", "target": "R4", "target_intf": "r4-eth0" }
+  ]
+}
