@@ -1,0 +1,66 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-r2", "connected_to": "s0" },
+        { "name": "eth-r3", "connected_to": "s1" }
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-r1", "connected_to": "s0" },
+        { "name": "eth-r4", "connected_to": "s2" }
+      ]
+    },
+    {
+      "id": "r3",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-r1", "connected_to": "s1" },
+        { "name": "eth-r4", "connected_to": "s3" }
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-r2", "connected_to": "s2" },
+        { "name": "eth-r3", "connected_to": "s3" }
+      ]
+    },
+    {
+      "id": "s0",
+      "type": "switch",
+      "connected_routers": ["r1", "r2"]
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "connected_routers": ["r1", "r3"]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "connected_routers": ["r2", "r4"]
+    },
+    {
+      "id": "s3",
+      "type": "switch",
+      "connected_routers": ["r3", "r4"]
+    }
+  ],
+  "links": [
+    { "source": "r1", "destination": "s0", "interface": "eth-r2" },
+    { "source": "r2", "destination": "s0", "interface": "eth-r1" },
+    { "source": "r1", "destination": "s1", "interface": "eth-r3" },
+    { "source": "r3", "destination": "s1", "interface": "eth-r1" },
+    { "source": "r2", "destination": "s2", "interface": "eth-r4" },
+    { "source": "r4", "destination": "s2", "interface": "eth-r2" },
+    { "source": "r3", "destination": "s3", "interface": "eth-r4" },
+    { "source": "r4", "destination": "s3", "interface": "eth-r3" }
+  ]
+}
