@@ -1,0 +1,17 @@
+{
+  "topology": {
+    "switches": {
+      "s1": {
+        "connected_routers": ["r1", "r2"]
+      }
+    },
+    "routers": {
+      "r1": {
+        "connected_switches": ["s1"]
+      },
+      "r2": {
+        "connected_switches": ["s1"]
+      }
+    }
+  }
+}
