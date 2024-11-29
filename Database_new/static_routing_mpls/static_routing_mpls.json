@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    {"id": "r1"},
+    {"id": "r2"}
+  ],
+  "links": [
+    {"source": "r1", "target": "sw1", "interface": "r1-eth1"},
+    {"source": "r1", "target": "sw2", "interface": "r1-eth2"},
+    {"source": "r2", "target": "sw2", "interface": "r2-eth1"},
+    {"source": "r2", "target": "sw3", "interface": "r2-eth2"},
+    {"source": "r2", "target": "sw4", "interface": "r2-eth3"}
+  ],
+  "mpls": {
+    "platform_labels": 100000,
+    "enabled_interfaces": [
+      {"router": "r2", "interface": "r2-eth1", "enabled": true},
+      {"router": "r2", "interface": "r2-eth2", "enabled": false}
+    ]
+  }
+}
