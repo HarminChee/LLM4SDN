@@ -1,0 +1,27 @@
+{
+  "nodes": [
+    {"id": "r1"}
+  ],
+  "links": [
+    {"source": "r1", "target": "s1", "interface": "r1-eth0", "type": "switch"}
+  ],
+  "routes": [
+    {
+      "router": "r1",
+      "routes": [
+        {
+          "destination": "2.1.3.7/32",
+          "next_hop": {"ip": "192.168.1.1", "interface": "r1-eth0"},
+          "protocol": "sharp",
+          "distance": 150,
+          "metric": 0,
+          "table": 254,
+          "installed": true
+        }
+      ]
+    }
+  ],
+  "interface_addresses": [
+    {"interface": "r1-eth0", "addresses": ["192.168.1.1/24"]}
+  ]
+}
