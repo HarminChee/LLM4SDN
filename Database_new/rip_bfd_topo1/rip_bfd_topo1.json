@@ -1,0 +1,82 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.0.1",
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "ip": "192.168.1.1",
+          "connected_to": "s2"
+        }
+      },
+      "role": "central"
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.0.2",
+          "connected_to": "s1"
+        }
+      },
+      "role": "neighbor"
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.2",
+          "connected_to": "s2"
+        }
+      },
+      "role": "neighbor"
+    }
+  },
+  "links": {
+    "s1": {
+      "type": "switch",
+      "subnet": "192.168.0.0/24",
+      "connected_to": ["r1", "r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "subnet": "192.168.1.0/24",
+      "connected_to": ["r1", "r3"]
+    }
+  },
+  "routes": {
+    "10.254.254.1/32": {
+      "origin": "r1",
+      "next_hops": ["r2", "r3"]
+    },
+    "10.254.254.2/32": {
+      "origin": "r2",
+      "next_hops": ["r1"]
+    },
+    "10.254.254.3/32": {
+      "origin": "r3",
+      "next_hops": ["r1"]
+    }
+  },
+  "bfd": {
+    "links": [
+      {
+        "peer_a": "192.168.0.1",
+        "peer_b": "192.168.0.2",
+        "status": "up",
+        "receive_interval": 1000,
+        "transmit_interval": 1000
+      },
+      {
+        "peer_a": "192.168.1.1",
+        "peer_b": "192.168.1.2",
+        "status": "up",
+        "receive_interval": 1000,
+        "transmit_interval": 1000
+      }
+    ]
+  }
+}
