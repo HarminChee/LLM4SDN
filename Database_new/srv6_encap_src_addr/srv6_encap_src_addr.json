@@ -1,0 +1,26 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ip": "fc00:0:1::1/128",
+          "connected_to": null
+        }
+      },
+      "role": "srv6_manager",
+      "protocols": ["BGP", "SRv6"],
+      "segment_routing": {
+        "srv6_encapsulation_source_address": "fc00:0:1::1"
+      }
+    }
+  },
+  "links": {},
+  "segment_routing": {
+    "srv6": {
+      "encapsulation": {
+        "source_address": "fc00:0:1::1"
+      }
+    }
+  }
+}
