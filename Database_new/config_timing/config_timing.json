@@ -1,0 +1,36 @@
+{
+  "topology": {
+    "routers": [
+      {
+        "name": "r1",
+        "connections": [
+          {
+            "to": "s1",
+            "type": "ethernet"
+          }
+        ],
+        "static_routes": {
+          "ipv4": {
+            "prefixes": ["10.0.0.0/8", "11.0.0.0/8"],
+            "via": "lo"
+          },
+          "ipv6": {
+            "prefixes": ["2100:1111:2220::/44", "2100:3333:4440::/44"],
+            "via": "lo"
+          }
+        }
+      }
+    ],
+    "switches": [
+      {
+        "name": "s1",
+        "connections": [
+          {
+            "to": "r1",
+            "type": "ethernet"
+          }
+        ]
+      }
+    ]
+  }
+}
