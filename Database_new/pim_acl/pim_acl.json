@@ -1,0 +1,37 @@
+{
+  "nodes": [
+    { "id": "h1", "type": "host", "role": "receiver" },
+    { "id": "h2", "type": "host", "role": "source" },
+    { "id": "r1", "type": "router", "role": "main_router" },
+    { "id": "r11", "type": "router", "role": "pim_rp" },
+    { "id": "r12", "type": "router", "role": "pim_rp" },
+    { "id": "r13", "type": "router", "role": "pim_rp" },
+    { "id": "r14", "type": "router", "role": "pim_rp" },
+    { "id": "r15", "type": "router", "role": "pim_rp" },
+    { "id": "sw1", "type": "switch", "links": [{ "node": "h1" }, { "node": "r1" }] },
+    {
+      "id": "sw2",
+      "type": "switch",
+      "links": [
+        { "node": "r1" },
+        { "node": "h2" },
+        { "node": "r11" },
+        { "node": "r12" },
+        { "node": "r13" },
+        { "node": "r14" },
+        { "node": "r15" }
+      ]
+    }
+  ],
+  "links": [
+    { "source": "h1", "target": "sw1", "interface": "h1-eth0" },
+    { "source": "r1", "target": "sw1", "interface": "r1-eth0" },
+    { "source": "r1", "target": "sw2", "interface": "r1-eth1" },
+    { "source": "h2", "target": "sw2", "interface": "h2-eth0" },
+    { "source": "r11", "target": "sw2", "interface": "r11-eth0" },
+    { "source": "r12", "target": "sw2", "interface": "r12-eth0" },
+    { "source": "r13", "target": "sw2", "interface": "r13-eth0" },
+    { "source": "r14", "target": "sw2", "interface": "r14-eth0" },
+    { "source": "r15", "target": "sw2", "interface": "r15-eth0" }
+  ]
+}
