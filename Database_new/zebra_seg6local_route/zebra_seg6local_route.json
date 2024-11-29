@@ -1,0 +1,30 @@
+{
+  "nodes": [
+    {"id": "r1"}
+  ],
+  "links": [
+    {"source": "r1", "target": null, "interface": "dum0", "type": "loopback"}
+  ],
+  "routes": [
+    {
+      "router": "r1",
+      "seg6local_routes": [
+        {
+          "destination": "2001:db8:1::/128",
+          "action": "End.DT6",
+          "context": {"table": 100}
+        },
+        {
+          "destination": "2001:db8:2::/128",
+          "action": "End.X",
+          "context": {"interface": "r1-eth0"}
+        },
+        {
+          "destination": "2001:db8:3::/128",
+          "action": "End.T",
+          "context": {"segments": ["2001:db8:4::1", "2001:db8:5::1"]}
+        }
+      ]
+    }
+  ]
+}
