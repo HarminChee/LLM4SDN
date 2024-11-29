@@ -1,0 +1,121 @@
+{
+  "routers": [
+    {
+      "name": "r1",
+      "vrfs": [
+        {
+          "name": "DONNA",
+          "routes": [
+            {
+              "subnet": "10.0.0.0/24",
+              "protocol": "connected"
+            },
+            {
+              "subnet": "10.0.1.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "EVA",
+                "vrf": "EVA"
+              }
+            },
+            {
+              "subnet": "10.0.3.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "EVA",
+                "vrf": "EVA"
+              }
+            },
+            {
+              "subnet": "10.0.4.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "dummy0",
+                "vrf": "default"
+              }
+            },
+            {
+              "subnet": "172.16.101.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "ZITA",
+                "vrf": "ZITA"
+              }
+            }
+          ]
+        },
+        {
+          "name": "EVA",
+          "routes": [
+            {
+              "subnet": "10.0.0.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "DONNA",
+                "vrf": "DONNA"
+              }
+            },
+            {
+              "subnet": "10.0.1.0/24",
+              "protocol": "connected"
+            },
+            {
+              "subnet": "10.0.2.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "DONNA",
+                "vrf": "DONNA"
+              }
+            },
+            {
+              "subnet": "10.0.3.0/24",
+              "protocol": "connected"
+            },
+            {
+              "subnet": "172.16.101.0/24",
+              "protocol": "unknown"
+            }
+          ]
+        },
+        {
+          "name": "default",
+          "routes": [
+            {
+              "subnet": "10.0.0.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "DONNA",
+                "vrf": "DONNA"
+              }
+            },
+            {
+              "subnet": "10.0.2.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "DONNA",
+                "vrf": "DONNA"
+              }
+            },
+            {
+              "subnet": "10.0.4.0/24",
+              "protocol": "connected"
+            }
+          ]
+        },
+        {
+          "name": "ZITA",
+          "routes": [
+            {
+              "subnet": "172.16.101.0/24",
+              "protocol": "bgp",
+              "nexthop": {
+                "interface": "ZITA",
+                "vrf": "ZITA"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
