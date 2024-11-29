@@ -1,0 +1,102 @@
+#include <core.p4>
+#include <v1model.p4>
+
+// Header Definitions
+header ethernet_t {
+    bit<48> dstAddr;
+    bit<48> srcAddr;
+    bit<16> etherType;
+}
+
+header ipv4_t {
+    bit<4>  version;
+    bit<4>  ihl;
+    bit<8>  diffserv;
+    bit<16> totalLen;
+    bit<16> identification;
+    bit<3>  flags;
+    bit<13> fragOffset;
+    bit<8>  ttl;
+    bit<8>  protocol;
+    bit<16> hdrChecksum;
+    bit<32> srcAddr;
+    bit<32> dstAddr;
+}
+
+header gre_t {
+    bit<16> flags; // GRE Flags
+    bit<16> protocol;
+    bit<32> key; // Tunnel Key
+}
+
+// Parsers
+parser MyParser(packet_in packet,
+                out ethernet_t eth_hdr,
+                out ipv4_t ip_hdr,
+                out gre_t gre_hdr) {
+    state start {
+        packet.extract(eth_hdr);
+        transition select(eth_hdr.etherType) {
+            0x0800: parse_ipv4;
+            default: accept;
+        }
+    }
+    state parse_ipv4 {
+        packet.extract(ip_hdr);
+        transition select(ip_hdr.protocol) {
+            0x2F: parse_gre; // GRE Protocol
+            default: accept;
+        }
+    }
+    state parse_gre {
+        packet.extract(gre_hdr);
+        transition accept;
+    }
+}
+
+// Control Logic
+control MyIngress {
+    action forward(bit<9> port) {
+        standard_metadata.egress_spec = port;
+    }
+
+    action drop() {
+        mark_to_drop();
+    }
+
+    table ipv4_lpm {
+        key = {
+            hdr.ipv4.dstAddr: lpm;
+        }
+        actions = {
+            forward;
+            drop;
+        }
+        size = 1024;
+    }
+
+    apply {
+        if (hdr.ipv4.isValid()) {
+            ipv4_lpm.apply();
+        }
+    }
+}
+
+// Deparser
+control MyDeparser(packet_out packet,
+                   in ethernet_t eth_hdr,
+                   in ipv4_t ip_hdr,
+                   in gre_t gre_hdr) {
+    apply {
+        packet.emit(eth_hdr);
+        packet.emit(ip_hdr);
+        packet.emit(gre_hdr);
+    }
+}
+
+// Pipeline
+control MyPipeline {
+    MyParser() parser;
+    MyIngress() ingress;
+    MyDeparser() deparser;
+}
