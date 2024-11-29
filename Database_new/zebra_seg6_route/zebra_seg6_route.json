@@ -1,0 +1,27 @@
+{
+  "nodes": [
+    {"id": "r1"}
+  ],
+  "links": [
+    {"source": "r1", "target": null, "interface": "r1-eth0", "type": "loopback"}
+  ],
+  "routes": [
+    {
+      "router": "r1",
+      "seg6_routes": [
+        {
+          "destination": "2001:db8:1::/64",
+          "nexthop": "2001:db8:2::1",
+          "segment_list": ["2001:db8:3::1", "2001:db8:4::1"],
+          "action": "encap"
+        },
+        {
+          "destination": "2001:db8:5::/64",
+          "nexthop": "2001:db8:6::1",
+          "segment_list": ["2001:db8:7::1"],
+          "action": "encap"
+        }
+      ]
+    }
+  ]
+}
