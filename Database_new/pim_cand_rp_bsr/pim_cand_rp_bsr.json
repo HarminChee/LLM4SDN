@@ -1,0 +1,129 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.0.1",
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "ip": "10.0.1.1",
+          "connected_to": "s2"
+        }
+      },
+      "role": "C-BSR (elected)"
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.0.2",
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "ip": "10.0.2.1",
+          "connected_to": "s3"
+        }
+      },
+      "role": "C-BSR"
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.1.3",
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "ip": "10.0.3.3",
+          "connected_to": "s4"
+        },
+        "eth2": {
+          "ip": "10.0.4.5",
+          "connected_to": "s5"
+        }
+      },
+      "role": "C-RP (priority)"
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.2.4",
+          "connected_to": "s3"
+        },
+        "eth1": {
+          "ip": "10.0.3.4",
+          "connected_to": "s4"
+        },
+        "eth2": {
+          "ip": "10.0.5.6",
+          "connected_to": "s6"
+        }
+      },
+      "role": "C-RP"
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.4.5",
+          "connected_to": "s5"
+        },
+        "eth1": {
+          "ip": "10.0.6.5",
+          "connected_to": "s7"
+        }
+      }
+    },
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "10.0.5.6",
+          "connected_to": "s6"
+        },
+        "eth1": {
+          "ip": "10.0.6.6",
+          "connected_to": "s7"
+        }
+      }
+    },
+    "s1": {
+      "type": "switch",
+      "subnet": "10.0.0.0/24",
+      "connected_to": ["r1", "r2", "r4"]
+    },
+    "s2": {
+      "type": "switch",
+      "subnet": "10.0.1.0/24",
+      "connected_to": ["r1", "r3"]
+    },
+    "s3": {
+      "type": "switch",
+      "subnet": "10.0.2.0/24",
+      "connected_to": ["r2", "r4"]
+    },
+    "s4": {
+      "type": "switch",
+      "subnet": "10.0.3.0/24",
+      "connected_to": ["r3", "r4"]
+    },
+    "s5": {
+      "type": "switch",
+      "subnet": "10.0.4.0/24",
+      "connected_to": ["r3", "r5"]
+    },
+    "s6": {
+      "type": "switch",
+      "subnet": "10.0.5.0/24",
+      "connected_to": ["r4", "r6"]
+    },
+    "s7": {
+      "type": "switch",
+      "subnet": "10.0.6.0/24",
+      "connected_to": ["r5", "r6"]
+    }
+  }
+}
