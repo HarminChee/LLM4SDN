@@ -1,0 +1,30 @@
+{
+  "routers": [
+    { "name": "RT1", "interfaces": ["eth-rt2", "eth-rt3"] },
+    { "name": "RT2", "interfaces": ["eth-rt1", "eth-rt4"] },
+    { "name": "RT3", "interfaces": ["eth-rt1", "eth-rt5"] },
+    { "name": "RT4", "interfaces": ["eth-rt2", "eth-rt6"] },
+    { "name": "RT5", "interfaces": ["eth-rt3", "eth-rt7"] },
+    { "name": "RT6", "interfaces": ["eth-rt4", "eth-rt8"] },
+    { "name": "RT7", "interfaces": ["eth-rt5", "eth-rt8"] },
+    { "name": "RT8", "interfaces": ["eth-rt6", "eth-rt7"] }
+  ],
+  "links": [
+    { "source": "RT1", "destination": "RT2", "interface": "eth-rt2" },
+    { "source": "RT2", "destination": "RT1", "interface": "eth-rt1" },
+    { "source": "RT1", "destination": "RT3", "interface": "eth-rt3" },
+    { "source": "RT3", "destination": "RT1", "interface": "eth-rt1" },
+    { "source": "RT2", "destination": "RT4", "interface": "eth-rt4" },
+    { "source": "RT4", "destination": "RT2", "interface": "eth-rt2" },
+    { "source": "RT3", "destination": "RT5", "interface": "eth-rt5" },
+    { "source": "RT5", "destination": "RT3", "interface": "eth-rt3" },
+    { "source": "RT4", "destination": "RT6", "interface": "eth-rt6" },
+    { "source": "RT6", "destination": "RT4", "interface": "eth-rt4" },
+    { "source": "RT5", "destination": "RT7", "interface": "eth-rt7" },
+    { "source": "RT7", "destination": "RT5", "interface": "eth-rt5" },
+    { "source": "RT6", "destination": "RT8", "interface": "eth-rt8" },
+    { "source": "RT8", "destination": "RT6", "interface": "eth-rt6" },
+    { "source": "RT7", "destination": "RT8", "interface": "eth-rt8" },
+    { "source": "RT8", "destination": "RT7", "interface": "eth-rt7" }
+  ]
+}
