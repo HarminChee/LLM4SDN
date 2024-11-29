@@ -1,0 +1,21 @@
+{
+  "routers": [
+    { "name": "RT1", "interfaces": ["eth-RT2", "eth-RT3"], "affinities": ["red", "green", "yellow", "orange"] },
+    { "name": "RT2", "interfaces": ["eth-RT1", "eth-RT3"], "affinities": ["red", "blue", "yellow", "orange"] },
+    { "name": "RT3", "interfaces": ["eth-RT1", "eth-RT2"], "affinities": ["green", "blue", "yellow", "orange"] }
+  ],
+  "links": [
+    { "source": "RT1", "interface": "eth-RT2", "destination": "RT2", "interface": "eth-RT1", "subnet": "10.12.0.0/24", "affinity": "red" },
+    { "source": "RT2", "interface": "eth-RT3", "destination": "RT3", "interface": "eth-RT2", "subnet": "10.23.0.0/24", "affinity": "blue" },
+    { "source": "RT3", "interface": "eth-RT1", "destination": "RT1", "interface": "eth-RT3", "subnet": "10.13.0.0/24", "affinities": ["green", "yellow", "orange"] }
+  ],
+  "flex_algorithms": [
+    { "id": 201, "description": "exclude red", "exclude-any": ["red"] },
+    { "id": 202, "description": "exclude blue", "exclude-any": ["blue"] },
+    { "id": 203, "description": "exclude green", "exclude-any": ["green"] },
+    { "id": 204, "description": "include-any blue green", "include-any": ["blue", "green"] },
+    { "id": 205, "description": "include-any red green", "include-any": ["red", "green"] },
+    { "id": 206, "description": "include-any red blue", "include-any": ["red", "blue"] },
+    { "id": 207, "description": "include-all yellow orange", "include-all": ["yellow", "orange"] }
+  ]
+}
