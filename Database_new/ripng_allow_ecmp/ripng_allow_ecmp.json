@@ -1,0 +1,68 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "2001:db8:1::1/64",
+          "connected_to": "s1"
+        }
+      },
+      "role": "sender"
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "2001:db8:1::2/64",
+          "connected_to": "s1"
+        }
+      },
+      "role": "next-hop"
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "2001:db8:1::3/64",
+          "connected_to": "s1"
+        }
+      },
+      "role": "next-hop"
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "2001:db8:1::4/64",
+          "connected_to": "s1"
+        }
+      },
+      "role": "next-hop"
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "2001:db8:1::5/64",
+          "connected_to": "s1"
+        }
+      },
+      "role": "receiver"
+    }
+  },
+  "links": {
+    "s1": {
+      "type": "switch",
+      "subnet": "2001:db8:1::/64",
+      "connected_to": ["r1", "r2", "r3", "r4", "r5"]
+    }
+  },
+  "routes": {
+    "2001:db8:2::/64": {
+      "origin": "r1",
+      "next_hops": ["r2", "r3", "r4"],
+      "allow_ecmp": true
+    }
+  }
+}
