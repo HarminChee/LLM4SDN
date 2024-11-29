@@ -1,0 +1,67 @@
+{
+  "nodes": [
+    { "id": "r1", "ip": "10.254.0.1", "ipv6": "2001:db8:f::1", "level": 2 },
+    { "id": "r2", "ip": "10.254.0.2", "ipv6": "2001:db8:f::2", "level": 2 },
+    { "id": "r3", "ip": "10.254.0.3", "ipv6": "2001:db8:f::3", "level": 1.5 },
+    { "id": "r4", "ip": "10.254.0.4", "ipv6": "2001:db8:f::4", "level": 1.5 },
+    { "id": "r5", "ip": "10.254.0.5", "ipv6": "2001:db8:f::5", "level": 1 }
+  ],
+  "links": [
+    {
+      "source": "r1",
+      "target": "sw1",
+      "interface": "eth0",
+      "subnet": "10.0.20.0/24",
+      "ipv6_subnet": "2001:db8:1::/64"
+    },
+    {
+      "source": "sw1",
+      "target": "r3",
+      "interface": "eth0",
+      "subnet": "10.0.20.0/24",
+      "ipv6_subnet": "2001:db8:1::/64"
+    },
+    {
+      "source": "r2",
+      "target": "sw2",
+      "interface": "eth0",
+      "subnet": "10.0.21.0/24",
+      "ipv6_subnet": "2001:db8:1::/64"
+    },
+    {
+      "source": "sw2",
+      "target": "r3",
+      "interface": "eth1",
+      "subnet": "10.0.21.0/24",
+      "ipv6_subnet": "2001:db8:1::/64"
+    },
+    {
+      "source": "r3",
+      "target": "sw3",
+      "interface": "eth0",
+      "subnet": "10.0.10.0/24",
+      "ipv6_subnet": "2001:db8:2::/64"
+    },
+    {
+      "source": "sw3",
+      "target": "r4",
+      "interface": "eth0",
+      "subnet": "10.0.10.0/24",
+      "ipv6_subnet": "2001:db8:2::/64"
+    },
+    {
+      "source": "r4",
+      "target": "sw4",
+      "interface": "eth1",
+      "subnet": "10.0.11.0/24",
+      "ipv6_subnet": "2001:db8:2::/64"
+    },
+    {
+      "source": "sw4",
+      "target": "r5",
+      "interface": "eth0",
+      "subnet": "10.0.11.0/24",
+      "ipv6_subnet": "2001:db8:2::/64"
+    }
+  ]
+}
