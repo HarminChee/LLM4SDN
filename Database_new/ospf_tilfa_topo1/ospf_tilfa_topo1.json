@@ -1,0 +1,51 @@
+{
+  "nodes": {
+    "rt1": {
+      "type": "router",
+      "router_id": "1.1.1.1",
+      "interfaces": {
+        "eth-rt2": {"ip": "10.0.1.1/24", "link": "s1"},
+        "eth-rt3": {"ip": "10.0.2.1/24", "link": "s2"}
+      }
+    },
+    "rt2": {
+      "type": "router",
+      "router_id": "2.2.2.2",
+      "interfaces": {
+        "eth-rt1": {"ip": "10.0.1.2/24", "link": "s1"},
+        "eth-rt4": {"ip": "10.0.3.1/24", "link": "s3"}
+      }
+    },
+    "rt3": {
+      "type": "router",
+      "router_id": "3.3.3.3",
+      "interfaces": {
+        "eth-rt1": {"ip": "10.0.2.2/24", "link": "s2"},
+        "eth-rt5": {"ip": "10.0.4.1/24", "link": "s4"}
+      }
+    },
+    "rt4": {
+      "type": "router",
+      "router_id": "4.4.4.4",
+      "interfaces": {
+        "eth-rt2": {"ip": "10.0.3.2/24", "link": "s3"},
+        "eth-rt5": {"ip": "10.0.5.1/24", "link": "s5"}
+      }
+    },
+    "rt5": {
+      "type": "router",
+      "router_id": "5.5.5.5",
+      "interfaces": {
+        "eth-rt3": {"ip": "10.0.4.2/24", "link": "s4"},
+        "eth-rt4": {"ip": "10.0.5.2/24", "link": "s5"}
+      }
+    }
+  },
+  "links": {
+    "s1": {"type": "switch", "connected_nodes": ["rt1", "rt2"]},
+    "s2": {"type": "switch", "connected_nodes": ["rt1", "rt3"]},
+    "s3": {"type": "switch", "connected_nodes": ["rt2", "rt4"]},
+    "s4": {"type": "switch", "connected_nodes": ["rt3", "rt5"]},
+    "s5": {"type": "switch", "connected_nodes": ["rt4", "rt5"]}
+  }
+}
