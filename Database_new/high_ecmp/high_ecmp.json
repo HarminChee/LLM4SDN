@@ -1,0 +1,87 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": [
+        { "name": "r1-eth1", "connected_to": "sw1" },
+        { "name": "r1-eth2", "connected_to": "sw2" },
+        { "name": "r1-eth3", "connected_to": "sw3" },
+        { "name": "r1-eth4", "connected_to": "sw4" },
+        { "name": "r1-eth5", "connected_to": "sw5" },
+        { "name": "r1-eth6", "connected_to": "sw6" },
+        { "name": "r1-eth7", "connected_to": "sw7" },
+        { "name": "r1-eth8", "connected_to": "sw8" },
+        { "name": "r1-eth9", "connected_to": "sw9" },
+        { "name": "r1-eth10", "connected_to": "sw10" },
+        { "name": "r1-eth11", "connected_to": "sw11" },
+        { "name": "r1-eth12", "connected_to": "sw12" },
+        { "name": "r1-eth13", "connected_to": "sw13" },
+        { "name": "r1-eth14", "connected_to": "sw14" },
+        { "name": "r1-eth15", "connected_to": "sw15" },
+        { "name": "r1-eth16", "connected_to": "sw16" },
+        { "name": "r1-eth17", "connected_to": "sw17" },
+        { "name": "r1-eth18", "connected_to": "sw18" },
+        { "name": "r1-eth19", "connected_to": "sw19" },
+        { "name": "r1-eth20", "connected_to": "sw20" },
+        { "name": "r1-eth21", "connected_to": "sw21" },
+        { "name": "r1-eth22", "connected_to": "sw22" },
+        { "name": "r1-eth23", "connected_to": "sw23" },
+        { "name": "r1-eth24", "connected_to": "sw24" },
+        { "name": "r1-eth25", "connected_to": "sw25" },
+        { "name": "r1-eth26", "connected_to": "sw26" },
+        { "name": "r1-eth27", "connected_to": "sw27" },
+        { "name": "r1-eth28", "connected_to": "sw28" },
+        { "name": "r1-eth29", "connected_to": "sw29" },
+        { "name": "r1-eth30", "connected_to": "sw30" }
+        // Repeat similar for up to "r1-eth256"
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "interfaces": [
+        { "name": "r2-eth1", "connected_to": "sw1" },
+        { "name": "r2-eth2", "connected_to": "sw2" },
+        { "name": "r2-eth3", "connected_to": "sw3" },
+        { "name": "r2-eth4", "connected_to": "sw4" },
+        { "name": "r2-eth5", "connected_to": "sw5" },
+        { "name": "r2-eth6", "connected_to": "sw6" },
+        { "name": "r2-eth7", "connected_to": "sw7" },
+        { "name": "r2-eth8", "connected_to": "sw8" },
+        { "name": "r2-eth9", "connected_to": "sw9" },
+        { "name": "r2-eth10", "connected_to": "sw10" },
+        { "name": "r2-eth11", "connected_to": "sw11" },
+        { "name": "r2-eth12", "connected_to": "sw12" },
+        { "name": "r2-eth13", "connected_to": "sw13" },
+        { "name": "r2-eth14", "connected_to": "sw14" },
+        { "name": "r2-eth15", "connected_to": "sw15" },
+        { "name": "r2-eth16", "connected_to": "sw16" },
+        { "name": "r2-eth17", "connected_to": "sw17" },
+        { "name": "r2-eth18", "connected_to": "sw18" },
+        { "name": "r2-eth19", "connected_to": "sw19" },
+        { "name": "r2-eth20", "connected_to": "sw20" },
+        { "name": "r2-eth21", "connected_to": "sw21" },
+        { "name": "r2-eth22", "connected_to": "sw22" },
+        { "name": "r2-eth23", "connected_to": "sw23" },
+        { "name": "r2-eth24", "connected_to": "sw24" },
+        { "name": "r2-eth25", "connected_to": "sw25" },
+        { "name": "r2-eth26", "connected_to": "sw26" },
+        { "name": "r2-eth27", "connected_to": "sw27" },
+        { "name": "r2-eth28", "connected_to": "sw28" },
+        { "name": "r2-eth29", "connected_to": "sw29" },
+        { "name": "r2-eth30", "connected_to": "sw30" }
+        // Repeat similar for up to "r2-eth256"
+      ]
+    }
+  ],
+  "links": [
+    { "source": "sw1", "destination": "r1-eth1" },
+    { "source": "sw1", "destination": "r2-eth1" },
+    { "source": "sw2", "destination": "r1-eth2" },
+    { "source": "sw2", "destination": "r2-eth2" },
+    { "source": "sw3", "destination": "r1-eth3" },
+    { "source": "sw3", "destination": "r2-eth3" }
+    // Repeat similar for all switches up to "sw256"
+  ]
+}
