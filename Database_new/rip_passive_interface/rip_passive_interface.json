@@ -1,0 +1,60 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.1",
+          "connected_to": "s1"
+        }
+      },
+      "role": "sender"
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.1.2",
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "ip": "192.168.2.1",
+          "connected_to": "s2"
+        }
+      },
+      "role": "intermediate",
+      "rip": {
+        "passive_interface_default": true,
+        "active_interfaces": ["eth0"]
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ip": "192.168.2.2",
+          "connected_to": "s2"
+        }
+      },
+      "role": "receiver"
+    }
+  },
+  "links": {
+    "s1": {
+      "type": "switch",
+      "subnet": "192.168.1.0/24",
+      "connected_to": ["r1", "r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "subnet": "192.168.2.0/24",
+      "connected_to": ["r2", "r3"]
+    }
+  },
+  "routes": {
+    "10.10.10.1/32": {
+      "origin": "r1",
+      "next_hops": ["r2", "r3"]
+    }
+  }
+}
