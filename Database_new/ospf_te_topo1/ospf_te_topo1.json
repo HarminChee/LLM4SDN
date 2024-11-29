@@ -1,0 +1,51 @@
+{
+  "nodes": {
+    "r1": {
+      "type": "router",
+      "router_id": "10.0.255.1",
+      "interfaces": {
+        "eth0": {"ip": "10.0.0.1/24", "link": "r1-r2-eth0"},
+        "eth1": {"ip": "10.0.1.1/24", "link": "r1-r2-eth1"}
+      }
+    },
+    "r2": {
+      "type": "router",
+      "router_id": "10.0.255.2",
+      "interfaces": {
+        "eth0": {"ip": "10.0.0.2/24", "link": "r1-r2-eth0"},
+        "eth1": {"ip": "10.0.1.2/24", "link": "r1-r2-eth1"},
+        "eth2": {"ip": "10.0.3.2/24", "link": "r2-r3"},
+        "eth3": {"ip": "10.0.4.2/24", "link": "r2-r4"}
+      }
+    },
+    "r3": {
+      "type": "router",
+      "router_id": "10.0.255.3",
+      "interfaces": {
+        "eth0": {"ip": "10.0.3.3/24", "link": "r2-r3"},
+        "eth1": {"ip": "10.0.5.1/24", "link": "r3-asbr"}
+      }
+    },
+    "r4": {
+      "type": "router",
+      "router_id": "10.0.255.4",
+      "interfaces": {
+        "eth0": {"ip": "10.0.4.4/24", "link": "r2-r4"}
+      }
+    },
+    "asbr": {
+      "type": "router",
+      "router_id": "10.0.255.5",
+      "interfaces": {
+        "eth0": {"ip": "10.0.5.2/24", "link": "r3-asbr"}
+      }
+    }
+  },
+  "links": {
+    "r1-r2-eth0": {"type": "link", "nodes": ["r1", "r2"]},
+    "r1-r2-eth1": {"type": "link", "nodes": ["r1", "r2"]},
+    "r2-r3": {"type": "link", "nodes": ["r2", "r3"]},
+    "r2-r4": {"type": "link", "nodes": ["r2", "r4"]},
+    "r3-asbr": {"type": "link", "nodes": ["r3", "asbr"]}
+  }
+}
