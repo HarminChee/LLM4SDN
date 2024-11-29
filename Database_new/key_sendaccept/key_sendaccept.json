@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    { "id": "r1", "type": "router" },
+    { "id": "r2", "type": "router" },
+    { "id": "s1", "type": "switch" }
+  ],
+  "links": [
+    { "source": "r1", "target": "s1", "interface": "eth0" },
+    { "source": "r2", "target": "s1", "interface": "eth0" }
+  ],
+  "keychains": [
+    {
+      "name": "kc",
+      "keys": [
+        {
+          "id": 1,
+          "key-string": "theSecret",
+          "algorithm": "hmac-sha-256",
+          "send-lifetime": "00:00:00 Jan 1 2024 infinite",
+          "accept-lifetime": "00:00:00 Jan 1 2024 infinite"
+        },
+        {
+          "id": 2,
+          "key-string": "theSecret",
+          "algorithm": "hmac-sha-256",
+          "send-lifetime": "00:00:00 Jan 1 2024 duration 315360000",
+          "accept-lifetime": "00:00:00 Jan 1 2024 duration 315360000"
+        },
+        {
+          "id": 3,
+          "key-string": "theSecret",
+          "algorithm": "hmac-sha-256",
+          "send-lifetime": "00:00:00 Jan 1 2024 23:59:59 Dec 31 2034",
+          "accept-lifetime": "00:00:00 Jan 1 2024 23:59:59 Dec 31 2034"
+        }
+      ]
+    }
+  ]
+}
