@@ -1,0 +1,18 @@
+{
+  "nodes": [
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": [
+        { "name": "r1-eth0", "ip": "1.1.1.1/24" },
+        { "name": "r1-eth1", "ip": "3.3.3.1/24" }
+      ]
+    }
+  ],
+  "routes": [
+    { "prefix": "111.0.0.0/8", "next_hop": "1.1.1.2", "interface": "r1-eth0" },
+    { "prefix": "55.0.0.0/8", "next_hop": "1.1.1.2", "interface": "r1-eth0" },
+    { "prefix": "2111::/48", "next_hop": "2102::2", "interface": "r1-eth1", "vrf": "red" },
+    { "prefix": "2055::/48", "next_hop": "2101::2", "interface": "r1-eth0" }
+  ]
+}
