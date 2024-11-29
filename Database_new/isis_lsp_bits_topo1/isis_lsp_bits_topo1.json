@@ -1,0 +1,98 @@
+{
+  "nodes": [
+    {
+      "id": "rt1",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-sw1", "connected_to": "s1" }
+      ]
+    },
+    {
+      "id": "rt2",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-sw1", "connected_to": "s1" },
+        { "name": "eth-rt4", "connected_to": "s2" }
+      ]
+    },
+    {
+      "id": "rt3",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-sw1", "connected_to": "s1" },
+        { "name": "eth-rt5", "connected_to": "s4" }
+      ]
+    },
+    {
+      "id": "rt4",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt2", "connected_to": "s2" },
+        { "name": "eth-rt5", "connected_to": "s6" },
+        { "name": "eth-rt6", "connected_to": "s7" }
+      ]
+    },
+    {
+      "id": "rt5",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt3", "connected_to": "s4" },
+        { "name": "eth-rt4", "connected_to": "s6" },
+        { "name": "eth-rt6", "connected_to": "s8" }
+      ]
+    },
+    {
+      "id": "rt6",
+      "type": "router",
+      "interfaces": [
+        { "name": "eth-rt4", "connected_to": "s7" },
+        { "name": "eth-rt5", "connected_to": "s8" }
+      ]
+    },
+    {
+      "id": "s1",
+      "type": "switch",
+      "connected_routers": ["rt1", "rt2", "rt3"]
+    },
+    {
+      "id": "s2",
+      "type": "switch",
+      "connected_routers": ["rt2", "rt4"]
+    },
+    {
+      "id": "s4",
+      "type": "switch",
+      "connected_routers": ["rt3", "rt5"]
+    },
+    {
+      "id": "s6",
+      "type": "switch",
+      "connected_routers": ["rt4", "rt5"]
+    },
+    {
+      "id": "s7",
+      "type": "switch",
+      "connected_routers": ["rt4", "rt6"]
+    },
+    {
+      "id": "s8",
+      "type": "switch",
+      "connected_routers": ["rt5", "rt6"]
+    }
+  ],
+  "links": [
+    { "source": "rt1", "destination": "s1", "interface": "eth-sw1" },
+    { "source": "rt2", "destination": "s1", "interface": "eth-sw1" },
+    { "source": "rt2", "destination": "s2", "interface": "eth-rt4" },
+    { "source": "rt3", "destination": "s1", "interface": "eth-sw1" },
+    { "source": "rt3", "destination": "s4", "interface": "eth-rt5" },
+    { "source": "rt4", "destination": "s2", "interface": "eth-rt2" },
+    { "source": "rt4", "destination": "s6", "interface": "eth-rt5" },
+    { "source": "rt4", "destination": "s7", "interface": "eth-rt6" },
+    { "source": "rt5", "destination": "s4", "interface": "eth-rt3" },
+    { "source": "rt5", "destination": "s6", "interface": "eth-rt4" },
+    { "source": "rt5", "destination": "s8", "interface": "eth-rt6" },
+    { "source": "rt6", "destination": "s7", "interface": "eth-rt4" },
+    { "source": "rt6", "destination": "s8", "interface": "eth-rt5" }
+  ]
+}
