@@ -1,0 +1,37 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": []
+    },
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": [
+        { "name": "r1-eth0", "ip": "11.11.11.1/24" }
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "router",
+      "interfaces": [
+        { "name": "r2-eth0", "ip": "11.11.11.2/24" }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": "s1",
+      "source_intf": null,
+      "target": "r1",
+      "target_intf": "r1-eth0"
+    },
+    {
+      "source": "s1",
+      "source_intf": null,
+      "target": "r2",
+      "target_intf": "r2-eth0"
+    }
+  ]
+}
