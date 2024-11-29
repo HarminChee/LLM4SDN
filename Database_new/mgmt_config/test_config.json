@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "switch",
+      "interfaces": []
+    },
+    {
+      "id": "r1",
+      "type": "router",
+      "interfaces": []
+    }
+  ],
+  "links": [
+    {
+      "source": "s1",
+      "source_intf": null,
+      "target": "r1",
+      "target_intf": null
+    }
+  ]
+}
