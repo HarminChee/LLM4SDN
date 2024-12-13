@@ -1,0 +1,129 @@
+{
+  "nodes": {
+    "routers": [
+      {
+        "id": "rt1",
+        "type": "router",
+        "ip": "1.1.1.1",
+        "interfaces": ["eth-rt2", "eth-rt3"]
+      },
+      {
+        "id": "rt2",
+        "type": "router",
+        "ip": "2.2.2.2",
+        "interfaces": ["eth-rt1", "eth-rt5"]
+      },
+      {
+        "id": "rt3",
+        "type": "router",
+        "ip": "3.3.3.3",
+        "interfaces": ["eth-rt1", "eth-rt4"]
+      },
+      {
+        "id": "rt4",
+        "type": "router",
+        "ip": "4.4.4.4",
+        "interfaces": ["eth-rt3", "eth-rt5"]
+      },
+      {
+        "id": "rt5",
+        "type": "router",
+        "ip": "5.5.5.5",
+        "interfaces": ["eth-rt2", "eth-rt4"]
+      }
+    ],
+    "switches": ["s1", "s2", "s3", "s4", "s5"]
+  },
+  "links": [
+    {
+      "source": "s1",
+      "target": "rt1:eth-rt2",
+      "link_properties": {
+        "network": "10.0.1.0/24",
+        "bandwidth": "1Gbps",
+        "latency": "1ms"
+      }
+    },
+    {
+      "source": "s1",
+      "target": "rt2:eth-rt1",
+      "link_properties": {
+        "network": "10.0.1.0/24",
+        "bandwidth": "1Gbps",
+        "latency": "1ms"
+      }
+    },
+    {
+      "source": "s2",
+      "target": "rt1:eth-rt3",
+      "link_properties": {
+        "network": "10.0.2.0/24",
+        "bandwidth": "1Gbps",
+        "latency": "1ms"
+      }
+    },
+    {
+      "source": "s2",
+      "target": "rt3:eth-rt1",
+      "link_properties": {
+        "network": "10.0.2.0/24",
+        "bandwidth": "1Gbps",
+        "latency": "1ms"
+      }
+    },
+    {
+      "source": "s3",
+      "target": "rt2:eth-rt5",
+      "link_properties": {
+        "network": "10.0.3.0/24",
+        "bandwidth": "10Gbps",
+        "latency": "5ms"
+      }
+    },
+    {
+      "source": "s3",
+      "target": "rt5:eth-rt2",
+      "link_properties": {
+        "network": "10.0.3.0/24",
+        "bandwidth": "10Gbps",
+        "latency": "5ms"
+      }
+    },
+    {
+      "source": "s4",
+      "target": "rt3:eth-rt4",
+      "link_properties": {
+        "network": "10.0.4.0/24",
+        "bandwidth": "10Gbps",
+        "latency": "5ms"
+      }
+    },
+    {
+      "source": "s4",
+      "target": "rt4:eth-rt3",
+      "link_properties": {
+        "network": "10.0.4.0/24",
+        "bandwidth": "10Gbps",
+        "latency": "5ms"
+      }
+    },
+    {
+      "source": "s5",
+      "target": "rt4:eth-rt5",
+      "link_properties": {
+        "network": "10.0.5.0/24",
+        "bandwidth": "1Gbps",
+        "latency": "2ms"
+      }
+    },
+    {
+      "source": "s5",
+      "target": "rt5:eth-rt4",
+      "link_properties": {
+        "network": "10.0.5.0/24",
+        "bandwidth": "1Gbps",
+        "latency": "2ms"
+      }
+    }
+  ]
+}
