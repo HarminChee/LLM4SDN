@@ -1,0 +1,24 @@
+{
+  "nodes": {
+    "routers": ["r1", "r2", "r3"],
+    "switches": ["s1", "s2"]
+  },
+  "links": [
+    {
+      "source": "s1",
+      "target": "r1"
+    },
+    {
+      "source": "s1",
+      "target": "r2"
+    },
+    {
+      "source": "s2",
+      "target": "r2"
+    },
+    {
+      "source": "s2",
+      "target": "r3"
+    }
+  ]
+}
