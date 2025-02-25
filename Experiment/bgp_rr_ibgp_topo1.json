@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_rr_ibgp_topo1.py",
+    "description": "Topology with 4 switches (sw1, sw2, sw3, sw4) and 3 routers (tor1, tor2, spine1) for testing IBGP with Route Reflection (RR) and no IGP.",
+    "conf_files": {
+      "tor1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "tor2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "spine1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "tor1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "connected_to": "sw2",
+          "ipv4": "192.168.2.1/24"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    },
+    "tor2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw3"
+        },
+        "eth1": {
+          "connected_to": "sw4",
+          "ipv4": "192.168.4.1/24"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    },
+    "spine1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2",
+          "ipv4": "192.168.2.2/24"
+        },
+        "eth1": {
+          "connected_to": "sw4",
+          "ipv4": "192.168.4.2/24"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "tor1"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "tor1",
+        "spine1"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "tor2"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "tor2",
+        "spine1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "tor1",
+      "target": "spine1",
+      "interface_source": "tor1-eth1",
+      "interface_target": "spine1-eth0",
+      "ipv4_subnet": "192.168.2.0/24"
+    },
+    {
+      "source": "tor2",
+      "target": "spine1",
+      "interface_source": "tor2-eth1",
+      "interface_target": "spine1-eth1",
+      "ipv4_subnet": "192.168.4.0/24"
+    }
+  ]
+}

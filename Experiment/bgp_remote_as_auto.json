@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Topology with 2 switches (s1, s2) and 4 routers (r1, r2, r3, r4). BGP tested. This JSON is an inferred structure from the original Python code.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "r3": [
+        "frr.conf"
+      ],
+      "r4": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.1.2",
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "ipv4_address": "192.168.1.3",
+            "state": "Established"
+          },
+          "r4": {
+            "remote_as": 65004,
+            "interface": "r1-eth1",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.1.1",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.1.1",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65004,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "interface": "r1-eth1",
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r3"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth0",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "interface_source": "r1-eth1",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "Unnumbered",
+      "bgp_neighbors": true
+    }
+  ]
+}

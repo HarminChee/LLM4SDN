@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_path_attribute_treat_as_withdraw.py",
+    "description": "Test if `neighbor path-attribute treat-as-withdraw` command works correctly, can withdraw unwanted prefixes from BGP table.",
+    "conf_files": {
+      "r1": [
+        "r1/zebra.conf",
+        "r1/bgpd.conf"
+      ],
+      "r2": [
+        "r2/zebra.conf",
+        "r2/bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  }
+}

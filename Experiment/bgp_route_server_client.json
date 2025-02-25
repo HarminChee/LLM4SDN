@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_route_server_client.py",
+    "description": "Test if we send ONLY GUA address for route-server-client peers.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "exabgp.env"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv6": "2001:db8:1::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "ipv6_address": "2001:db8:1::2",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv6": "2001:db8:1::2/64"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv6": "2001:db8:3::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65000,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv6_address": "2001:db8:1::1",
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "ipv6_address": "2001:db8:3::2",
+            "state": "Established"
+          },
+          "r4": {
+            "remote_as": 65004,
+            "ipv6_address": "2001:db8:1::3",
+            "state": "Established"
+          },
+          "r5": {
+            "remote_as": 65005,
+            "ipv6_address": "2001:db8:1::4",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv6": "2001:db8:3::2/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "ipv6_address": "2001:db8:3::1",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv6": "2001:db8:1::3/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65004,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "ipv6_address": "2001:db8:1::2",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv6": "2001:db8:1::4/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65005,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "ipv6_address": "2001:db8:1::2",
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r4",
+        "r5"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv6_subnet": "2001:db8:1::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv6_subnet": "2001:db8:3::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth0",
+      "interface_target": "r4-eth0",
+      "ipv6_subnet": "2001:db8:1::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r5",
+      "interface_source": "r2-eth0",
+      "interface_target": "r5-eth0",
+      "ipv6_subnet": "2001:db8:1::/64",
+      "bgp_neighbors": true
+    }
+  ]
+}

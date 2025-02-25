@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "script_name": "bgp_tcp_mss.py",
+    "description": "Test if BGP tcp-mss works in routers. Topology has 2 switches (s1, s2) and 2 routers (r1, r2). This is inferred from the given Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65000,
+        "neighbors": {
+          "192.168.255.2": {
+            "tcp_mss": 500
+          },
+          "192.168.254.2": {
+            "tcp_mss": 500
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "192.168.255.1": {
+            "tcp_mss": 500
+          },
+          "192.168.254.1": {
+            "tcp_mss": 500
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth1",
+      "protocols": [
+        "bgp"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_oad.py",
+    "description": "Test if local-preference is passed between different EBGP peers when EBGP-OAD is configured. Also check if no-export community is passed to the EBGP-OAD peer.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "r3": [
+        "frr.conf"
+      ],
+      "r4": [
+        "frr.conf"
+      ],
+      "r5": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "type": "external (oad)",
+            "advertised_routes": [
+              "10.10.10.1/32"
+            ]
+          },
+          "r4": {
+            "remote_as": 65004,
+            "type": "external",
+            "advertised_routes": [
+              "10.10.10.1/32"
+            ]
+          }
+        },
+        "routes": {
+          "10.10.10.10/32": [
+            {
+              "aspath": "65002 65003",
+              "metric": 123,
+              "locPrf": 123,
+              "peer": "r2",
+              "bestpath": false
+            },
+            {
+              "aspath": "65004 65005",
+              "metric": 123,
+              "locPrf": 123,
+              "peer": "r4",
+              "bestpath": true
+            }
+          ]
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "type": "external (oad)"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "type": "external"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "type": "external"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "type": "external"
+          },
+          "r5": {
+            "remote_as": 65005,
+            "type": "external"
+          }
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r4": {
+            "remote_as": 65004,
+            "type": "external"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r4"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r5"
+      ]
+    }
+  }
+}

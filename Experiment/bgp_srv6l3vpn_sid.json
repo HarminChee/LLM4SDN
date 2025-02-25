@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Topology of R1 and R2 with multiple CE routers connected through VRFs. BGP and other configuration details are provided.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce6": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "vrf": {
+        "vrf10": {
+          "interfaces": [
+            "eth1",
+            "eth2"
+          ]
+        },
+        "vrf20": {
+          "interfaces": [
+            "eth3"
+          ]
+        }
+      },
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": "2001::1/64"
+        },
+        "eth1": {
+          "connected_to": "ce1",
+          "ipv6": "192.168.1.1/24"
+        },
+        "eth2": {
+          "connected_to": "ce3",
+          "ipv6": "192.168.1.1/24"
+        },
+        "eth3": {
+          "connected_to": "ce5",
+          "ipv6": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 1,
+        "neighbors": {
+          "r2": {
+            "remote_as": 1,
+            "ipv6_address": "2001::2",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "2001::2/64"
+        },
+        "eth1": {
+          "connected_to": "ce2",
+          "ipv6": "192.168.2.1/24"
+        },
+        "eth2": {
+          "connected_to": "ce4",
+          "ipv6": "192.168.2.1/24"
+        },
+        "eth3": {
+          "connected_to": "ce6",
+          "ipv6": "192.168.2.1/24"
+        }
+      },
+      "vrf": {
+        "vrf10": {
+          "interfaces": [
+            "eth1"
+          ]
+        },
+        "vrf20": {
+          "interfaces": [
+            "eth2",
+            "eth3"
+          ]
+        }
+      },
+      "bgp": {
+        "local_as": 1,
+        "neighbors": {
+          "r1": {
+            "remote_as": 1,
+            "ipv6_address": "2001::1",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "ce1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "2001:1::2/64"
+        }
+      }
+    },
+    "ce2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": "2001:2::2/64"
+        }
+      }
+    },
+    "ce3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "2001:3::2/64"
+        }
+      }
+    },
+    "ce4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": "2001:4::2/64"
+        }
+      }
+    },
+    "ce5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "2001:5::2/64"
+        }
+      }
+    },
+    "ce6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": "2001:6::2/64"
+        }
+      }
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv6_subnet": "2001::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "ce1",
+      "target": "r1",
+      "interface_source": "ce1-eth0",
+      "interface_target": "r1-eth1",
+      "ipv6_subnet": "192.168.1.0/24"
+    },
+    {
+      "source": "ce2",
+      "target": "r2",
+      "interface_source": "ce2-eth0",
+      "interface_target": "r2-eth1",
+      "ipv6_subnet": "192.168.2.0/24"
+    },
+    {
+      "source": "ce3",
+      "target": "r1",
+      "interface_source": "ce3-eth0",
+      "interface_target": "r1-eth2",
+      "ipv6_subnet": "2001:3::/64"
+    },
+    {
+      "source": "ce4",
+      "target": "r2",
+      "interface_source": "ce4-eth0",
+      "interface_target": "r2-eth2",
+      "ipv6_subnet": "2001:4::/64"
+    },
+    {
+      "source": "ce5",
+      "target": "r1",
+      "interface_source": "ce5-eth0",
+      "interface_target": "r1-eth3",
+      "ipv6_subnet": "2001:5::/64"
+    },
+    {
+      "source": "ce6",
+      "target": "r2",
+      "interface_source": "ce6-eth0",
+      "interface_target": "r2-eth3",
+      "ipv6_subnet": "2001:6::/64"
+    }
+  ]
+}

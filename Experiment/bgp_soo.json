@@ -1,0 +1,167 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_soo.py",
+    "description": "Topology with 4 switches and 4 routers using BGP SoO per neighbor.",
+    "conf_files": {
+      "cpe1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ],
+      "cpe2": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ],
+      "pe1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ],
+      "pe2": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "cpe1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s4"
+        }
+      }
+    },
+    "cpe2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        },
+        "eth1": {
+          "connected_to": "s4"
+        }
+      }
+    },
+    "pe1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "cpe1": {
+            "ipv4_address": "192.168.2.1",
+            "soo": [
+              "65000:1",
+              "65000:2"
+            ]
+          }
+        }
+      },
+      "ospf": {},
+      "zebra": {},
+      "ldp": {}
+    },
+    "pe2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "cpe2": {
+            "ipv4_address": "192.168.2.1",
+            "vrf": "RED"
+          }
+        }
+      },
+      "ospf": {},
+      "zebra": {},
+      "ldp": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "cpe1",
+        "pe1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "pe1",
+        "pe2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "pe2",
+        "cpe2"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "cpe2",
+        "cpe1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "cpe1",
+      "target": "pe1",
+      "interface_source": "cpe1-eth0",
+      "interface_target": "pe1-eth0",
+      "protocols": [
+        "bgp",
+        "ospf"
+      ]
+    },
+    {
+      "source": "pe1",
+      "target": "pe2",
+      "interface_source": "pe1-eth1",
+      "interface_target": "pe2-eth0",
+      "protocols": [
+        "bgp",
+        "ospf"
+      ]
+    },
+    {
+      "source": "pe2",
+      "target": "cpe2",
+      "interface_source": "pe2-eth1",
+      "interface_target": "cpe2-eth0",
+      "protocols": [
+        "bgp",
+        "ospf"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_labeled_unicast_default_originate.py",
+    "description": "Check if labeled-unicast works correctly with default-originate.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": "Unspecified",
+        "neighbors": {
+          "r2": {
+            "remote_as": "Unspecified",
+            "ipv4_address": "192.168.12.2",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": "Unspecified",
+        "neighbors": {
+          "r1": {
+            "remote_as": "Unspecified",
+            "ipv4_address": "192.168.12.1",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "192.168.12.0/24"
+    }
+  ]
+}

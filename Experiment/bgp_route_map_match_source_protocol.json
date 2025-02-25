@@ -1,0 +1,118 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_route_map_match_source_protocol.py",
+    "description": "Test if r1 can announce only static routes to r2, and only connected routes to r3 using `match source-protocol` with route-maps.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "r3": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "192.168.1.2": {
+            "direction": "out",
+            "advertised_routes": {
+              "10.10.10.10/32": {
+                "valid": true
+              },
+              "192.168.11.0/32": {
+                "valid": true
+              },
+              "192.168.11.1/32": {
+                "valid": true
+              },
+              "192.168.11.2/32": {
+                "valid": true
+              },
+              "192.168.11.3/32": {
+                "valid": true
+              },
+              "192.168.11.4/32": {
+                "valid": true
+              }
+            }
+          },
+          "192.168.2.2": {
+            "direction": "out",
+            "advertised_routes": {
+              "192.168.1.0/24": {
+                "valid": true
+              },
+              "192.168.2.0/24": {
+                "valid": true
+              },
+              "172.16.255.1/32": {
+                "valid": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0"
+    }
+  ]
+}

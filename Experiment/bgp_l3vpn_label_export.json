@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "script_name": "undefined_script_name",
+    "description": "SDN network configuration for testing BGP, MPLS, and VRF with 2 routers and 1 switch. Inferred structure from the provided Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "staticd.conf",
+        "bgpd.conf",
+        "ldpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "staticd.conf",
+        "bgpd.conf",
+        "ldpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "vrf1": {
+          "ipv4": "192.0.3.1/32",
+          "mpls_input": true
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "vrfs": {
+          "vrf1": {
+            "neighbors": {
+              "r2": {
+                "remote_as": 65002,
+                "ipv4_address": "192.0.2.2"
+              }
+            }
+          }
+        }
+      },
+      "mpls": {
+        "ldp": true
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "vrf1": {
+          "ipv4": "192.0.3.2/32",
+          "mpls_input": true
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "vrfs": {
+          "vrf1": {
+            "neighbors": {
+              "r1": {
+                "remote_as": 65001,
+                "ipv4_address": "192.0.2.2"
+              }
+            }
+          }
+        }
+      },
+      "mpls": {
+        "ldp": true
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.0.3.0/32",
+      "mpls": true,
+      "protocols": [
+        "bgp"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,357 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_local_asn_vrf.py",
+    "description": "Verify the BGP Local AS functionality by adding new AS when leaking routes from non-default VRF to non-default with route map by prefix lists.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.1.1.1/32"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv6": "10:1::1:0/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "advertise_prefix": "10.1.1.0/32"
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "advertise_prefix": "10:1::1:0/128"
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.1.1.2/32"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv6": "10:1::1:1/128"
+        }
+      },
+      "bgp": {
+        "local_as": 200,
+        "vrfs": [
+          "RED"
+        ],
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                },
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                },
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "10.1.1.0/32",
+          "next_hop": "Null0",
+          "vrf": "RED"
+        }
+      ]
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.1.1.3/32"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv6": "10:1::1:2/128"
+        }
+      },
+      "bgp": {
+        "local_as": 300,
+        "vrfs": [
+          "BLUE"
+        ],
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "import": {
+                "vrf": "RED"
+              },
+              "neighbor": {
+                "r2": {
+                  "local_asn": {
+                    "local_as": "110"
+                  },
+                  "no_prepend": true,
+                  "replace_as": true
+                },
+                "r4": {
+                  "local_asn": {
+                    "local_as": "110"
+                  },
+                  "no_prepend": true,
+                  "replace_as": true
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "import": {
+                "vrf": "RED"
+              },
+              "neighbor": {
+                "r2": {
+                  "local_asn": {
+                    "local_as": "110"
+                  },
+                  "no_prepend": true,
+                  "replace_as": true
+                },
+                "r4": {
+                  "local_asn": {
+                    "local_as": "110"
+                  },
+                  "no_prepend": true,
+                  "replace_as": true
+                }
+              }
+            }
+          }
+        },
+        "prefix_lists": {
+          "ipv4": {
+            "pf_list_1_ipv4": [
+              {
+                "seqid": 10,
+                "action": "permit",
+                "network": "10.1.1.0/32"
+              }
+            ]
+          },
+          "ipv6": {
+            "pf_list_1_ipv6": [
+              {
+                "seqid": 100,
+                "action": "permit",
+                "network": "10:1::1:0/128"
+              }
+            ]
+          }
+        },
+        "route_maps": {
+          "rmap_match_tag_1_ipv4": [
+            {
+              "action": "permit",
+              "match": {
+                "ipv4": {
+                  "prefix_lists": "pf_list_1_ipv4"
+                }
+              }
+            }
+          ],
+          "rmap_match_tag_1_ipv6": [
+            {
+              "action": "permit",
+              "match": {
+                "ipv6": {
+                  "prefix_lists": "pf_list_1_ipv6"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv4": "10.1.1.4/32"
+        },
+        "eth1": {
+          "connected_to": "s5",
+          "ipv6": "10:1::1:3/128"
+        }
+      },
+      "bgp": {
+        "local_as": 400,
+        "vrfs": [
+          "BLUE"
+        ],
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r3": {
+                  "local_asn": {
+                    "remote_as": "110"
+                  }
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r3": {
+                  "local_asn": {
+                    "remote_as": "110"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "prefix_lists": {
+          "ipv4": {
+            "pf_list_1_ipv4": [
+              {
+                "seqid": 10,
+                "action": "permit",
+                "network": "10.1.1.0/32"
+              }
+            ]
+          },
+          "ipv6": {
+            "pf_list_1_ipv6": [
+              {
+                "seqid": 100,
+                "action": "permit",
+                "network": "10:1::1:0/128"
+              }
+            ]
+          }
+        },
+        "route_maps": {
+          "rmap_match_tag_1_ipv4": [
+            {
+              "action": "permit",
+              "match": {
+                "ipv4": {
+                  "prefix_lists": "pf_list_1_ipv4"
+                }
+              }
+            }
+          ],
+          "rmap_match_tag_1_ipv6": [
+            {
+              "action": "permit",
+              "match": {
+                "ipv6": {
+                  "prefix_lists": "pf_list_1_ipv6"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.1.1.0/32",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth0",
+      "ipv6_subnet": "10:1::1:3/128",
+      "protocols": [
+        "bgp"
+      ]
+    }
+  ]
+}

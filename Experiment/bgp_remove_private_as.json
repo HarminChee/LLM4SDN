@@ -1,0 +1,270 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_remove_private_as.py",
+    "description": "Hub/spoke topology with r2 and r5 as hubs connected to r3/r4, with r1 as the originator. BGP remove-private-AS tests.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "203.0.113.0"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "203.0.113.2"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "203.0.113.1"
+          },
+          "r5": {
+            "remote_as": 5555,
+            "ipv4_address": "203.0.113.3"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "203.0.113.1"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "203.0.113.4"
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "ipv4": "203.0.113.8"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "203.0.113.0"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "ipv4_address": "203.0.113.5"
+          },
+          "r4": {
+            "remote_as": 4444,
+            "ipv4_address": "203.0.113.9"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "203.0.113.5"
+        },
+        "eth1": {
+          "connected_to": "s5",
+          "ipv4": "203.0.113.7"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "203.0.113.4"
+          },
+          "r5": {
+            "remote_as": 5555,
+            "ipv4_address": "203.0.113.6"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "203.0.113.9"
+        },
+        "eth1": {
+          "connected_to": "s6",
+          "ipv4": "203.0.113.11"
+        }
+      },
+      "bgp": {
+        "local_as": 4444,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "203.0.113.8"
+          },
+          "r5": {
+            "remote_as": 5555,
+            "ipv4_address": "203.0.113.10"
+          }
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv4": "203.0.113.3"
+        },
+        "eth1": {
+          "connected_to": "s5",
+          "ipv4": "203.0.113.6"
+        },
+        "eth2": {
+          "connected_to": "s6",
+          "ipv4": "203.0.113.10"
+        }
+      },
+      "bgp": {
+        "local_as": 5555,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "203.0.113.2"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "ipv4_address": "203.0.113.7"
+          },
+          "r4": {
+            "remote_as": 4444,
+            "ipv4_address": "203.0.113.11"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r5"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r5"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r5"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "203.0.113.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r5",
+      "interface_source": "r1-eth1",
+      "interface_target": "r5-eth0",
+      "ipv4_subnet": "203.0.113.2/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "203.0.113.4/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth2",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "203.0.113.8/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "r3-eth1",
+      "interface_target": "r5-eth1",
+      "ipv4_subnet": "203.0.113.6/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r4",
+      "target": "r5",
+      "interface_source": "r4-eth1",
+      "interface_target": "r5-eth2",
+      "ipv4_subnet": "203.0.113.10/30",
+      "bgp_neighbors": true
+    }
+  ]
+}

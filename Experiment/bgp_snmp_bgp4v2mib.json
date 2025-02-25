@@ -1,0 +1,196 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_snmp_bgp4v2.py",
+    "description": "Test BGP4V2-MIB entries with 1 switch (s1) and 4 routers (r1, r2, r3, rr).",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf",
+        "snmpd.conf",
+        "snmptrapd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "rr": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.12.4",
+            "state": "Established",
+            "pfxRcd": 6
+          },
+          "rr": {
+            "remote_as": 100,
+            "ipv6_address": "2001:db8::12:4",
+            "state": "Established",
+            "pfxRcd": 4
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r1": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.12.4",
+            "state": "Established",
+            "pfxRcd": 6
+          },
+          "rr": {
+            "remote_as": 100,
+            "ipv6_address": "2001:db8::12:4",
+            "state": "Established",
+            "pfxRcd": 4
+          }
+        }
+      },
+      "snmp": {
+        "enabled": true,
+        "trap": {
+          "peer_last_error_code_received": {
+            "192.168.12.4": 0,
+            "2001:db8::12:4": 0
+          },
+          "peer_state": {
+            "192.168.12.4": 6,
+            "2001:db8::12:4": 6
+          },
+          "peer_remote_addr": {
+            "192.168.12.4": "C0 A8 0C 04",
+            "2001:db8::12:4": "20 01 0D B8 00 00 00 00 00 00 00 00 00 12 00 04"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.12.4",
+            "state": "Established",
+            "pfxRcd": 6
+          },
+          "rr": {
+            "remote_as": 100,
+            "ipv6_address": "2001:db8::12:4",
+            "state": "Established",
+            "pfxRcd": 4
+          }
+        }
+      }
+    },
+    "rr": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r1": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.12.4",
+            "state": "Established",
+            "pfxRcd": 6
+          },
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.12.4",
+            "state": "Established",
+            "pfxRcd": 6
+          },
+          "r3": {
+            "remote_as": 100,
+            "ipv6_address": "2001:db8::12:4",
+            "state": "Established",
+            "pfxRcd": 4
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r3",
+        "rr"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.12.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth0",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.12.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r3",
+      "target": "rr",
+      "interface_source": "r3-eth0",
+      "interface_target": "rr-eth0",
+      "ipv4_subnet": "192.168.12.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "rr",
+      "target": "r1",
+      "interface_source": "rr-eth0",
+      "interface_target": "r1-eth0",
+      "ipv4_subnet": "192.168.12.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

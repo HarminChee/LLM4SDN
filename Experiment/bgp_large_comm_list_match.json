@@ -1,0 +1,152 @@
+{
+  "metadata": {
+    "script_name": "bgp_large_community_test.py",
+    "description": "Test BGP large-community-list as match rule in incoming route-maps.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "large_community_lists": {
+          "1": [
+            "65001:1:1",
+            "65001:2:1",
+            "65001:3:1"
+          ],
+          "2": [
+            "65001:12:1"
+          ]
+        },
+        "route_maps": {
+          "r1": {
+            "deny": {
+              "10": {
+                "match": {
+                  "large_community": "1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "large_community_lists": {
+          "1": [
+            "65001:1:1",
+            "65001:2:1",
+            "65001:3:1"
+          ],
+          "2": [
+            "65001:12:1"
+          ]
+        },
+        "route_maps": {
+          "r1": {
+            "deny": {
+              "10": {
+                "match": {
+                  "large_community": "2",
+                  "option": "any"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "large_community_lists": {
+          "1": [
+            "65001:1:1",
+            "65001:2:1",
+            "65001:3:1"
+          ],
+          "2": [
+            "65001:12:1"
+          ]
+        },
+        "route_maps": {
+          "r1": {
+            "deny": {
+              "10": {
+                "match": {
+                  "community": "1"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0"
+    }
+  ]
+}

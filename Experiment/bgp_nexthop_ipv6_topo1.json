@@ -1,0 +1,220 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_nexthop_ipv6_topo1.py",
+    "description": "Ensure that BGP ipv6 nexthops are correct",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r6": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "rr": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw": {
+          "connected_to": "sw"
+        },
+        "eth-dummy": {
+          "connected_to": "sw1"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw": {
+          "connected_to": "sw"
+        },
+        "eth-dummy": {
+          "connected_to": "sw2"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth-dummy": {
+          "connected_to": "sw3"
+        }
+      },
+      "exabgp": {
+        "peer_ip": "fd00:0:2::3",
+        "default_route": "via fd00:0:2::9"
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw": {
+          "connected_to": "sw"
+        },
+        "eth-dummy": {
+          "connected_to": "sw4"
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth-rr": {
+          "connected_to": "s-rr-r5"
+        },
+        "eth-dummy": {
+          "connected_to": "sw5"
+        }
+      }
+    },
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth-rr": {
+          "connected_to": "s-rr-r6"
+        },
+        "eth-dummy": {
+          "connected_to": "sw6"
+        }
+      }
+    },
+    "rr": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw": {
+          "connected_to": "sw"
+        },
+        "eth-r5": {
+          "connected_to": "s-rr-r5"
+        },
+        "eth-r6": {
+          "connected_to": "s-rr-r6"
+        }
+      },
+      "bgp": {
+        "local_as": 65000,
+        "neighbors": {
+          "fd00:0:2::1": {
+            "nexthop_local_unchanged": true
+          },
+          "fd00:0:2::2": {
+            "nexthop_local_unchanged": true
+          },
+          "fd00:0:2::3": {
+            "nexthop_local_unchanged": true
+          },
+          "fd00:0:2::4": {
+            "nexthop_local_unchanged": true
+          },
+          "fd00:0:3::5": {
+            "nexthop_local_unchanged": true
+          },
+          "fd00:0:4::6": {
+            "nexthop_local_unchanged": true
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw": {
+      "type": "switch",
+      "connected_nodes": [
+        "rr",
+        "r1",
+        "r2",
+        "r4",
+        "r3"
+      ]
+    },
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    },
+    "sw5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r5"
+      ]
+    },
+    "sw6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r6"
+      ]
+    },
+    "s-rr-r5": {
+      "type": "switch",
+      "connected_nodes": [
+        "rr",
+        "r5"
+      ]
+    },
+    "s-rr-r6": {
+      "type": "switch",
+      "connected_nodes": [
+        "rr",
+        "r6"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "rr",
+      "target": "r5",
+      "interface_source": "eth-r5",
+      "interface_target": "eth-rr",
+      "ipv6_subnet": "fd00:0:4::/64"
+    },
+    {
+      "source": "rr",
+      "target": "r6",
+      "interface_source": "eth-r6",
+      "interface_target": "eth-rr",
+      "ipv6_subnet": "fd00:0:3::/64"
+    }
+  ]
+}

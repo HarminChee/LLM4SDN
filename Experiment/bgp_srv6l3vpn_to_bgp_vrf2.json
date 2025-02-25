@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Test topology using BGP with multiple routers and links.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce6": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": null
+        },
+        "eth1": {
+          "connected_to": "ce1",
+          "ipv6": null,
+          "vrf": "vrf10"
+        },
+        "eth2": {
+          "connected_to": "ce3",
+          "ipv6": null,
+          "vrf": "vrf10"
+        },
+        "eth3": {
+          "connected_to": "ce5",
+          "ipv6": null,
+          "vrf": "vrf20"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": null
+        },
+        "eth1": {
+          "connected_to": "ce2",
+          "ipv6": null,
+          "vrf": "vrf10"
+        },
+        "eth2": {
+          "connected_to": "ce4",
+          "ipv6": null,
+          "vrf": "vrf20"
+        },
+        "eth3": {
+          "connected_to": "ce6",
+          "ipv6": null,
+          "vrf": "vrf20"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "ce1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": null
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "ce2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": null
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "ce3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": null
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "ce4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": null
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "ce5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": null
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "ce6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv6": null
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv6_subnet": null
+    },
+    {
+      "source": "ce1",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth1",
+      "ipv6_subnet": null
+    },
+    {
+      "source": "ce2",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth1",
+      "ipv6_subnet": null
+    },
+    {
+      "source": "ce3",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth2",
+      "ipv6_subnet": null
+    },
+    {
+      "source": "ce4",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth2",
+      "ipv6_subnet": null
+    },
+    {
+      "source": "ce5",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth3",
+      "ipv6_subnet": null
+    },
+    {
+      "source": "ce6",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth3",
+      "ipv6_subnet": null
+    }
+  ]
+}

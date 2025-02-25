@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_lu.py",
+    "description": "Topology with 2 switches (s1, s2) and 3 routers (R1, R2, R3). BGP LU label allocation test.",
+    "conf_files": {
+      "R1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "R2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "R3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "R1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "R2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      }
+    },
+    "R3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "R1",
+        "R2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "R2",
+        "R3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "R1",
+      "target": "R2",
+      "interface_source": "R1-eth0",
+      "interface_target": "R2-eth0",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "R2",
+      "target": "R3",
+      "interface_source": "R2-eth1",
+      "interface_target": "R3-eth0",
+      "bgp_neighbors": true
+    }
+  ]
+}
