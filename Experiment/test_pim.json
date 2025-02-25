@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "script_name": "test_pim.py",
+    "description": "Test PIM topology with 3 routers (r1, r2, r3) and 1 RP (rp) using PIM, BGP, and Zebra protocols. Network includes 3 switches (sw1, sw2, sw3) connecting the routers.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "pimd.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "pimd.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "pimd.conf",
+        "bgpd.conf"
+      ],
+      "rp": [
+        "zebra.conf",
+        "pimd.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "ipv4": "10.0.20.1/24"
+        },
+        "eth1": {
+          "connected_to": "sw2",
+          "ipv4": "10.0.30.1/24"
+        },
+        "eth2": {
+          "connected_to": "sw3",
+          "ipv4": "10.0.40.1/24"
+        },
+        "loopback": {
+          "ipv4": "10.254.0.1/32"
+        }
+      },
+      "pim": {},
+      "bgp": {},
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "ipv4": "10.0.20.2/24"
+        },
+        "loopback": {
+          "ipv4": "10.254.0.2/32"
+        }
+      },
+      "pim": {},
+      "bgp": {},
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw3",
+          "ipv4": "10.0.40.2/24"
+        },
+        "loopback": {
+          "ipv4": "10.254.0.4/32"
+        }
+      },
+      "pim": {},
+      "bgp": {},
+      "zebra": {}
+    },
+    "rp": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2",
+          "ipv4": "10.0.30.3/24"
+        },
+        "loopback": {
+          "ipv4": "10.254.0.3/32"
+        }
+      },
+      "pim": {},
+      "bgp": {},
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "rp"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.0.20.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "rp",
+      "interface_source": "r1-eth1",
+      "interface_target": "rp-eth0",
+      "ipv4_subnet": "10.0.30.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth2",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.40.0/24"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "script_name": "test_zebra_seg6local_route.py",
+    "description": "Test seg6local route addition with zapi.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {},
+      "zebra": {},
+      "sharpd": {}
+    }
+  },
+  "switches": {},
+  "links": []
+}

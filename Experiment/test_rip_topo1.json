@@ -1,0 +1,129 @@
+{
+  "metadata": {
+    "script_name": "test_rip_topo1.py",
+    "description": "Testing RIPv2 topology with 6 switches (sw1..sw6) and 3 routers (r1,r2,r3). Inferred from Python code. Actual interfaces and IPs are partially guessed.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ripd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ripd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "ripd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "connected_to": "sw2"
+        },
+        "eth2": {
+          "connected_to": "sw5"
+        },
+        "eth3": {
+          "connected_to": "sw6"
+        }
+      },
+      "zebra": {},
+      "ripd": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "connected_to": "sw3"
+        }
+      },
+      "zebra": {},
+      "ripd": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "sw3",
+          "nodeif": "r3-eth1"
+        },
+        "eth0": {
+          "connected_to": "sw4",
+          "nodeif": "r3-eth0"
+        }
+      },
+      "zebra": {},
+      "ripd": {}
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "sw5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "sw6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "rip"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth1",
+      "protocols": [
+        "rip"
+      ]
+    }
+  ]
+}

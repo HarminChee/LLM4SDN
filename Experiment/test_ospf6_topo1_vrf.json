@@ -1,0 +1,176 @@
+{
+  "metadata": {
+    "script_name": "test_ospf6_topo1_vrf.py",
+    "description": "Topology with 6 switches (s1...s6) and 4 routers (r1, r2, r3, r4) using OSPFv3 + VRF. Inferred from Python code. Actual IP/VRF info partially guessed.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "r1-stubnet": {
+          "connected_to": "s1",
+          "ipv6": "fc00:1:1:1::1/64"
+        },
+        "r1-sw5": {
+          "connected_to": "s5",
+          "ipv6": "fc00:A:A:A::1/64"
+        }
+      },
+      "ospf6": {
+        "router_id": "10.0.0.1",
+        "area": "0.0.0.0",
+        "vrf": "r1-cust1"
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "r2-stubnet": {
+          "connected_to": "s2",
+          "ipv6": "fc00:2:2:2::1/64"
+        },
+        "r2-sw5": {
+          "connected_to": "s5",
+          "ipv6": "fc00:A:A:A::2/64"
+        }
+      },
+      "ospf6": {
+        "router_id": "10.0.0.2",
+        "area": "0.0.0.0",
+        "vrf": "r2-cust1"
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "r3-stubnet": {
+          "connected_to": "s3",
+          "ipv6": "fc00:3:3:3::1/64"
+        },
+        "r3-sw5": {
+          "connected_to": "s5",
+          "ipv6": "fc00:A:A:A::3/64"
+        },
+        "r3-sw6": {
+          "connected_to": "s6",
+          "ipv6": "fc00:B:B:B::1/64"
+        }
+      },
+      "ospf6": {
+        "router_id": "10.0.0.3",
+        "area": "0.0.0.0.0"
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "r4-stubnet": {
+          "connected_to": "s4",
+          "ipv6": "fc00:4:4:4::1/64"
+        },
+        "r4-sw6": {
+          "connected_to": "s6",
+          "ipv6": "fc00:B:B:B::2/64"
+        }
+      },
+      "ospf6": {
+        "router_id": "10.0.0.4",
+        "area": "0.0.0.1",
+        "vrf": "r4-cust1"
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r3"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-sw5",
+      "interface_target": "r2-sw5",
+      "ipv6_subnet": "fc00:A:A:A::/64",
+      "ospf6": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-sw5",
+      "interface_target": "r3-sw5",
+      "ipv6_subnet": "fc00:A:A:A::/64",
+      "ospf6": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-sw5",
+      "interface_target": "r3-sw5",
+      "ipv6_subnet": "fc00:A:A:A::/64",
+      "ospf6": true
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-sw6",
+      "interface_target": "r4-sw6",
+      "ipv6_subnet": "fc00:B:B:B::/64",
+      "ospf6": true
+    }
+  ]
+}

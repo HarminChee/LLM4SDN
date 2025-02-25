@@ -1,0 +1,180 @@
+{
+  "metadata": {
+    "script_name": "test_pim_basic_topo2.py",
+    "description": "Topology with 3 switches (s1, s2, s3) and 4 routers (r1, r2, r3, r4). PIM and BFD tested.",
+    "conf_files": {
+      "r1": [
+        "bfdd.conf",
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "r2": [
+        "bfdd.conf",
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "r3": [
+        "bfdd.conf",
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "r4": [
+        "bfdd.conf",
+        "pimd.conf",
+        "zebra.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1"
+        }
+      },
+      "pim": {},
+      "bfd": {
+        "peers": {
+          "r2": {
+            "ipv4": "192.168.1.2",
+            "status": "up"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.1"
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.1"
+        }
+      },
+      "pim": {},
+      "bfd": {
+        "peers": {
+          "r1": {
+            "ipv4": "192.168.1.1",
+            "status": "up"
+          },
+          "r3": {
+            "ipv4": "192.168.2.2",
+            "status": "up"
+          },
+          "r4": {
+            "ipv4": "192.168.3.2",
+            "status": "up"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.2"
+        }
+      },
+      "pim": {},
+      "bfd": {
+        "peers": {
+          "r2": {
+            "ipv4": "192.168.2.1",
+            "status": "up"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.2"
+        }
+      },
+      "pim": {},
+      "bfd": {
+        "peers": {
+          "r2": {
+            "ipv4": "192.168.3.1",
+            "status": "up"
+          }
+        }
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "pim",
+        "bfd"
+      ],
+      "ipv4_subnet": "192.168.1.0/24"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "protocols": [
+        "pim",
+        "bfd"
+      ],
+      "ipv4_subnet": "192.168.2.0/24"
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth2",
+      "interface_target": "r4-eth0",
+      "protocols": [
+        "pim",
+        "bfd"
+      ],
+      "ipv4_subnet": "192.168.3.0/24"
+    }
+  ]
+}

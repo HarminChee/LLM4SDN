@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "script_name": "test_srv6_manager.py",
+    "description": "Test for SRv6 manager on zebra with one router. Tests locator configuration and chunk management.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {},
+      "bgp": {},
+      "sharp": {},
+      "zebra": {
+        "srv6_manager": {
+          "locators": [
+            {
+              "name": "loc3",
+              "prefix": "2001:db8:3:3::/64"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": []
+}

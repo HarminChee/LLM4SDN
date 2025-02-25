@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "script_name": "test_ospf6_ecmp_inter_area.py",
+    "description": "Test OSPFv3 ECMP inter-area nexthop update. Topology with 8 routers (r1-r8). Routers have multiple paths via ABRs. Test nexthop removal by bringing down specific links.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r6": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r7": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "r8": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2"
+        },
+        "eth1": {
+          "connected_to": "r3"
+        },
+        "eth2": {
+          "connected_to": "r4"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r2": "Full",
+          "r3": "Full",
+          "r4": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1"
+        },
+        "eth1": {
+          "connected_to": "r5"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r1": "Full",
+          "r5": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1"
+        },
+        "eth1": {
+          "connected_to": "r6"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r1": "Full",
+          "r6": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1"
+        },
+        "eth1": {
+          "connected_to": "r6"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r1": "Full",
+          "r6": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2"
+        },
+        "eth1": {
+          "connected_to": "r7"
+        },
+        "eth2": {
+          "connected_to": "r8"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r2": "Full",
+          "r7": "Full",
+          "r8": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3"
+        },
+        "eth1": {
+          "connected_to": "r4"
+        },
+        "eth2": {
+          "connected_to": "r7"
+        },
+        "eth3": {
+          "connected_to": "r8"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r3": "Full",
+          "r4": "Full",
+          "r7": "Full",
+          "r8": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r7": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r5"
+        },
+        "eth1": {
+          "connected_to": "r6"
+        },
+        "eth2": {
+          "connected_to": "r7"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r5": "Full",
+          "r6": "Full"
+        }
+      },
+      "zebra": {}
+    },
+    "r8": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r5"
+        },
+        "eth1": {
+          "connected_to": "r6"
+        },
+        "eth2": {
+          "connected_to": "r8"
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r5": "Full",
+          "r6": "Full"
+        }
+      },
+      "zebra": {}
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r5",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r6",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r4",
+      "target": "r6",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r5",
+      "target": "r7",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r5",
+      "target": "r8",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r6",
+      "target": "r7",
+      "protocols": [
+        "ospf6"
+      ]
+    },
+    {
+      "source": "r6",
+      "target": "r8",
+      "protocols": [
+        "ospf6"
+      ]
+    }
+  ]
+}

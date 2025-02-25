@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "script_name": "test_ospf6_gr_topo1.py",
+    "description": "Topology with 8 switches (s1-s8) and 7 routers (rt1-rt7) using OSPF6 with graceful restart and Zebra. Inferred from Python code. Actual OSPF6 config partially guessed.",
+    "conf_files": {
+      "rt1": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "rt2": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "rt3": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "rt4": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "rt5": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "rt6": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ],
+      "rt7": [
+        "zebra.conf",
+        "ospf6d.conf"
+      ]
+    }
+  },
+  "routers": {
+    "rt1": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt2": {
+          "connected_to": "s1"
+        },
+        "stub1": {
+          "connected_to": "s2"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    },
+    "rt2": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt1": {
+          "connected_to": "s1"
+        },
+        "eth-rt3": {
+          "connected_to": "s3"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    },
+    "rt3": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt2": {
+          "connected_to": "s3"
+        },
+        "eth-rt4": {
+          "connected_to": "s4"
+        },
+        "eth-rt6": {
+          "connected_to": "s5"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    },
+    "rt4": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt3": {
+          "connected_to": "s4"
+        },
+        "eth-rt5": {
+          "connected_to": "s6"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    },
+    "rt5": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt4": {
+          "connected_to": "s6"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    },
+    "rt6": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt3": {
+          "connected_to": "s5"
+        },
+        "eth-rt7": {
+          "connected_to": "s7"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    },
+    "rt7": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt6": {
+          "connected_to": "s7"
+        },
+        "stub1": {
+          "connected_to": "s8"
+        }
+      },
+      "ospf6": {
+        "enable": true
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt2",
+        "rt3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt3",
+        "rt4"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt3",
+        "rt6"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt4",
+        "rt5"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt6",
+        "rt7"
+      ]
+    },
+    "s8": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt7"
+      ]
+    }
+  }
+}

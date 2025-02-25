@@ -1,0 +1,187 @@
+{
+  "metadata": {
+    "script_name": "test_pim_igmp_proxy.py",
+    "description": "Topology with 3 switches (sw1, sw2, sw3) and 4 routers (r1, r2, r3, rp). PIM IGMP Proxy tested.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "r3": [
+        "frr.conf"
+      ],
+      "rp": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "subnet": "10.0.20.0/24"
+        },
+        "eth1": {
+          "connected_to": "sw2",
+          "ipv4": "10.0.30.1",
+          "subnet": "10.0.30.0/24"
+        },
+        "eth2": {
+          "connected_to": "sw3",
+          "subnet": "10.0.40.0/24"
+        }
+      },
+      "igmp_proxy": {
+        "vrf": "default",
+        "interfaces": {
+          "r1-eth1": {
+            "name": "r1-eth1",
+            "groups": [
+              {
+                "source": "*",
+                "group": "225.4.4.4",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.3.3.3",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.2.2.2",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.1.1.1",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.5.5.5",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.6.6.6",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.7.7.7",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.8.8.8",
+                "primaryAddr": "10.0.30.1"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "subnet": "10.0.20.0/24"
+        },
+        "eth1": {
+          "subnet": "10.0.30.0/24",
+          "type": "dummy"
+        }
+      },
+      "igmp_proxy": {
+        "vrf": "default",
+        "interfaces": {
+          "r2-eth1": {
+            "name": "r2-eth1",
+            "groups": [
+              {
+                "source": "*",
+                "group": "225.7.7.7",
+                "primaryAddr": "10.0.30.1"
+              },
+              {
+                "source": "*",
+                "group": "225.8.8.8",
+                "primaryAddr": "10.0.30.1"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw3",
+          "subnet": "10.0.40.0/24"
+        }
+      }
+    },
+    "rp": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2",
+          "subnet": "10.0.30.0/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "rp"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "subnet": "10.0.20.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "rp",
+      "interface_source": "r1-eth1",
+      "interface_target": "rp-eth0",
+      "subnet": "10.0.30.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth2",
+      "interface_target": "r3-eth0",
+      "subnet": "10.0.40.0/24"
+    }
+  ]
+}

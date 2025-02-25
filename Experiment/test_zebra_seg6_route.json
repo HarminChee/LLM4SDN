@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "script_name": "test_zebra_seg6_route.py",
+    "description": "Test seg6 route addition with zapi.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "setup_script": "setup.sh"
+        }
+      },
+      "zebra": {
+        "config_file": "zebra.conf"
+      },
+      "sharp": {
+        "config_file": "sharpd.conf"
+      }
+    }
+  },
+  "switches": {},
+  "links": []
+}

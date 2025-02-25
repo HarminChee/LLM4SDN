@@ -1,0 +1,220 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Verify static route ECMP functionality with 2 next hop, and RIB status when same route advertise via BGP and static route.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bfdd.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bfdd.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bfdd.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "r1-link0": {
+          "connected_to": "r2",
+          "ipv4": "28.1.1.1/24",
+          "ipv6": "2::1/128"
+        },
+        "r1-link1": {
+          "connected_to": "r2",
+          "ipv4": "29.1.1.1/24",
+          "ipv6": "2::2/128"
+        },
+        "r3-link0": {
+          "connected_to": "r3",
+          "ipv4": "28.1.1.1/24"
+        },
+        "r3-link1": {
+          "connected_to": "r3",
+          "ipv4": "29.1.1.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": "101"
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "r2-link0": {
+          "connected_to": "r1",
+          "ipv4": "28.1.1.2/24",
+          "ipv6": "2::2/128"
+        },
+        "r2-link1": {
+          "connected_to": "r1",
+          "ipv4": "29.1.1.2/24",
+          "ipv6": "2::1/128"
+        },
+        "r3": {
+          "connected_to": "r3",
+          "ipv4": "21.1.1.1/24",
+          "ipv6": "3::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": "102",
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "11.0.20.1/32",
+          "next_hop": "28.1.1.2"
+        },
+        {
+          "network": "11.0.20.1/32",
+          "next_hop": "29.1.1.2"
+        },
+        {
+          "network": "11.0.20.2/32",
+          "next_hop": "28.1.1.2",
+          "admin_distance": 10
+        },
+        {
+          "network": "11.0.20.2/32",
+          "next_hop": "29.1.1.2",
+          "admin_distance": 20
+        }
+      ]
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "r3-link0": {
+          "connected_to": "r1",
+          "ipv4": "28.1.1.2/24"
+        },
+        "r3-link1": {
+          "connected_to": "r1",
+          "ipv4": "29.1.1.2/24"
+        },
+        "r1-link0": {
+          "connected_to": "r2",
+          "ipv4": "21.1.1.1/24"
+        },
+        "r1-link1": {
+          "connected_to": "r2",
+          "ipv6": "3::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": "103",
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-link0",
+      "interface_target": "r2-link0",
+      "ipv4_subnet": "28.1.1.0/24",
+      "protocols": [
+        "bgp",
+        "static"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-link1",
+      "interface_target": "r2-link1",
+      "ipv4_subnet": "29.1.1.0/24",
+      "protocols": [
+        "bgp",
+        "static"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r1-link0",
+      "interface_target": "r3-link0",
+      "ipv4_subnet": "21.1.1.0/24",
+      "protocols": [
+        "bgp",
+        "static"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r1-link1",
+      "interface_target": "r3-link1",
+      "ipv6_subnet": "3::/64",
+      "protocols": [
+        "bgp",
+        "static"
+      ]
+    }
+  ]
+}

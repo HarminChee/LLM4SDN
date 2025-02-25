@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "script_name": "static_routes_topo1_ibgp.json",
+    "description": "Topology with routers using static routes for ECMP functionality and different AD values, along with BGP and static route interactions.",
+    "conf_files": {}
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "11.0.20.1/32",
+          "ipv6": "2::1/128"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "11.0.20.2/32",
+          "ipv6": "2::2/128"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "10.0.0.2"
+          },
+          "r3": {
+            "remote_as": 100,
+            "ipv4_address": "10.0.0.3"
+          }
+        }
+      },
+      "static_routes": {
+        "10.1.1.1/24": {
+          "next_hops": [
+            {
+              "address": "28.1.1.2",
+              "admin_distance": 10
+            },
+            {
+              "address": "29.1.1.2",
+              "admin_distance": 20
+            }
+          ]
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "11.0.20.1/32",
+          "ipv6": "2::1/128"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "11.0.20.2/32",
+          "ipv6": "2::2/128"
+        }
+      },
+      "bgp": {
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": {
+        "110.0.20.1/32": {
+          "next_hops": [
+            {
+              "address": "11.0.20.1",
+              "admin_distance": 10
+            },
+            {
+              "address": "11.0.20.2",
+              "admin_distance": 20
+            }
+          ]
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "11.0.20.3/32",
+          "ipv6": "2::3/128"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "11.0.20.4/32",
+          "ipv6": "2::4/128"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv6_subnet": "2::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0",
+      "ipv6_subnet": "2::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth1",
+      "ipv6_subnet": "2::/64",
+      "bgp_neighbors": true
+    }
+  ]
+}

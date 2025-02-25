@@ -1,0 +1,260 @@
+{
+  "metadata": {
+    "script_name": "static_route_tests.py",
+    "description": "Verify static route ECMP functionality with different AD values and tag options, and interact with BGP.",
+    "conf_files": {}
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "links": {
+        "r2-link0": {
+          "interface": "ens224",
+          "ipv4": "1.1.1.1/32",
+          "ipv6": "4001::32/128"
+        }
+      },
+      "static_routes": []
+    },
+    "r2": {
+      "type": "router",
+      "links": {
+        "r1-link0": {
+          "interface": "ens224",
+          "ipv4": "21.1.1.2/32",
+          "ipv6": "2::1/128"
+        },
+        "r1-link1": {
+          "interface": "ens225",
+          "ipv4": "22.1.1.2/32",
+          "ipv6": "2::2/128"
+        },
+        "r1-link2": {
+          "interface": "ens226",
+          "ipv4": "23.1.1.2/32",
+          "ipv6": "2::3/128"
+        },
+        "r1-link3": {
+          "interface": "ens227",
+          "ipv4": "24.1.1.2/32",
+          "ipv6": "2::4/128"
+        },
+        "r1-link4": {
+          "interface": "ens228",
+          "ipv4": "25.1.1.2/32",
+          "ipv6": "2::5/128"
+        },
+        "r1-link5": {
+          "interface": "ens229",
+          "ipv4": "26.1.1.2/32",
+          "ipv6": "2::6/128"
+        },
+        "r1-link6": {
+          "interface": "ens230",
+          "ipv4": "27.1.1.2/32",
+          "ipv6": "2::7/128"
+        },
+        "r1-link7": {
+          "interface": "ens231",
+          "ipv4": "28.1.1.2/32",
+          "ipv6": "2::8/128"
+        },
+        "r2-link0": {
+          "interface": "ens232",
+          "ipv4": "10.0.0.1/32",
+          "ipv6": "2000::1/128"
+        }
+      },
+      "static_routes": [
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "21.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "22.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "23.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "24.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "25.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "26.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "27.1.1.2"
+        },
+        {
+          "network": "110.0.20.1/32",
+          "next_hop": "28.1.1.2"
+        },
+        {
+          "network": "10.1.1.1/24",
+          "next_hop": "28.1.1.2",
+          "tag": 1
+        },
+        {
+          "network": "20.1.1.1/24",
+          "next_hop": "28.1.1.2",
+          "tag": 2
+        },
+        {
+          "network": "10.1.1.1/24",
+          "next_hop": "28.1.1.2",
+          "tag": 1
+        },
+        {
+          "network": "10.1.1.1/24",
+          "next_hop": "29.1.1.2",
+          "tag": 2
+        },
+        {
+          "network": "10.1.1.1/24",
+          "next_hop": "28.1.1.2",
+          "tag": 3
+        }
+      ],
+      "bgp": {
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "route_maps": {
+        "rmap_match_tag_1_ipv4": [
+          {
+            "action": "permit",
+            "seq_id": 10,
+            "match": {
+              "ipv4": {
+                "tag": "4001"
+              }
+            }
+          },
+          {
+            "action": "deny",
+            "seq_id": 20,
+            "match": {
+              "ipv4": {
+                "tag": "4002"
+              }
+            }
+          }
+        ],
+        "rmap_match_tag_1_ipv6": [
+          {
+            "action": "permit",
+            "seq_id": 10,
+            "match": {
+              "ipv6": {
+                "tag": "4001"
+              }
+            }
+          },
+          {
+            "action": "deny",
+            "seq_id": 20,
+            "match": {
+              "ipv6": {
+                "tag": "4002"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "r3": {
+      "type": "router",
+      "links": {
+        "r2-link0": {
+          "interface": "ens233",
+          "ipv4": "10.0.0.2/32",
+          "ipv6": "2000::2/128"
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "ens224",
+      "interface_target": "ens224"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens225",
+      "interface_target": "ens225"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens226",
+      "interface_target": "ens226"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens227",
+      "interface_target": "ens227"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens228",
+      "interface_target": "ens228"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens229",
+      "interface_target": "ens229"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens230",
+      "interface_target": "ens230"
+    },
+    {
+      "source": "r2",
+      "target": "r1",
+      "interface_source": "ens231",
+      "interface_target": "ens231"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "ens232",
+      "interface_target": "ens233"
+    }
+  ]
+}

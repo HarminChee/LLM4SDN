@@ -1,0 +1,10 @@
+{
+  "metadata": {
+    "script_name": "script_name_here.py",
+    "description": "Test <template>. BGP convergence and memory leak test.",
+    "conf_files": {}
+  },
+  "routers": {},
+  "switches": {},
+  "links": []
+}

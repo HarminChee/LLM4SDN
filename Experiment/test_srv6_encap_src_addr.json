@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "script_name": "test_srv6_encap_src_addr.py",
+    "description": "Test for SRv6 encapsulation source address on zebra",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {},
+      "zebra": {},
+      "bgp": {},
+      "sharp": {}
+    }
+  },
+  "switches": {},
+  "links": []
+}

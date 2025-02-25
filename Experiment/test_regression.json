@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Test mgmtd regressions with single router connected to switch. Includes config tests for regression issue #13920 and pull request #15423.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "static_routes": [
+        {
+          "destination": "3.2.4.0/24",
+          "nexthop": "6.5.5.11",
+          "interface": "loop3"
+        },
+        {
+          "destination": "3.22.4.0/24",
+          "nexthop": "6.5.5.12"
+        }
+      ],
+      "access_lists": [
+        {
+          "name": "test",
+          "type": "ipv4",
+          "entries": [
+            {
+              "sequence": 1,
+              "action": "permit",
+              "source": "any",
+              "destination": "10.10.10.0/24"
+            }
+          ]
+        }
+      ],
+      "mgmt_operations": [
+        {
+          "type": "delete-config",
+          "path": "/frr-filter:lib/access-list[name='test'][type='ipv4']/entry[sequence='1']/destination-network"
+        },
+        {
+          "type": "commit",
+          "operation": "apply"
+        }
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  }
+}
