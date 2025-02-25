@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_orf.py",
+    "description": "Test if BGP ORF filtering is working correctly when modifying prefix-list. Topology with 1 switch (s1) and 2 routers (r1, r2). Inferred from Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.1.2",
+            "state": "Established",
+            "prefix_list": {
+              "out": [
+                "10.10.10.1/32",
+                "10.10.10.2/32"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.1.1",
+            "state": "Established",
+            "prefix_list": {
+              "in": [
+                "10.10.10.1/32",
+                "10.10.10.2/32"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

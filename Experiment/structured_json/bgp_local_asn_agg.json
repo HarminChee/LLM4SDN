@@ -1,0 +1,257 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_local_as.py",
+    "description": "Tests BGP Multi-VRF Dynamic Route Leaking and BGP Local AS functionality by aggregating routes between eBGP peers.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.1.1.1/24",
+          "ipv6": "10:1::1:1/64"
+        }
+      },
+      "bgp": {
+        "local_as": "100",
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r2": {
+                  "remote_as": "200",
+                  "ipv4_address": "10.1.1.2"
+                }
+              },
+              "aggregate_address": "10.1.0.0/16"
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r2": {
+                  "remote_as": "200",
+                  "ipv6_address": "10:1::1:2"
+                }
+              },
+              "aggregate_address": "10:1::/96"
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.1.1.2/24",
+          "ipv6": "10:1::1:2/64"
+        }
+      },
+      "bgp": {
+        "local_as": "200",
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r1": {
+                  "remote_as": "100",
+                  "ipv4_address": "10.1.1.1"
+                },
+                "r3": {
+                  "remote_as": "110",
+                  "ipv4_address": "10.1.2.3"
+                }
+              },
+              "aggregate_address": "10.1.0.0/16"
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r1": {
+                  "remote_as": "100",
+                  "ipv6_address": "10:1::1:1"
+                },
+                "r3": {
+                  "remote_as": "110",
+                  "ipv6_address": "10:1::2:3"
+                }
+              },
+              "aggregate_address": "10:1::/96"
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "10.1.2.3/24",
+          "ipv6": "10:1::2:1/64"
+        }
+      },
+      "bgp": {
+        "local_as": "300",
+        "local_asn": {
+          "local_as": "110"
+        },
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r2": {
+                  "remote_as": "200",
+                  "ipv4_address": "10.1.2.2"
+                },
+                "r4": {
+                  "remote_as": "400",
+                  "ipv4_address": "10.1.2.4"
+                }
+              },
+              "aggregate_address": "10.1.0.0/16"
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r2": {
+                  "remote_as": "200",
+                  "ipv6_address": "10:1::2:2"
+                },
+                "r4": {
+                  "remote_as": "400",
+                  "ipv6_address": "10:1::2:4"
+                }
+              },
+              "aggregate_address": "10:1::/96"
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.1.3.4/24",
+          "ipv6": "10:1::3:1/64"
+        }
+      },
+      "bgp": {
+        "local_as": "400",
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r3": {
+                  "remote_as": "300",
+                  "ipv4_address": "10.1.2.3"
+                }
+              },
+              "aggregate_address": "10.1.0.0/16"
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r3": {
+                  "remote_as": "300",
+                  "ipv6_address": "10:1::3:3"
+                }
+              },
+              "aggregate_address": "10:1::/96"
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv4_subnet": "10.1.1.0/24",
+      "ipv6_subnet": "10:1::1:0/64",
+      "bgp_neighbors": true,
+      " protocols": [
+        "bgp",
+        "static"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv4_subnet": "10.1.2.0/24",
+      "ipv6_subnet": "10:1::2:0/64",
+      "bgp_neighbors": true,
+      "protocols": [
+        "bgp",
+        "static"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv4_subnet": "10.1.3.0/24",
+      "ipv6_subnet": "10:1::3:0/64",
+      "bgp_neighbors": true,
+      "protocols": [
+        "bgp",
+        "static"
+      ]
+    }
+  ]
+}

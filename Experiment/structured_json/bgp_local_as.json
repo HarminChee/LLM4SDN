@@ -1,0 +1,122 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Topology with 2 switches (s1, s2) and 3 routers (r1, r2, r3). BGP tested. This JSON is an inferred structure from the original Python code. Actual IP/ASNs partially guessed.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.1.2",
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.2.2",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r1": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.1.1",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.2/24"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r1": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.2.1",
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.2.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

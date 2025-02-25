@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_update_delay.py",
+    "description": "Topology with 4 switches and 5 routers testing BGP update-delay settings. This JSON is an inferred structure from the original Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65001
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        },
+        "eth2": {
+          "connected_to": "s3"
+        },
+        "eth3": {
+          "connected_to": "s4"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "peers": {
+          "r1": {
+            "remote_as": 65001,
+            "update_delay": {
+              "max_delay": 20,
+              "establish_wait": 10
+            }
+          },
+          "r3": {
+            "remote_as": 65002
+          },
+          "r4": {
+            "remote_as": 65002
+          },
+          "r5": {
+            "remote_as": 65002,
+            "vrf": "vrf1"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65002
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "local_as": 65002
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        }
+      },
+      "bgp": {
+        "local_as": 65002
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r5"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth2",
+      "interface_target": "r4-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r5",
+      "interface_source": "r2-eth3",
+      "interface_target": "r5-eth0"
+    }
+  ]
+}

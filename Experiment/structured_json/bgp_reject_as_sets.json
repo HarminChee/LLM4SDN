@@ -1,0 +1,128 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_reject_as_sets.py",
+    "description": "Test if an aggregated route with AS_SET is not sent to peers. BGP speakers conforming to this document must not generate BGP UPDATE messages containing AS_SET or AS_CONFED_SET.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "zebra": {},
+      "bgp": {
+        "local_as": null,
+        "neighbors": {}
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "zebra": {},
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "192.168.255.2": {
+            "bgpState": "Established",
+            "addressFamilyInfo": {
+              "ipv4Unicast": {
+                "acceptedPrefixCounter": 2
+              }
+            }
+          }
+        }
+      },
+      "bgp_routes": {
+        "172.16.0.0/16": {
+          "paths": [
+            {
+              "aspath": {
+                "string": "Local",
+                "segments": [],
+                "length": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "zebra": {},
+      "bgp": {
+        "local_as": null,
+        "neighbors": {},
+        "advertisedRoutes": {
+          "172.16.0.0/16": {
+            "path": ""
+          },
+          "192.168.254.0/30": {
+            "path": "65003"
+          },
+          "192.168.255.0/30": {
+            "path": "65001"
+          }
+        },
+        "totalPrefixCounter": 3
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Check if we can override VPN underlay next-hop from PE1 to PE2.",
+    "conf_files": {
+      "cpe1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospf6d.conf",
+        "ldpd.conf"
+      ],
+      "cpe2": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospf6d.conf",
+        "ldpd.conf"
+      ],
+      "pe1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospf6d.conf",
+        "ldpd.conf"
+      ],
+      "pe2": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospf6d.conf",
+        "ldpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "cpe1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {},
+      "ospf6": {},
+      "ldp": {},
+      "zebra": {}
+    },
+    "cpe2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {},
+      "ospf6": {},
+      "ldp": {},
+      "zebra": {}
+    },
+    "pe1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {},
+      "ospf6": {},
+      "ldp": {},
+      "zebra": {},
+      "vrfs": {
+        "RED": {
+          "table": 1001,
+          "interfaces": [
+            "eth0"
+          ]
+        }
+      },
+      "sysctl": {
+        "net.ipv4.ip_forward": 1,
+        "net.mpls.conf.eth0.input": 1
+      }
+    },
+    "pe2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {},
+      "ospf6": {},
+      "ldp": {},
+      "zebra": {},
+      "vrfs": {
+        "RED": {
+          "table": 1001,
+          "interfaces": [
+            "eth1"
+          ]
+        }
+      },
+      "sysctl": {
+        "net.ipv4.ip_forward": 1,
+        "net.mpls.conf.eth1.input": 1
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "cpe1",
+        "pe1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "pe1",
+        "pe2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "pe2",
+        "cpe2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "cpe1",
+      "target": "pe1",
+      "interface_source": "cpe1-eth0",
+      "interface_target": "pe1-eth0"
+    },
+    {
+      "source": "pe1",
+      "target": "pe2",
+      "interface_source": "pe1-eth1",
+      "interface_target": "pe2-eth0"
+    },
+    {
+      "source": "pe2",
+      "target": "cpe2",
+      "interface_source": "pe2-eth1",
+      "interface_target": "cpe2-eth0"
+    }
+  ]
+}

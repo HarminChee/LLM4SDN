@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_configuration.py",
+    "description": "Topology with 2 routers (r1, r2) and 6 customer edges (ce1 to ce6). VRF, BGP, and link configurations are tested. This JSON is inferred from the provided Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce6": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2-eth0"
+        },
+        "eth1": {
+          "connected_to": "ce1-eth0"
+        },
+        "eth2": {
+          "connected_to": "ce3-eth0"
+        },
+        "eth3": {
+          "connected_to": "ce5-eth0"
+        }
+      },
+      "bgp": {
+        "local_as": 1
+      },
+      "vrf": {
+        "vrf10": {
+          "interfaces": [
+            "eth1",
+            "eth2"
+          ]
+        },
+        "vrf20": {
+          "interfaces": [
+            "eth3"
+          ]
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1-eth0"
+        },
+        "eth1": {
+          "connected_to": "ce2-eth0"
+        },
+        "eth2": {
+          "connected_to": "ce4-eth0"
+        },
+        "eth3": {
+          "connected_to": "ce6-eth0"
+        }
+      },
+      "bgp": {
+        "local_as": 1
+      },
+      "vrf": {
+        "vrf10": {
+          "interfaces": [
+            "eth1"
+          ]
+        },
+        "vrf20": {
+          "interfaces": [
+            "eth2",
+            "eth3"
+          ]
+        }
+      }
+    },
+    "ce1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1-eth1"
+        }
+      }
+    },
+    "ce2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2-eth1"
+        }
+      }
+    },
+    "ce3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1-eth2"
+        }
+      }
+    },
+    "ce4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2-eth2"
+        }
+      }
+    },
+    "ce5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1-eth3"
+        }
+      }
+    },
+    "ce6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2-eth3"
+        }
+      }
+    }
+  }
+}

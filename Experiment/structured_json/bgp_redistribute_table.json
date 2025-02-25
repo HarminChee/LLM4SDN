@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_redistribute_table.py",
+    "description": "Test the FRR BGP daemon with 'redistribute table-direct'",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "zebra": {},
+      "bgp": {
+        "local_as": 65501
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "zebra": {},
+      "bgp": {
+        "local_as": 65501,
+        "redistribute_table_direct": 2200,
+        "kernel_routes": [
+          "172.31.0.10/32 via 172.31.1.10",
+          "172.31.0.15/32 via 172.31.1.100"
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "metadata": {
+    "script_name": "test_vrf.py",
+    "description": "BGP Multi-VRF tests: CHAOS_1, CHAOS_2, CHAOS_3, CHAOS_4, CHAOS_5, CHAOS_6, CHAOS_8, CHAOS_9",
+    "conf_files": {}
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "link1": {
+          "connected_to": "r2",
+          "ipv4": "100.1.0.1/30",
+          "ipv6": "100::1/126"
+        },
+        "link2": {
+          "connected_to": "r2",
+          "ipv4": "100.1.0.1/30",
+          "ipv6": "100::1/126"
+        },
+        "link3": {
+          "connected_to": "r2",
+          "ipv4": "100.1.0.1/30",
+          "ipv6": "100::1/126"
+        },
+        "link4": {
+          "connected_to": "r2",
+          "ipv4": "100.1.0.1/30",
+          "ipv6": "100::1/126"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r2": {
+                  "dest_link": "link1",
+                  "keepalivetimer": 1,
+                  "holddowntimer": 3
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r2": {
+                  "dest_link": "link1",
+                  "keepalivetimer": 1,
+                  "holddowntimer": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "vrfs": [
+        {
+          "name": "RED_A",
+          "id": "1"
+        },
+        {
+          "name": "RED_B",
+          "id": "2"
+        },
+        {
+          "name": "BLUE_A",
+          "id": "3"
+        },
+        {
+          "name": "BLUE_B",
+          "id": "4"
+        }
+      ],
+      "static_routes": [
+        {
+          "network": "1.1.1.1/32",
+          "next_hop": "Null0",
+          "vrf": "RED_A"
+        },
+        {
+          "network": "2.1.1.1/32",
+          "next_hop": "Null0",
+          "vrf": "BLUE_A"
+        }
+      ]
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "link1": {
+          "connected_to": "r1",
+          "ipv4": "100.1.0.2/30",
+          "ipv6": "100::2/126"
+        },
+        "link2": {
+          "connected_to": "r1",
+          "ipv4": "100.1.0.2/30",
+          "ipv6": "100::2/126"
+        },
+        "link3": {
+          "connected_to": "r1",
+          "ipv4": "100.1.0.2/30",
+          "ipv6": "100::2/126"
+        },
+        "link4": {
+          "connected_to": "r1",
+          "ipv4": "100.1.0.2/30",
+          "ipv6": "100::2/126"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r1": {
+                  "dest_link": "link1",
+                  "keepalivetimer": 1,
+                  "holddowntimer": 3
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r1": {
+                  "dest_link": "link1",
+                  "keepalivetimer": 1,
+                  "holddowntimer": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "1.1.1.1/32",
+          "next_hop": "Null0",
+          "vrf": "RED_A"
+        },
+        {
+          "network": "2.1.1.1/32",
+          "next_hop": "Null0",
+          "vrf": "BLUE_A"
+        }
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "link1",
+      "interface_target": "link1",
+      "ipv4_subnet": "100.1.0.0/30",
+      "ipv6_subnet": "100::/126"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "link2",
+      "interface_target": "link2",
+      "ipv4_subnet": "100.1.0.0/30",
+      "ipv6_subnet": "100::/126"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "link3",
+      "interface_target": "link3",
+      "ipv4_subnet": "100.1.0.0/30",
+      "ipv6_subnet": "100::/126"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "link4",
+      "interface_target": "link4",
+      "ipv4_subnet": "100.1.0.0/30",
+      "ipv6_subnet": "100::/126"
+    }
+  ]
+}

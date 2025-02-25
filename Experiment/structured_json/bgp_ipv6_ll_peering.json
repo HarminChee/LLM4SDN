@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_ipv6_link_local_peering.py",
+    "description": "Topology with 1 switch (s1) and 2 routers (r1, r2) to test IPv6 Link-Local BGP peering.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "fe80:1::2": {
+            "remote_as": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "fe80:1::1": {
+            "remote_as": null,
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp"
+      ]
+    }
+  ]
+}

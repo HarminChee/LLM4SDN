@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "script_name": "bgp_set_local-preference_add_subtract.py",
+    "description": "Test if we can add/subtract the value to/from an existing LOCAL_PREF in route-maps.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r2": {
+            "remote_as": null,
+            "ipv4_address": "192.168.255.2",
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": null,
+            "ipv4_address": "192.168.255.3",
+            "state": "Established"
+          }
+        },
+        "routes": [
+          {
+            "prefix": "10.10.10.2/32",
+            "locPrf": 160
+          },
+          {
+            "prefix": "10.10.10.3/32",
+            "locPrf": 40
+          },
+          {
+            "prefix": "172.16.255.254/32",
+            "locPrfs": [
+              {
+                "locPrf": 50,
+                "nexthops": [
+                  {
+                    "ip": "192.168.255.3"
+                  }
+                ]
+              },
+              {
+                "locPrf": 150,
+                "nexthops": [
+                  {
+                    "ip": "192.168.255.2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.255.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth0",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.255.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

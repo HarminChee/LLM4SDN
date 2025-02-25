@@ -1,0 +1,99 @@
+{
+  "metadata": {
+    "script_name": "test_adjacencies.py",
+    "description": "A test script focusing on BGP and OSPF adjacencies, adding and checking routes, and cleanup.",
+    "conf_files": [],
+    "test_cmds": [
+      "ltemplateTest('scripts/adjacencies.py', False, None, 'ltemplateVersionCheck(\"3.1\")')",
+      "ltemplateTest('scripts/add_routes.py', False, None, 'ltemplateVersionCheck(\"3.1\")')",
+      "ltemplateTest('scripts/check_routes.py', False, None, 'ltemplateVersionCheck(\"3.1\")')",
+      "ltemplateTest('scripts/cleanup_all.py', False, None, 'ltemplateVersionCheck(\"3.1\")')"
+    ]
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 1,
+        "neighbors": {
+          "r2": {
+            "remote_as": 2,
+            "ipv4_address": "10.0.0.2"
+          }
+        }
+      },
+      "ospf": {
+        "networks": {
+          "10.0.0.0/24": "area 0"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "local_as": 2,
+        "neighbors": {
+          "r1": {
+            "remote_as": 1,
+            "ipv4_address": "10.0.0.1"
+          }
+        }
+      },
+      "ospf": {
+        "networks": {
+          "10.0.1.0/24": "area 1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp",
+        "ospf"
+      ],
+      "ipv4_subnet": "10.0.0.0/24"
+    }
+  ]
+}

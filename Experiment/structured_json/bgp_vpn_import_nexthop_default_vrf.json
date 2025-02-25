@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "script_name": "test_issue_12502.py",
+    "description": "Topology under test has 3 switches (s1, s2, s3) and 2 routers (r1, r2) interconnected. It tests BGP and VRF (CUSTOMER-A).",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "vrf": {
+        "CUSTOMER-A": {
+          "table": 1001,
+          "interfaces": [
+            "r1-eth1"
+          ]
+        }
+      },
+      "bgp": {
+        "vrfs": {
+          "CUSTOMER-A": {
+            "ipv4_unicast": {
+              "routes": {
+                "192.168.2.0/24": {
+                  "valid": true,
+                  "pathFrom": "external",
+                  "prefix": "192.168.2.0",
+                  "prefixLen": 24,
+                  "path": "65002",
+                  "nhVrfName": "default",
+                  "nexthops": [
+                    {
+                      "ip": "192.168.179.5",
+                      "hostname": "r1",
+                      "afi": "ipv4",
+                      "used": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "vrf": {
+        "CUSTOMER-A": {
+          "table": 1001,
+          "interfaces": [
+            "r2-eth1"
+          ]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "vrf": "CUSTOMER-A"
+    }
+  ]
+}

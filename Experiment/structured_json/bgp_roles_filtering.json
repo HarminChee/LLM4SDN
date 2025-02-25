@@ -1,0 +1,350 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_roles_filtering.py",
+    "description": "Test leaks prevention and mitigation with BGP roles. Topology with 7 switches (s1 to s7) connecting routers (r1 to r7) to a central router (r10).",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r6": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r7": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r10": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s5"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s6"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r7": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s7"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r10": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r10": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        },
+        "eth2": {
+          "connected_to": "s3"
+        },
+        "eth3": {
+          "connected_to": "s4"
+        },
+        "eth4": {
+          "connected_to": "s5"
+        },
+        "eth5": {
+          "connected_to": "s6"
+        },
+        "eth6": {
+          "connected_to": "s7"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r1": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          },
+          "r2": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          },
+          "r4": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          },
+          "r5": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          },
+          "r6": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          },
+          "r7": {
+            "remote_as": null,
+            "ipv4_address": null,
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r10"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r10"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r10"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r10"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r5",
+        "r10"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r6",
+        "r10"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "r7",
+        "r10"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r10",
+      "interface_source": "r1-eth0",
+      "interface_target": "r10-eth0",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r10",
+      "interface_source": "r2-eth0",
+      "interface_target": "r10-eth1",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r10",
+      "interface_source": "r3-eth0",
+      "interface_target": "r10-eth2",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r4",
+      "target": "r10",
+      "interface_source": "r4-eth0",
+      "interface_target": "r10-eth3",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r5",
+      "target": "r10",
+      "interface_source": "r5-eth0",
+      "interface_target": "r10-eth4",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r6",
+      "target": "r10",
+      "interface_source": "r6-eth0",
+      "interface_target": "r10-eth5",
+      "protocols": [
+        "bgp"
+      ]
+    },
+    {
+      "source": "r7",
+      "target": "r10",
+      "interface_source": "r7-eth0",
+      "interface_target": "r10-eth6",
+      "protocols": [
+        "bgp"
+      ]
+    }
+  ]
+}

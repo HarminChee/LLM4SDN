@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_set_aspath_exclude.py",
+    "description": "Test if `set as-path exclude` is working correctly for route-maps.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "neighbors": {}
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {},
+      "bgp": {
+        "neighbors": {}
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp",
+        "zebra"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp",
+        "zebra"
+      ]
+    }
+  ]
+}

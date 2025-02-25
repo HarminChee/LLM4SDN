@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_addpath_labeled_unicast.py",
+    "description": "Check if labeled-unicast works correctly with addpath capability. Initially R3 MUST announce 10.0.0.1/32 multipath(2) from R1 and R2. Later, we enable R5 and 10.0.0.1/32 multipath(3) must be announced, R1, R2, and R5.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "192.168.34.3": {
+            "remote_as": 65003,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "192.168.34.3": {
+            "remote_as": 65003,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        },
+        "eth2": {
+          "connected_to": "s3"
+        },
+        "eth3": {
+          "connected_to": "s4"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "192.168.34.1": {
+            "remote_as": 65001,
+            "state": "Established"
+          },
+          "192.168.34.2": {
+            "remote_as": 65002,
+            "state": "Established"
+          },
+          "192.168.35.4": {
+            "remote_as": 65004,
+            "state": "Established"
+          },
+          "192.168.35.5": {
+            "remote_as": 65005,
+            "admin_state": "shutdown"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "local_as": 65004,
+        "neighbors": {
+          "192.168.35.3": {
+            "remote_as": 65003,
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        }
+      },
+      "bgp": {
+        "local_as": 65005,
+        "neighbors": {
+          "192.168.35.3": {
+            "remote_as": 65003,
+            "admin_state": "shutdown"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r5"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth0",
+      "interface_target": "r3-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth0",
+      "interface_target": "r3-eth1"
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth2",
+      "interface_target": "r4-eth0"
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "r3-eth3",
+      "interface_target": "r5-eth0"
+    }
+  ]
+}
