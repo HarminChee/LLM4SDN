@@ -1,0 +1,158 @@
+{
+  "metadata": {
+    "script_name": "test_isis_advertise_high_metrics.py",
+    "description": "Advertise High Metrics FRR ISIS Test with 4 routers and 4 switches. Configuration includes ISIS and Zebra.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "isisd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth-r2": {
+          "connected_to": "s0"
+        },
+        "eth-r3": {
+          "connected_to": "s1"
+        }
+      },
+      "isis": {
+        "metric_style": "default",
+        "advertise_high_metrics": false
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth-r1": {
+          "connected_to": "s0"
+        },
+        "eth-r4": {
+          "connected_to": "s2"
+        }
+      },
+      "isis": {
+        "metric_style": "default",
+        "advertise_high_metrics": false
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth-r1": {
+          "connected_to": "s1"
+        },
+        "eth-r4": {
+          "connected_to": "s3"
+        }
+      },
+      "isis": {
+        "metric_style": "default",
+        "advertise_high_metrics": false
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth-r2": {
+          "connected_to": "s2"
+        },
+        "eth-r3": {
+          "connected_to": "s3"
+        }
+      },
+      "isis": {
+        "metric_style": "default",
+        "advertise_high_metrics": false
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s0": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth-r2",
+      "interface_target": "eth-r1",
+      "protocols": [
+        "isis"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "eth-r3",
+      "interface_target": "eth-r1",
+      "protocols": [
+        "isis"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "eth-r4",
+      "interface_target": "eth-r2",
+      "protocols": [
+        "isis"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "eth-r4",
+      "interface_target": "eth-r3",
+      "protocols": [
+        "isis"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "script_name": "multicast_pim6_sm_topo1.py",
+    "description": "Test script to verify Multicast data traffic with static RP in a topology with 5 routers and multiple multicast configurations.",
+    "conf_files": {
+      "r1": [],
+      "r2": [],
+      "r3": [],
+      "r4": [],
+      "r5": []
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv6": "2001:db8::1/128"
+        },
+        "eth0": {
+          "connected_to": "i1"
+        },
+        "eth1": {
+          "connected_to": "r2"
+        },
+        "eth2": {
+          "connected_to": "r4"
+        }
+      },
+      "pim6": {
+        "rp": {
+          "group_range": "ff00::/8"
+        }
+      },
+      "mld": {
+        "interfaces": {
+          "eth0": {
+            "mld": {
+              "version": "1",
+              "query": {
+                "query-max-response-time": 10
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv6": "2001:db8::2/128"
+        },
+        "eth0": {
+          "connected_to": "r1"
+        },
+        "eth1": {
+          "connected_to": "r3"
+        }
+      },
+      "pim6": {
+        "rp": {
+          "group_range": "ff00::/8"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv6": "2001:db8::3/128"
+        },
+        "eth0": {
+          "connected_to": "i2"
+        },
+        "eth1": {
+          "connected_to": "r2"
+        },
+        "eth2": {
+          "connected_to": "r5"
+        },
+        "eth3": {
+          "connected_to": "i8"
+        }
+      },
+      "pim6": {
+        "rp": {
+          "group_range": "ff00::/8"
+        }
+      },
+      "mld": {
+        "interfaces": {
+          "eth3": {
+            "mld": {
+              "version": "1",
+              "query": {
+                "query-interval": 100
+              }
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv6": "2001:db8::4/128"
+        },
+        "eth0": {
+          "connected_to": "r1"
+        },
+        "eth1": {
+          "connected_to": "r5"
+        }
+      },
+      "pim6": {
+        "rp": {
+          "group_range": "ff00::/8"
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv6": "2001:db8::5/128"
+        },
+        "eth0": {
+          "connected_to": "r4"
+        },
+        "eth1": {
+          "connected_to": "r3"
+        },
+        "eth2": {
+          "connected_to": "i5"
+        }
+      },
+      "pim6": {
+        "rp": {
+          "group_range": "ff00::/8"
+        }
+      },
+      "mld": {
+        "interfaces": {
+          "eth2": {
+            "mld": {
+              "version": "1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "interface_source": "eth2",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1",
+      "interface_target": "eth1"
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "eth2",
+      "interface_target": "eth1"
+    },
+    {
+      "source": "r4",
+      "target": "r5",
+      "interface_source": "eth1",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "i1",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "i2",
+      "target": "r3",
+      "interface_source": "eth0",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "i5",
+      "target": "r5",
+      "interface_source": "eth0",
+      "interface_target": "eth2"
+    },
+    {
+      "source": "i8",
+      "target": "r3",
+      "interface_source": "eth0",
+      "interface_target": "eth3"
+    }
+  ]
+}

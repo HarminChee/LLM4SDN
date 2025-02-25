@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "script_name": "test_ospf_dual_stack.py",
+    "description": "OSPF dual stack test setup with routers and switches from a JSON topology configuration.",
+    "conf_files": {},
+    "test_cmds": []
+  },
+  "routers": {},
+  "switches": {},
+  "links": []
+}

@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "script_name": "test_access_list_config_ordering.py",
+    "description": "Test Northbound Config Operations with a single router connected to one switch.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  }
+}

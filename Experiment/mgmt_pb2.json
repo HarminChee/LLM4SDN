@@ -1,0 +1,592 @@
+{
+  "metadata": {
+    "script_name": "mgmt.proto",
+    "description": "Protocol buffer definitions for management operations",
+    "conf_files": []
+  },
+  "routers": {},
+  "switches": {},
+  "links": [],
+  "protocols": {
+    "YangDataXPath": {
+      "fields": {
+        "xpath": {
+          "type": "string",
+          "label": "required"
+        }
+      }
+    },
+    "YangDataValue": {
+      "fields": {
+        "encoded_str_val": {
+          "type": "string",
+          "label": "optional"
+        }
+      }
+    },
+    "YangData": {
+      "fields": {
+        "xpath": {
+          "type": "string",
+          "label": "required"
+        },
+        "value": {
+          "type": "YangDataValue",
+          "label": "optional"
+        }
+      }
+    },
+    "YangCfgDataReq": {
+      "fields": {
+        "data": {
+          "type": "YangData",
+          "label": "required"
+        },
+        "req_type": {
+          "type": "CfgDataReqType",
+          "label": "required"
+        }
+      }
+    },
+    "CfgDataReqType": {
+      "values": {
+        "REQ_TYPE_NONE": 0,
+        "SET_DATA": 1,
+        "DELETE_DATA": 2
+      }
+    },
+    "DatastoreId": {
+      "values": {
+        "DS_NONE": 0,
+        "RUNNING_DS": 1,
+        "CANDIDATE_DS": 2,
+        "OPERATIONAL_DS": 3,
+        "STARTUP_DS": 4
+      }
+    },
+    "YangGetDataReq": {
+      "fields": {
+        "data": {
+          "type": "YangData",
+          "label": "required"
+        },
+        "next_indx": {
+          "type": "int64",
+          "label": "required"
+        }
+      }
+    },
+    "BeSubscribeReq": {
+      "fields": {
+        "client_name": {
+          "type": "string",
+          "label": "required"
+        },
+        "subscribe_xpaths": {
+          "type": "bool",
+          "label": "required"
+        },
+        "xpath_reg": {
+          "type": "string",
+          "label": "repeated"
+        }
+      }
+    },
+    "BeSubscribeReply": {
+      "fields": {
+        "success": {
+          "type": "bool",
+          "label": "required"
+        }
+      }
+    },
+    "BeTxnReq": {
+      "fields": {
+        "txn_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "create": {
+          "type": "bool",
+          "label": "required"
+        }
+      }
+    },
+    "BeTxnReply": {
+      "fields": {
+        "txn_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "create": {
+          "type": "bool",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        }
+      }
+    },
+    "BeCfgDataCreateReq": {
+      "fields": {
+        "txn_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "data_req": {
+          "type": "YangCfgDataReq",
+          "label": "repeated"
+        },
+        "end_of_data": {
+          "type": "bool",
+          "label": "required"
+        }
+      }
+    },
+    "BeCfgDataCreateReply": {
+      "fields": {
+        "txn_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "error_if_any": {
+          "type": "string",
+          "label": "optional"
+        }
+      }
+    },
+    "BeCfgDataApplyReq": {
+      "fields": {
+        "txn_id": {
+          "type": "int64",
+          "label": "required"
+        }
+      }
+    },
+    "BeCfgDataApplyReply": {
+      "fields": {
+        "txn_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "error_if_any": {
+          "type": "string",
+          "label": "optional"
+        }
+      }
+    },
+    "YangDataReply": {
+      "fields": {
+        "data": {
+          "type": "YangData",
+          "label": "repeated"
+        },
+        "next_indx": {
+          "type": "int64",
+          "label": "required"
+        }
+      }
+    },
+    "BeMessage": {
+      "fields": {
+        "subscr_req": {
+          "type": "BeSubscribeReq",
+          "label": "optional"
+        },
+        "subscr_reply": {
+          "type": "BeSubscribeReply",
+          "label": "optional"
+        },
+        "txn_req": {
+          "type": "BeTxnReq",
+          "label": "optional"
+        },
+        "txn_reply": {
+          "type": "BeTxnReply",
+          "label": "optional"
+        },
+        "cfg_data_req": {
+          "type": "BeCfgDataCreateReq",
+          "label": "optional"
+        },
+        "cfg_data_reply": {
+          "type": "BeCfgDataCreateReply",
+          "label": "optional"
+        },
+        "cfg_apply_req": {
+          "type": "BeCfgDataApplyReq",
+          "label": "optional"
+        },
+        "cfg_apply_reply": {
+          "type": "BeCfgDataApplyReply",
+          "label": "optional"
+        }
+      }
+    },
+    "FeRegisterReq": {
+      "fields": {
+        "client_name": {
+          "type": "string",
+          "label": "required"
+        }
+      }
+    },
+    "FeSessionReq": {
+      "fields": {
+        "create": {
+          "type": "bool",
+          "label": "required"
+        },
+        "client_conn_id": {
+          "type": "int64",
+          "label": "optional"
+        },
+        "session_id": {
+          "type": "int64",
+          "label": "optional"
+        }
+      }
+    },
+    "FeSessionReply": {
+      "fields": {
+        "create": {
+          "type": "bool",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "client_conn_id": {
+          "type": "int64",
+          "label": "optional"
+        },
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        }
+      }
+    },
+    "FeLockDsReq": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "lock": {
+          "type": "bool",
+          "label": "required"
+        }
+      }
+    },
+    "FeLockDsReply": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "lock": {
+          "type": "bool",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "error_if_any": {
+          "type": "string",
+          "label": "optional"
+        }
+      }
+    },
+    "FeSetConfigReq": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "data": {
+          "type": "YangCfgDataReq",
+          "label": "repeated"
+        },
+        "implicit_commit": {
+          "type": "bool",
+          "label": "required"
+        },
+        "commit_ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        }
+      }
+    },
+    "FeSetConfigReply": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "implicit_commit": {
+          "type": "bool",
+          "label": "required"
+        },
+        "error_if_any": {
+          "type": "string",
+          "label": "optional"
+        }
+      }
+    },
+    "FeCommitConfigReq": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "src_ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "dst_ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "validate_only": {
+          "type": "bool",
+          "label": "required"
+        },
+        "abort": {
+          "type": "bool",
+          "label": "required"
+        }
+      }
+    },
+    "FeCommitConfigReply": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "src_ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "dst_ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "validate_only": {
+          "type": "bool",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "abort": {
+          "type": "bool",
+          "label": "required"
+        },
+        "error_if_any": {
+          "type": "string",
+          "label": "optional"
+        }
+      }
+    },
+    "FeGetReq": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "config": {
+          "type": "bool",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "data": {
+          "type": "YangGetDataReq",
+          "label": "repeated"
+        }
+      }
+    },
+    "FeGetReply": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "config": {
+          "type": "bool",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "success": {
+          "type": "bool",
+          "label": "required"
+        },
+        "error_if_any": {
+          "type": "string",
+          "label": "optional"
+        },
+        "data": {
+          "type": "YangDataReply",
+          "label": "optional"
+        }
+      }
+    },
+    "FeNotifyDataReq": {
+      "fields": {
+        "data": {
+          "type": "YangData",
+          "label": "repeated"
+        }
+      }
+    },
+    "FeRegisterNotifyReq": {
+      "fields": {
+        "session_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "ds_id": {
+          "type": "DatastoreId",
+          "label": "required"
+        },
+        "register_req": {
+          "type": "bool",
+          "label": "required"
+        },
+        "req_id": {
+          "type": "int64",
+          "label": "required"
+        },
+        "data_xpath": {
+          "type": "YangDataXPath",
+          "label": "repeated"
+        }
+      }
+    },
+    "FeMessage": {
+      "fields": {
+        "register_req": {
+          "type": "FeRegisterReq",
+          "label": "optional"
+        },
+        "session_req": {
+          "type": "FeSessionReq",
+          "label": "optional"
+        },
+        "session_reply": {
+          "type": "FeSessionReply",
+          "label": "optional"
+        },
+        "lockds_req": {
+          "type": "FeLockDsReq",
+          "label": "optional"
+        },
+        "lockds_reply": {
+          "type": "FeLockDsReply",
+          "label": "optional"
+        },
+        "setcfg_req": {
+          "type": "FeSetConfigReq",
+          "label": "optional"
+        },
+        "setcfg_reply": {
+          "type": "FeSetConfigReply",
+          "label": "optional"
+        },
+        "commcfg_req": {
+          "type": "FeCommitConfigReq",
+          "label": "optional"
+        },
+        "commcfg_reply": {
+          "type": "FeCommitConfigReply",
+          "label": "optional"
+        },
+        "get_req": {
+          "type": "FeGetReq",
+          "label": "optional"
+        },
+        "get_reply": {
+          "type": "FeGetReply",
+          "label": "optional"
+        },
+        "notify_data_req": {
+          "type": "FeNotifyDataReq",
+          "label": "optional"
+        },
+        "regnotify_req": {
+          "type": "FeRegisterNotifyReq",
+          "label": "optional"
+        }
+      }
+    }
+  }
+}

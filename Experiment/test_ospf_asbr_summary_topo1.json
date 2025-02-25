@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "script_name": "ospf_summarisation_functionality_automation.py",
+    "description": "OSPF Summarisation Functionality Automation. Topology with 4 routers (R0, R1, R2, R3) connected via OSPF. This JSON represents the inferred network structure from the original Python code. Actual IP/ASNs partially guessed.",
+    "conf_files": {
+      "r0": [
+        "ospfd.conf",
+        "staticd.conf",
+        "zebra.conf"
+      ],
+      "r1": [
+        "ospfd.conf",
+        "staticd.conf",
+        "zebra.conf"
+      ],
+      "r2": [
+        "ospfd.conf",
+        "staticd.conf",
+        "zebra.conf"
+      ],
+      "r3": [
+        "ospfd.conf",
+        "staticd.conf",
+        "zebra.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "11.0.20.1/32"
+        },
+        "eth1": {
+          "connected_to": "r3",
+          "ipv4": "11.0.20.4/32"
+        }
+      },
+      "ospf": {
+        "redistribute": [
+          {
+            "redist_type": "static"
+          }
+        ],
+        "summary-address": [
+          {
+            "prefix": "11.0.0.0",
+            "mask": "8"
+          },
+          {
+            "prefix": "12.0.0.0",
+            "mask": "8"
+          }
+        ]
+      },
+      "static_routes": [
+        {
+          "network": [
+            "11.0.20.1/32",
+            "11.0.20.2/32",
+            "11.0.20.3/32",
+            "11.0.20.4/32",
+            "11.0.20.5/32"
+          ],
+          "next_hop": "blackhole"
+        },
+        {
+          "network": [
+            "12.0.20.1/32",
+            "12.0.20.2/32",
+            "12.0.20.3/32",
+            "12.0.20.4/32",
+            "12.0.20.5/32"
+          ],
+          "next_hop": "blackhole"
+        }
+      ]
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r0",
+          "ipv4": "11.0.20.2/32"
+        }
+      },
+      "ospf": {},
+      "static_routes": []
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "11.0.20.3/32"
+        }
+      },
+      "ospf": {},
+      "static_routes": []
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r0",
+          "ipv4": "11.0.20.5/32"
+        }
+      },
+      "ospf": {},
+      "static_routes": []
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "r0",
+      "target": "r1",
+      "interface_source": "r0-eth0",
+      "interface_target": "r1-eth0",
+      "ipv4_subnet": "11.0.20.1/32"
+    },
+    {
+      "source": "r0",
+      "target": "r3",
+      "interface_source": "r0-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "11.0.20.4/32"
+    }
+  ]
+}

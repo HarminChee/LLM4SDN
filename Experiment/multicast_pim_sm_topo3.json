@@ -1,0 +1,385 @@
+{
+  "metadata": {
+    "script_name": "test_multicast_pim.py",
+    "description": "Script to test multicast PIM SM functionality in a network topology with IGMP and PIM configuration.",
+    "conf_files": {
+      "c1": [
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "c2": [
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "f1": [
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "i1": [],
+      "i2": [],
+      "i3": [],
+      "i4": [],
+      "i5": [],
+      "i6": [],
+      "i7": [],
+      "i8": [],
+      "l1": [
+        "pimd.conf",
+        "zebra.conf"
+      ],
+      "r2": [
+        "pimd.conf",
+        "zebra.conf"
+      ]
+    }
+  },
+  "routers": {
+    "c1": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "i4",
+          "ipv4": "10.0.4.1/24"
+        },
+        "eth2": {
+          "connected_to": "l1",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth3": {
+          "connected_to": "c2",
+          "ipv4": "10.0.3.1/24"
+        }
+      },
+      "pim": {
+        "rp": [
+          {
+            "rp_addr": "10.0.6.1",
+            "group_addr_range": "225.0.0.0/8"
+          }
+        ]
+      },
+      "igmp": {
+        "interfaces": {
+          "eth1": {
+            "version": "2"
+          }
+        }
+      }
+    },
+    "c2": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "c1",
+          "ipv4": "10.0.3.2/24"
+        },
+        "eth2": {
+          "connected_to": "i5",
+          "ipv4": "10.0.5.1/24"
+        }
+      },
+      "pim": {},
+      "igmp": {}
+    },
+    "f1": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "i2",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth2": {
+          "connected_to": "i8",
+          "ipv4": "10.0.3.1/24"
+        },
+        "eth3": {
+          "connected_to": "r2",
+          "ipv4": "10.0.4.1/24"
+        },
+        "eth4": {
+          "connected_to": "c2",
+          "ipv4": "10.0.6.1/24"
+        }
+      },
+      "pim": {
+        "rp": [
+          {
+            "rp_addr": "10.0.4.1",
+            "group_addr_range": "225.0.0.0/8"
+          }
+        ]
+      },
+      "igmp": {}
+    },
+    "i1": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "l1",
+          "ipv4": "10.0.1.1/24"
+        }
+      }
+    },
+    "i2": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "f1",
+          "ipv4": "10.0.2.2/24"
+        }
+      }
+    },
+    "i3": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "r2",
+          "ipv4": "10.0.3.1/24"
+        }
+      }
+    },
+    "i4": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "c1",
+          "ipv4": "10.0.4.2/24"
+        }
+      }
+    },
+    "i5": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "c2",
+          "ipv4": "10.0.5.2/24"
+        }
+      }
+    },
+    "i6": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "l1",
+          "ipv4": "10.0.1.2/24"
+        }
+      }
+    },
+    "i7": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "l1",
+          "ipv4": "10.0.1.3/24"
+        }
+      }
+    },
+    "i8": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "f1",
+          "ipv4": "10.0.3.2/24"
+        }
+      }
+    },
+    "l1": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "i1",
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth2": {
+          "connected_to": "r2",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth3": {
+          "connected_to": "i6",
+          "ipv4": "10.0.1.2/24"
+        },
+        "eth4": {
+          "connected_to": "i7",
+          "ipv4": "10.0.1.3/24"
+        }
+      },
+      "pim": {},
+      "igmp": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "l1",
+          "ipv4": "10.0.2.2/24"
+        },
+        "eth2": {
+          "connected_to": "f1",
+          "ipv4": "10.0.3.1/24"
+        },
+        "eth3": {
+          "connected_to": "i3",
+          "ipv4": "10.0.3.2/24"
+        }
+      },
+      "pim": {
+        "rp": [
+          {
+            "rp_addr": "10.0.2.1",
+            "group_addr_range": "225.0.0.0/8"
+          }
+        ]
+      },
+      "igmp": {
+        "interfaces": {
+          "eth3": {
+            "version": "2"
+          }
+        }
+      }
+    }
+  },
+  "links": [
+    {
+      "source": "c1",
+      "target": "i4",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "c1",
+      "target": "l1",
+      "interface_source": "eth2",
+      "interface_target": "eth2",
+      "ipv4_subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "c1",
+      "target": "c2",
+      "interface_source": "eth3",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "f1",
+      "target": "i2",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "f1",
+      "target": "i8",
+      "interface_source": "eth2",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "f1",
+      "target": "r2",
+      "interface_source": "eth3",
+      "interface_target": "eth2",
+      "ipv4_subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "i1",
+      "target": "l1",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "i2",
+      "target": "f1",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "i3",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth3",
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "i4",
+      "target": "c1",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "i5",
+      "target": "c2",
+      "interface_source": "eth1",
+      "interface_target": "eth2",
+      "ipv4_subnet": "10.0.5.0/24"
+    },
+    {
+      "source": "i6",
+      "target": "l1",
+      "interface_source": "eth1",
+      "interface_target": "eth3",
+      "ipv4_subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "i7",
+      "target": "l1",
+      "interface_source": "eth1",
+      "interface_target": "eth4",
+      "ipv4_subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "i8",
+      "target": "f1",
+      "interface_source": "eth1",
+      "interface_target": "eth2",
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "l1",
+      "target": "r2",
+      "interface_source": "eth2",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "r2",
+      "target": "f1",
+      "interface_source": "eth2",
+      "interface_target": "eth3",
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "r2",
+      "target": "i3",
+      "interface_source": "eth3",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.3.0/24"
+    }
+  ],
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    }
+  }
+}

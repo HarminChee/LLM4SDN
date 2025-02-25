@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "script_name": "test_bgp-vrf-route-leak-basic.py",
+    "description": "Test basic VRF route leaking with BGP, involving one router with multiple VRF configurations for testing route leaking.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "EVA": {
+          "connected_to": null,
+          "vrf": "EVA"
+        },
+        "DONNA": {
+          "connected_to": null,
+          "vrf": "DONNA"
+        },
+        "default": {
+          "connected_to": null,
+          "vrf": "default"
+        }
+      },
+      "bgp": {
+        "vrfs": {
+          "EVA": {
+            "routes": {
+              "10.0.0.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "DONNA",
+                    "vrf": "DONNA",
+                    "active": true
+                  }
+                ]
+              },
+              "10.0.2.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "DONNA",
+                    "vrf": "DONNA",
+                    "active": true
+                  }
+                ]
+              },
+              "10.0.4.0/24": {
+                "protocol": "connected"
+              }
+            }
+          },
+          "DONNA": {
+            "routes": {
+              "10.0.0.0/24": {
+                "protocol": "connected"
+              },
+              "10.0.1.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "EVA",
+                    "vrf": "EVA",
+                    "active": true
+                  }
+                ]
+              },
+              "10.0.2.0/24": {
+                "protocol": "connected"
+              },
+              "10.0.3.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "EVA",
+                    "vrf": "EVA",
+                    "active": true
+                  }
+                ]
+              },
+              "10.0.4.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "dummy0",
+                    "vrf": "default",
+                    "active": true
+                  }
+                ]
+              },
+              "172.16.101.0/24": {
+                "protocol": "bgp",
+                "selected": null,
+                "nexthops": [
+                  {
+                    "fib": null,
+                    "interfaceName": "unknown",
+                    "vrf": "Unknown",
+                    "active": null
+                  }
+                ]
+              }
+            }
+          },
+          "default": {
+            "routes": {
+              "10.0.0.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "DONNA",
+                    "vrf": "DONNA",
+                    "active": true
+                  }
+                ]
+              },
+              "10.0.2.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "DONNA",
+                    "vrf": "DONNA",
+                    "active": true
+                  }
+                ]
+              },
+              "10.0.4.0/24": {
+                "protocol": "connected"
+              }
+            }
+          },
+          "ZITA": {
+            "routes": {
+              "172.16.101.0/24": {
+                "protocol": "bgp",
+                "selected": true,
+                "nexthops": [
+                  {
+                    "fib": true,
+                    "interfaceName": "ZITA",
+                    "vrf": "ZITA",
+                    "active": true
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

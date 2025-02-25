@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "script_name": "test_ospf.py",
+    "description": "OSPF Basic Functionality Automation",
+    "conf_files": {
+      "r0": [
+        "ospfd.conf"
+      ],
+      "r1": [
+        "ospfd.conf"
+      ],
+      "r2": [
+        "ospfd.conf"
+      ],
+      "r3": [
+        "ospfd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {
+        "graceful-restart": {
+          "helper enable": [],
+          "opaque": true
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {
+        "graceful-restart": {
+          "helper enable": [],
+          "opaque": true
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r0",
+        "r1",
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r0",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r0",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r0",
+      "target": "r3",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "ospf"
+      ]
+    }
+  ]
+}

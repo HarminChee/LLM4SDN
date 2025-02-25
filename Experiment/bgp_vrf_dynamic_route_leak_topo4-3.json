@@ -1,0 +1,327 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_multi_vrf.py",
+    "description": "BGP Multi-VRF Dynamic Route Leaking Tests",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24",
+          "ipv6": "fe80::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 1,
+        "vrf": {
+          "RED": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "BLUE": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "GREEN": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.1/24",
+          "ipv6": "fe80::2/64"
+        }
+      },
+      "bgp": {
+        "local_as": 2,
+        "vrf": {
+          "RED": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "BLUE": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "GREEN": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.1/24",
+          "ipv6": "fe80::3/64"
+        }
+      },
+      "bgp": {
+        "local_as": 3,
+        "vrf": {
+          "RED": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                },
+                "import": {
+                  "vrf": "RED"
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ],
+                  "import": {
+                    "vrf": "RED"
+                  }
+                }
+              }
+            }
+          },
+          "BLUE": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ],
+                  "import": {
+                    "vrf": "BLUE"
+                  }
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ],
+                  "import": {
+                    "vrf": "BLUE"
+                  }
+                }
+              }
+            }
+          },
+          "GREEN": {
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ],
+                  "import": {
+                    "vrf": "GREEN"
+                  }
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ],
+                  "import": {
+                    "vrf": "GREEN"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "protocols": [
+        "bgp"
+      ],
+      "next_hop": "fe80::2"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth0",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.2.0/24",
+      "protocols": [
+        "bgp"
+      ],
+      "next_hop": "fe80::3"
+    }
+  ]
+}

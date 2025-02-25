@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "script_name": "test_static_route.py",
+    "description": "Topology with 4 switches (s1, s2, s3, s4) and 1 router (r1). Static route functionality tested with VRF configuration. FRR configs loaded.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth2": {
+          "connected_to": null,
+          "vrf": "red"
+        },
+        "eth3": {
+          "connected_to": null,
+          "vrf": "red"
+        }
+      },
+      "frr": {
+        "config_file": "frr.conf"
+      },
+      "additional_config": [
+        {
+          "actions": [
+            "net.add_l3vrf('red', 10)",
+            "net.add_loop('lo-red')",
+            "net.attach_iface_to_l3vrf('lo-red', 'red')",
+            "net.attach_iface_to_l3vrf('r1-eth2', 'red')",
+            "net.attach_iface_to_l3vrf('r1-eth3', 'red')"
+          ]
+        }
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": []
+}

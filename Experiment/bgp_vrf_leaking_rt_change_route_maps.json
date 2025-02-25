@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_vrf_leaking_rt_change_route_maps.py",
+    "description": "Topology with 1 router (r1). BGP with VRF leaking route-maps tested.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {},
+      "vrfs": {
+        "vrf1": {
+          "table": 10
+        },
+        "vrf2": {
+          "table": 20
+        }
+      },
+      "bgp": {
+        "vrfs": {
+          "vrf1": {},
+          "vrf2": {
+            "routes": {
+              "192.168.100.100/32": {
+                "nhVrfName": "vrf1"
+              }
+            }
+          }
+        },
+        "defined_route_maps": {
+          "rm": {
+            "sequence": 10,
+            "actions": {
+              "set": {
+                "extcommunity_rt": "65500:10100"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": []
+}

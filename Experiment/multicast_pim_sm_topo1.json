@@ -1,0 +1,196 @@
+{
+  "metadata": {
+    "script_name": "multicast_pim_sm.py",
+    "description": "Topology with 4 routers (l1, f1, r2, c1, c2) and 8 interfaces (i1, i2, i3, i4, i5, i6, i7, i8). Used to test multicast PIM-SM.",
+    "conf_files": {
+      "r2": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "c1": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "c2": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "l1": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "f1": [
+        "zebra.conf",
+        "pimd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "l1",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth1": {
+          "connected_to": "f1",
+          "ipv4": "10.0.3.1/24"
+        }
+      },
+      "pim": {
+        "rp": {
+          "rp_addr": "10.0.4.1",
+          "group_addr_range": "225.0.0.0/8"
+        }
+      }
+    },
+    "c1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.5.1/24"
+        },
+        "eth1": {
+          "connected_to": "l1",
+          "ipv4": "10.0.6.1/24"
+        }
+      },
+      "pim": {
+        "rp": {
+          "rp_addr": "10.0.5.1",
+          "group_addr_range": [
+            "225.1.1.1/32",
+            "225.1.1.2/32",
+            "225.1.1.3/32",
+            "225.1.1.4/32",
+            "225.1.1.5/32"
+          ]
+        }
+      }
+    },
+    "c2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2",
+          "ipv4": "10.0.7.1/24"
+        },
+        "eth1": {
+          "connected_to": "f1",
+          "ipv4": "10.0.8.1/24"
+        }
+      },
+      "pim": {
+        "rp": {
+          "rp_addr": "10.0.7.1",
+          "group_addr_range": [
+            "226.1.1.1/32",
+            "226.1.1.2/32",
+            "226.1.1.3/32",
+            "226.1.1.4/32",
+            "226.1.1.5/32",
+            "227.1.1.1/32",
+            "227.1.1.2/32",
+            "227.1.1.3/32",
+            "227.1.1.4/32",
+            "227.1.1.5/32"
+          ]
+        }
+      }
+    },
+    "l1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "i1",
+          "ipv4": "10.0.9.1/24"
+        },
+        "eth1": {
+          "connected_to": "i6",
+          "ipv4": "10.0.10.1/24"
+        },
+        "eth2": {
+          "connected_to": "r2",
+          "ipv4": "10.0.11.1/24"
+        },
+        "eth3": {
+          "connected_to": "i7",
+          "ipv4": "10.0.12.1/24"
+        }
+      }
+    },
+    "f1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "i2",
+          "ipv4": "10.0.13.1/24"
+        },
+        "eth1": {
+          "connected_to": "i8",
+          "ipv4": "10.0.14.1/24"
+        },
+        "eth2": {
+          "connected_to": "r2",
+          "ipv4": "10.0.15.1/24"
+        },
+        "eth3": {
+          "connected_to": "i3",
+          "ipv4": "10.0.16.1/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "c1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r2",
+      "target": "f1",
+      "interface_source": "eth1",
+      "interface_target": "eth2",
+      "ipv4_subnet": "10.0.3.0/24",
+      "protocols": [
+        "pim"
+      ]
+    },
+    {
+      "source": "c1",
+      "target": "l1",
+      "interface_source": "eth1",
+      "interface_target": "eth2",
+      "ipv4_subnet": "10.0.6.0/24",
+      "protocols": [
+        "pim"
+      ]
+    },
+    {
+      "source": "c2",
+      "target": "f1",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.8.0/24",
+      "protocols": [
+        "pim"
+      ]
+    },
+    {
+      "source": "f1",
+      "target": "r2",
+      "interface_source": "eth3",
+      "interface_target": "eth0",
+      "ipv4_subnet": "10.0.15.0/24",
+      "protocols": [
+        "pim"
+      ]
+    }
+  ]
+}

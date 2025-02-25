@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "script_name": "test_nhrp_redundancy.py",
+    "description": "Topology with 4 routers (nhs1, nhs2, nhs3, router) and 3 hosts (nhc1, nhc2, host) connected via switches (s1, s2, s3, s4). GRE and NHRP configuration.",
+    "conf_files": {
+      "nhs1": [
+        "frr.conf"
+      ],
+      "nhs2": [
+        "frr.conf"
+      ],
+      "nhs3": [
+        "frr.conf"
+      ],
+      "router": [
+        "frr.conf"
+      ],
+      "nhc1": [
+        "frr.conf"
+      ],
+      "nhc2": [
+        "frr.conf"
+      ],
+      "host": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "nhs1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "gre": {
+        "gre0": {
+          "mode": "gre",
+          "ttl": 64,
+          "key": 42,
+          "local": "192.168.1.1",
+          "remote": "0.0.0.0"
+        }
+      }
+    },
+    "nhs2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "gre": {
+        "gre0": {
+          "mode": "gre",
+          "ttl": 64,
+          "key": 42,
+          "local": "192.168.1.2",
+          "remote": "0.0.0.0"
+        }
+      }
+    },
+    "nhs3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.3/24"
+        }
+      },
+      "gre": {
+        "gre0": {
+          "mode": "gre",
+          "ttl": 64,
+          "key": 42,
+          "local": "192.168.1.3",
+          "remote": "0.0.0.0"
+        }
+      }
+    },
+    "nhc1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.4/24"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "10.4.4.4/24"
+        }
+      },
+      "gre": {
+        "gre0": {
+          "mode": "gre",
+          "ttl": 64,
+          "key": 42,
+          "local": "192.168.2.4",
+          "remote": "0.0.0.0"
+        }
+      }
+    },
+    "nhc2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.5/24"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "10.5.5.5/24"
+        }
+      },
+      "gre": {
+        "gre0": {
+          "mode": "gre",
+          "ttl": 64,
+          "key": 42,
+          "local": "192.168.2.5",
+          "remote": "0.0.0.0"
+        }
+      }
+    },
+    "router": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.6/24"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      }
+    },
+    "host": {
+      "type": "host",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.4.4.7/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "nhs1",
+        "nhs2",
+        "nhs3",
+        "router"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "nhc1",
+        "nhc2",
+        "router"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "nhc1",
+        "host"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "nhc2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "nhs1",
+      "target": "nhc1",
+      "interface_source": "nhs1-gre0",
+      "interface_target": "nhc1-gre0",
+      "ipv4_subnet": "172.16.1.1/32",
+      "gre": true
+    },
+    {
+      "source": "nhs2",
+      "target": "nhc1",
+      "interface_source": "nhs2-gre0",
+      "interface_target": "nhc1-gre0",
+      "ipv4_subnet": "172.16.1.2/32",
+      "gre": true
+    },
+    {
+      "source": "nhs3",
+      "target": "nhc1",
+      "interface_source": "nhs3-gre0",
+      "interface_target": "nhc1-gre0",
+      "ipv4_subnet": "172.16.1.3/32",
+      "gre": true
+    },
+    {
+      "source": "nhs1",
+      "target": "nhc2",
+      "interface_source": "nhs1-gre0",
+      "interface_target": "nhc2-gre0",
+      "ipv4_subnet": "172.16.1.1/32",
+      "gre": true
+    },
+    {
+      "source": "nhs2",
+      "target": "nhc2",
+      "interface_source": "nhs2-gre0",
+      "interface_target": "nhc2-gre0",
+      "ipv4_subnet": "172.16.1.2/32",
+      "gre": true
+    },
+    {
+      "source": "nhs3",
+      "target": "nhc2",
+      "interface_source": "nhs3-gre0",
+      "interface_target": "nhc2-gre0",
+      "ipv4_subnet": "172.16.1.3/32",
+      "gre": true
+    }
+  ]
+}

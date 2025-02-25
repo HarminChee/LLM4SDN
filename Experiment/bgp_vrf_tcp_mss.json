@@ -1,0 +1,167 @@
+{
+  "metadata": {
+    "script_name": "bgp_tcp_mss.py",
+    "description": "Topology with multiple networks to verify TCP MSS in BGP VRFs.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "ipv4": "1.1.1.1/32",
+          "ipv6": "1::1/128"
+        }
+      },
+      "bgp": [
+        {
+          "local_as": 100,
+          "vrf": "default",
+          "neighbors": {
+            "r2": {
+              "remote_as": 200,
+              "tcp_mss": 4096
+            }
+          }
+        },
+        {
+          "local_as": 100,
+          "vrf": "RED",
+          "neighbors": {
+            "r2": {
+              "remote_as": 200,
+              "tcp_mss": 150
+            }
+          }
+        }
+      ]
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2",
+          "ipv4": "2.1.1.1/32",
+          "ipv6": "2::1/128"
+        },
+        "eth1": {
+          "connected_to": "sw3",
+          "ipv4": "2.1.1.2/32",
+          "ipv6": "2::2/128"
+        }
+      },
+      "bgp": [
+        {
+          "local_as": 200,
+          "vrf": "default",
+          "neighbors": {
+            "r3": {
+              "remote_as": 300,
+              "tcp_mss": 500
+            }
+          }
+        },
+        {
+          "local_as": 200,
+          "vrf": "RED",
+          "neighbors": {
+            "r1": {
+              "remote_as": 100,
+              "tcp_mss": 150
+            }
+          }
+        }
+      ]
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw4",
+          "ipv4": "3.1.1.1/32",
+          "ipv6": "3::1/128"
+        },
+        "eth1": {
+          "connected_to": "sw3",
+          "ipv4": "3.1.1.2/32",
+          "ipv6": "3::2/128"
+        }
+      },
+      "bgp": [
+        {
+          "local_as": 300,
+          "vrf": "default",
+          "neighbors": {
+            "r2": {
+              "remote_as": 200,
+              "tcp_mss": 300
+            }
+          }
+        }
+      ]
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "1.1.1.0/24"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "2.1.1.0/24"
+    }
+  ]
+}

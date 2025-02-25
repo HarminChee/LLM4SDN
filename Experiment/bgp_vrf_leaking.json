@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "A minimal topology with 2 routers (pe1, ce1) connected via eth0. VRFs configured on pe1.",
+    "conf_files": {
+      "pe1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "ce1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "pe1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "ce1",
+          "vrf": "vrf10"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "ce1": {
+            "remote_as": 200,
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "ce1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "pe1"
+        }
+      },
+      "bgp": {
+        "local_as": 200,
+        "neighbors": {
+          "pe1": {
+            "remote_as": 100,
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    }
+  },
+  "links": [
+    {
+      "source": "pe1",
+      "target": "ce1",
+      "interface_source": "pe1-eth0",
+      "interface_target": "ce1-eth0"
+    }
+  ]
+}

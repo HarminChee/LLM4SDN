@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "script_name": "native_test_script.py",
+    "description": "Script with retry logic to wait for routes and ping tests between r1 and specified IPs.",
+    "conf_files": {}
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth1": {
+          "ipv4": "10.0.2.1/24"
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "r1",
+      "target": "10.0.1.2",
+      "interface_source": "eth0",
+      "protocols": [
+        "icmp"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "10.0.2.2",
+      "interface_source": "eth1",
+      "protocols": [
+        "icmp"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "10.0.2.3",
+      "interface_source": "eth1",
+      "protocols": [
+        "icmp"
+      ]
+    }
+  ]
+}
