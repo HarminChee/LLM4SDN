@@ -1,0 +1,55 @@
+{
+  "topology": {
+    "devices": [
+      {
+        "id": "Switch_Local_12",
+        "type": "Switch",
+        "interfaces": [
+          { "name": "Ethernet0/0", "vlan": 215, "mode": "access" },
+          { "name": "Ethernet0/1", "vlans": [215, 216], "mode": "trunk" },
+          { "name": "Ethernet0/2", "vlan": 216, "mode": "access" }
+        ]
+      },
+      {
+        "id": "Switch_Local_13",
+        "type": "Switch",
+        "interfaces": [
+          { "name": "Ethernet0/0", "vlans": [52], "mode": "trunk" },
+          { "name": "Ethernet0/1", "vlan": 52, "mode": "access" },
+          { "name": "Ethernet0/2", "vlans": [52], "mode": "trunk" }
+        ]
+      },
+      {
+        "id": "Router_R7",
+        "type": "Router",
+        "interfaces": [
+          { "name": "Ethernet0/0", "ip": "unassigned" },
+          { "name": "Ethernet0/0.52", "vlan": 52, "ip": "x.x.x.1/29" }
+        ]
+      },
+      {
+        "id": "Router_R1",
+        "type": "Router",
+        "interfaces": [
+          { "name": "Ethernet0/0", "ip": "unassigned" },
+          { "name": "Ethernet0/0.52", "vlan": 52, "ip": "x.x.x.2/29", "nat_mode": "outside" },
+          { "name": "Ethernet0/1.215", "vlan": 215, "ip": "10.12.0.1/21", "nat_mode": "inside" },
+          { "name": "Ethernet0/1.216", "vlan": 216, "ip": "10.12.8.1/21", "nat_mode": "inside" }
+        ],
+        "nat_rules": [
+          { "list": "WIFI1", "interface": "Ethernet0/0.52", "overload": true },
+          { "list": "WIFI2", "interface": "Ethernet0/0.52", "overload": true }
+        ]
+      }
+    ],
+    "vlans": [
+      { "id": 52, "name": "Trunk_VLAN" },
+      { "id": 215, "name": "VLAN_215" },
+      { "id": 216, "name": "VLAN_216" }
+    ],
+    "nat_acl": [
+      { "name": "WIFI1", "network": "10.12.0.0/21" },
+      { "name": "WIFI2", "network": "10.12.8.0/21" }
+    ]
+  }
+}

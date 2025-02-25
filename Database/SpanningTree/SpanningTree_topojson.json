@@ -1,0 +1,138 @@
+{
+  "network_topology": {
+    "routers": [
+      {
+        "id": "R1",
+        "hostname": "R1",
+        "interfaces": [
+          {
+            "name": "GigabitEthernet0/0",
+            "ip": "192.168.100.1/24",
+            "connected_to": "SW1"
+          },
+          {
+            "name": "Serial0/1/1",
+            "ip": "10.10.10.5/30",
+            "connected_to": "R2:Serial0/1/0"
+          }
+        ],
+        "rip_v2": {
+          "version": 2,
+          "networks": [
+            "10.10.10.4",
+            "192.168.100.0"
+          ],
+          "auto_summary": false
+        }
+      },
+      {
+        "id": "R2",
+        "hostname": "R2",
+        "interfaces": [
+          {
+            "name": "GigabitEthernet0/0",
+            "ip": "192.168.101.1/24",
+            "connected_to": "SW2"
+          },
+          {
+            "name": "Serial0/1/0",
+            "ip": "10.10.10.6/30",
+            "connected_to": "R1:Serial0/1/1"
+          },
+          {
+            "name": "Serial0/1/1",
+            "ip": "10.10.10.9/30",
+            "connected_to": "R3:Serial0/1/0"
+          }
+        ],
+        "rip_v2": {
+          "version": 2,
+          "networks": [
+            "10.0.0.0",
+            "192.168.101.0"
+          ],
+          "auto_summary": false
+        }
+      },
+      {
+        "id": "R3",
+        "hostname": "R3",
+        "interfaces": [
+          {
+            "name": "GigabitEthernet0/0",
+            "ip": "192.168.102.1/24",
+            "connected_to": "SW3"
+          },
+          {
+            "name": "Serial0/1/0",
+            "ip": "10.10.10.10/30",
+            "connected_to": "R2:Serial0/1/1"
+          },
+          {
+            "name": "GigabitEthernet0/1",
+            "ip": "192.168.103.254/24",
+            "connected_to": "Server1"
+          }
+        ],
+        "rip_v2": {
+          "version": 2,
+          "networks": [
+            "10.0.0.0",
+            "192.168.102.0"
+          ],
+          "default_information_originate": true,
+          "auto_summary": false
+        }
+      }
+    ],
+    "switches": [
+      {
+        "id": "SW1",
+        "connected_to": [
+          { "device": "R1", "interface": "GigabitEthernet0/0" },
+          { "device": "PC1", "interface": "FastEthernet0/1" }
+        ]
+      },
+      {
+        "id": "SW2",
+        "connected_to": [
+          { "device": "R2", "interface": "GigabitEthernet0/0" },
+          { "device": "PC2", "interface": "FastEthernet0/1" }
+        ]
+      },
+      {
+        "id": "SW3",
+        "connected_to": [
+          { "device": "R3", "interface": "GigabitEthernet0/0" },
+          { "device": "PC3", "interface": "FastEthernet0/1" }
+        ]
+      }
+    ],
+    "devices": [
+      {
+        "id": "PC1",
+        "type": "pc",
+        "ip": "192.168.100.2/24",
+        "connected_to": "SW1:FastEthernet0/1"
+      },
+      {
+        "id": "PC2",
+        "type": "pc",
+        "ip": "192.168.101.2/24",
+        "connected_to": "SW2:FastEthernet0/1"
+      },
+      {
+        "id": "PC3",
+        "type": "pc",
+        "ip": "192.168.102.2/24",
+        "connected_to": "SW3:FastEthernet0/1"
+      },
+      {
+        "id": "Server1",
+        "type": "server",
+        "ip": "192.168.103.1/24",
+        "connected_to": "R3:GigabitEthernet0/1"
+      }
+    ]
+  }
+}
