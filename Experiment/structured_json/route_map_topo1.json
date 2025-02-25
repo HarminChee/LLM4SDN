@@ -1,0 +1,425 @@
+{
+  "metadata": {
+    "script_name": "bgp_route_map_topo1.json",
+    "description": "Topology with 4 routers (R1, R2, R3, R4) interconnected. Tests BGP route-map functionality. Inferred from the provided Python code.",
+    "conf_files": {
+      "r1": [
+        "bgpd.conf",
+        "staticd.conf"
+      ],
+      "r2": [
+        "bgpd.conf"
+      ],
+      "r3": [
+        "bgpd.conf"
+      ],
+      "r4": [
+        "bgpd.conf",
+        "staticd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2"
+        },
+        "eth1": {
+          "connected_to": "r3"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                },
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                },
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "11.0.20.1/32",
+          "no_of_ip": 9,
+          "next_hop": "10.0.0.2"
+        }
+      ]
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1"
+        },
+        "eth1": {
+          "connected_to": "r3"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2"
+        },
+        "eth1": {
+          "connected_to": "r4"
+        }
+      },
+      "bgp": {
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "neighbor": {
+                "r1": {
+                  "dest_link": {
+                    "r3": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_pf_1_ipv4",
+                          "direction": "in"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "r4": {
+                  "dest_link": {
+                    "r3": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv4",
+                          "direction": "in"
+                        },
+                        {
+                          "name": "rmap_match_tag_1_ipv4",
+                          "direction": "out"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "neighbor": {
+                "r1": {
+                  "dest_link": {
+                    "r3": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_pf_1_ipv6",
+                          "direction": "in"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "r4": {
+                  "dest_link": {
+                    "r3": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv6",
+                          "direction": "in"
+                        },
+                        {
+                          "name": "rmap_match_tag_1_ipv6",
+                          "direction": "out"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "prefix_lists": {
+        "ipv4": {
+          "pf_list_1_ipv4": [
+            {
+              "seqid": 10,
+              "action": "permit",
+              "network": "11.0.20.1/32"
+            }
+          ],
+          "pf_list_2_ipv4": [
+            {
+              "seqid": 10,
+              "action": "permit",
+              "network": "20.0.20.1/32"
+            }
+          ]
+        },
+        "ipv6": {
+          "pf_list_1_ipv6": [
+            {
+              "seqid": 100,
+              "action": "permit",
+              "network": "1::1/128"
+            }
+          ],
+          "pf_list_2_ipv6": [
+            {
+              "seqid": 100,
+              "action": "permit",
+              "network": "2::1/128"
+            }
+          ]
+        }
+      },
+      "route_maps": {
+        "rmap_match_tag_1_ipv4": [
+          {
+            "action": "deny",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_list_1_ipv4"
+              }
+            }
+          }
+        ],
+        "rmap_match_tag_2_ipv4": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_list_2_ipv4"
+              }
+            }
+          }
+        ],
+        "rmap_match_tag_1_ipv6": [
+          {
+            "action": "deny",
+            "match": {
+              "ipv6": {
+                "prefix_lists": "pf_list_1_ipv6"
+              }
+            }
+          }
+        ],
+        "rmap_match_tag_2_ipv6": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv6": {
+                "prefix_lists": "pf_list_2_ipv6"
+              }
+            }
+          }
+        ],
+        "rmap_match_pf_1_ipv4": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_list_2_ipv4"
+              }
+            },
+            "set": {
+              "path": {
+                "as_num": 500
+              }
+            }
+          },
+          {
+            "action": "permit",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_list_2_ipv4"
+              }
+            },
+            "set": {
+              "locPrf": 150
+            }
+          },
+          {
+            "action": "permit",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_list_1_ipv4"
+              }
+            },
+            "set": {
+              "metric": 50
+            }
+          }
+        ],
+        "rmap_match_pf_1_ipv6": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv6": {
+                "prefix_lists": "pf_list_2_ipv6"
+              }
+            }
+          },
+          {
+            "action": "permit",
+            "match": {
+              "ipv6": {
+                "prefix_lists": "pf_list_2_ipv6"
+              }
+            }
+          }
+        ],
+        "rmap_match_pf_2_ipv4": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_list_1_ipv4"
+              }
+            }
+          }
+        ],
+        "rmap_match_pf_2_ipv6": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv6": {
+                "prefix_lists": "pf_list_1_ipv6"
+              }
+            }
+          }
+        ],
+        "rmap_match_pf_1": [
+          {
+            "action": "permit",
+            "set": {
+              "metric": 50,
+              "locPrf": 150,
+              "weight": 4000
+            }
+          }
+        ]
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3"
+        }
+      },
+      "bgp": {
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ],
+              "neighbor": {
+                "r3": {
+                  "dest_link": {
+                    "r4": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv4",
+                          "direction": "in"
+                        },
+                        {
+                          "name": "rmap_match_tag_1_ipv4",
+                          "direction": "out"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ],
+              "neighbor": {
+                "r3": {
+                  "dest_link": {
+                    "r4": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv6",
+                          "direction": "in"
+                        },
+                        {
+                          "name": "rmap_match_tag_1_ipv6",
+                          "direction": "out"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "20.0.20.1/32",
+          "no_of_ip": 9,
+          "next_hop": "10.0.0.2"
+        }
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0"
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth0"
+    }
+  ]
+}

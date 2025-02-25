@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "script_name": "test_static_route.py",
+    "description": "Test static route functionality with VRF setup and route checks.",
+    "conf_files": {
+      "r1": [
+        "frr-scale.conf",
+        ""
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": [
+            "s1",
+            "s2"
+          ]
+        }
+      },
+      "vrfs": {
+        "red": {
+          "rd": 10,
+          "interfaces": [
+            "lo-red",
+            "r1-eth1"
+          ]
+        }
+      },
+      "configs": [
+        "frr-scale.conf",
+        "sharp"
+      ]
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": []
+}

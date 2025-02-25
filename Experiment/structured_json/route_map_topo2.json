@@ -1,0 +1,293 @@
+{
+  "metadata": {
+    "script_name": "test_routemap_function_test.py",
+    "description": "Topology with 5 routers (R1-R5) using iBGP and eBGP. This JSON is an inferred structure from the original Python code. Actual IP/ASNs partially guessed.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "11.0.20.1/32",
+          "ipv6": "2::1/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "advertise_networks": [
+                {
+                  "network": "10.0.20.1/32"
+                },
+                {
+                  "network": "11.0.20.1/32"
+                }
+              ],
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                },
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "advertise_networks": [
+                {
+                  "network": "2::1/128"
+                },
+                {
+                  "network": "3::1/128"
+                }
+              ],
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                },
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "11.0.20.2/32",
+          "ipv6": "2::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {}
+          },
+          "ipv6": {
+            "unicast": {}
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "10.0.30.1/32",
+          "ipv6": "1::1/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "advertise_networks": [
+                {
+                  "network": "10.0.30.1/32"
+                }
+              ],
+              "neighbor": {
+                "r1": {
+                  "address_family": {
+                    "ipv4": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv4",
+                          "direction": "in"
+                        }
+                      ]
+                    },
+                    "ipv6": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv6",
+                          "direction": "in"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "advertise_networks": [
+                {
+                  "network": "1::1/128"
+                }
+              ],
+              "neighbor": {
+                "r1": {
+                  "address_family": {
+                    "ipv4": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv4",
+                          "direction": "in"
+                        }
+                      ]
+                    },
+                    "ipv6": {
+                      "route_maps": [
+                        {
+                          "name": "rmap_match_tag_1_ipv6",
+                          "direction": "in"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.0.20.2/32",
+          "ipv6": "1::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": 200,
+        "address_family": {
+          "ipv4": {
+            "unicast": {}
+          },
+          "ipv6": {
+            "unicast": {}
+          }
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv4": "20.0.30.1/32",
+          "ipv6": "2::1/128"
+        }
+      },
+      "bgp": {
+        "local_as": 300,
+        "address_family": {
+          "ipv4": {
+            "unicast": {}
+          },
+          "ipv6": {
+            "unicast": {}
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r5"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "11.0.20.0/30",
+      "bfd": true,
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.30.0/30",
+      "bfd": true,
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "10.0.20.0/30",
+      "bfd": true,
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r4",
+      "target": "r5",
+      "interface_source": "r4-eth1",
+      "interface_target": "r5-eth0",
+      "ipv4_subnet": "20.0.30.0/30",
+      "bfd": true,
+      "bgp_neighbors": true
+    }
+  ]
+}

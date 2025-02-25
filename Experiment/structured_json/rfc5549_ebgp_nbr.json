@@ -1,0 +1,173 @@
+{
+  "metadata": {
+    "script_name": "rfc5549_ebgp_nbr.py",
+    "description": "RFC5549 Automation test suite for BGP with IPv6 next-hop",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv6": "fe80::1"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv6": "fe80::2"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ],
+              "advertise_networks": [
+                {
+                  "network": "1.0.1.17/32",
+                  "no_of_network": 1
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv6": "fe80::3"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv6": "fe80::4"
+        }
+      },
+      "bgp": {
+        "local_as": 200,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": []
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": []
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv6": "fe80::5"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv6": "fe80::6"
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv6": "fe80::7"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth0",
+      "ipv6_subnet": "fe80::2/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv6_subnet": "fe80::4/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth0",
+      "ipv6_subnet": "fe80::6/64",
+      "bgp_neighbors": true
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "script_name": "test_pim_autorp.py",
+    "description": "Test PIM AutoRP functionality with 2 routers (r1, r2) and a single switch (s1-2). Script infers structure from the original Python test.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1-2",
+          "ipv4": "10.10.76.1/24"
+        }
+      },
+      "pim": {
+        "rp_configuration": [
+          {
+            "rp_type": "AutoRP",
+            "holdtime": 5,
+            "rp_address": "10.10.76.1",
+            "groups": "224.0.0.0/4"
+          }
+        ]
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1-2",
+          "ipv4": "10.10.76.2/24"
+        }
+      },
+      "pim": {
+        "rp_configuration": []
+      }
+    }
+  },
+  "switches": {
+    "s1-2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.10.76.0/24",
+      "protocols": [
+        "pim"
+      ]
+    }
+  ]
+}

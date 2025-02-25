@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "script_name": "test_ospf_unnumbered.py",
+    "description": "Test the OSPF unnumbered.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ospfd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ospfd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "ospf": {},
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "ospf": {},
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth1",
+      "protocols": [
+        "ospf"
+      ]
+    }
+  ]
+}

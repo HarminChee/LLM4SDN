@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Topology with 1 switch (s1) and 1 router (r1) using Yang library for configuration. This JSON is an inferred structure from the original Python code.",
+    "conf_files": {
+      "r1": [
+        "frr-yanglib.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "yanglib": {
+        "modules_count": ">10"
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "s1",
+      "interface_source": "r1-eth0",
+      "interface_target": "s1",
+      "protocols": [
+        "yanglib"
+      ]
+    }
+  ]
+}

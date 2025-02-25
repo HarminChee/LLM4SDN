@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "script_name": "test_ospf_topo1.py",
+    "description": "Test the FRR OSPF routing daemon. Topology with 6 switches (s1..s6) and 4 routers (r1,r2,r3,r4). Inferred from Python code. Actual IP/OSPF info partially guessed.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "ospf": {
+        "neighbors": {
+          "r2": {
+            "ipv4_address": "10.0.255.2",
+            "state": "Full"
+          },
+          "r3": {
+            "ipv4_address": "10.0.255.3",
+            "state": "Full"
+          }
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r2": {
+            "ipv4_address": "10.0.255.2",
+            "state": "Full"
+          },
+          "r3": {
+            "ipv4_address": "10.0.255.3",
+            "state": "Full"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "ospf": {
+        "neighbors": {
+          "r1": {
+            "ipv4_address": "10.0.255.1",
+            "state": "Full"
+          },
+          "r3": {
+            "ipv4_address": "10.0.255.3",
+            "state": "Full"
+          }
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r1": {
+            "ipv4_address": "10.0.255.1",
+            "state": "Full"
+          },
+          "r3": {
+            "ipv4_address": "10.0.255.3",
+            "state": "Full"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        },
+        "eth2": {
+          "connected_to": "s5"
+        }
+      },
+      "ospf": {
+        "neighbors": {
+          "r1": {
+            "ipv4_address": "10.0.255.1",
+            "state": "Full"
+          },
+          "r2": {
+            "ipv4_address": "10.0.255.2",
+            "state": "Full"
+          },
+          "r4": {
+            "ipv4_address": "10.0.255.4",
+            "state": "Full"
+          }
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r1": {
+            "ipv4_address": "10.0.255.1",
+            "state": "Full"
+          },
+          "r2": {
+            "ipv4_address": "10.0.255.2",
+            "state": "Full"
+          },
+          "r4": {
+            "ipv4_address": "10.0.255.4",
+            "state": "Full"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s6"
+        },
+        "eth1": {
+          "connected_to": "s5"
+        }
+      },
+      "ospf": {
+        "neighbors": {
+          "r3": {
+            "ipv4_address": "10.0.255.3",
+            "state": "Full"
+          }
+        }
+      },
+      "ospf6": {
+        "neighbors": {
+          "r3": {
+            "ipv4_address": "10.0.255.3",
+            "state": "Full"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2",
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.1.0/24",
+      "ospf_neighbors": true,
+      "ospf6_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.2.0/24",
+      "ospf_neighbors": true,
+      "ospf6_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.3.0/24",
+      "ospf_neighbors": true,
+      "ospf6_neighbors": true
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "eth2",
+      "interface_target": "eth1",
+      "ipv4_subnet": "10.0.4.0/24",
+      "ospf_neighbors": true,
+      "ospf6_neighbors": true
+    }
+  ]
+}

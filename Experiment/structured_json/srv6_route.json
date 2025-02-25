@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "script_name": "test_srv6_route.py",
+    "description": "Test script for SRv6 static route on zebra.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "mgmtd.conf",
+        "staticd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "zebra": {},
+      "mgmtd": {},
+      "static": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "s1",
+      "interface_source": "eth0",
+      "interface_target": "eth0"
+    }
+  ]
+}

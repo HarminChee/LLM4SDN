@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "script_name": "test_ospf6_loopback_cost.py",
+    "description": "Test if OSPFv3 loopback interfaces get a cost of 0 based on RFC 5340.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {
+        "loopback": {
+          "ipv6": "2001:db8::1/128",
+          "cost": 0
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {
+        "loopback": {
+          "ipv6": "2001:db8::2/128",
+          "cost": 10
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  }
+}

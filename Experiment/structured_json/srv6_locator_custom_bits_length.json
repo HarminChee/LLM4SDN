@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "script_name": "test_srv6_manager.py",
+    "description": "Test for SRv6 manager on zebra with 1 router (r1).",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {},
+      "bgp": {},
+      "zebra": {},
+      "sharp": {}
+    }
+  },
+  "switches": {},
+  "links": []
+}

@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "script_name": "rfc5549_ebgp_ibgp_nbr.py",
+    "description": "Topology test script for RFC5549 with extended nexthop capability in IPv4 and IPv6 BGP sessions.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {}
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r0",
+        "r1",
+        "r2",
+        "r3"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r0",
+      "target": "r1",
+      "interface_source": "r0-eth0",
+      "interface_target": "r1-eth0",
+      "ipv4_subnet": "10.0.0.0/31",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth1",
+      "ipv6_subnet": "2001:db8:1::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth2",
+      "interface_target": "r3-eth2",
+      "ipv6_subnet": "2001:db8:2::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth3",
+      "interface_target": "r4-eth3",
+      "ipv4_subnet": "10.0.4.0/30",
+      "bgp_neighbors": true
+    }
+  ]
+}

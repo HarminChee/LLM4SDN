@@ -1,0 +1,196 @@
+{
+  "metadata": {
+    "script_name": "test_zebra_opaque.py",
+    "description": "Test if Opaque Data is accessible from other daemons in Zebra using BGP, OSPF, and OSPF6. This JSON is an inferred structure from the original Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf",
+        "ospfd.conf",
+        "ospf6d.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "192.168.1.2",
+            "state": "Established"
+          }
+        }
+      },
+      "ospf": {
+        "area": "0.0.0.0",
+        "networks": [
+          "192.168.1.0/24"
+        ]
+      },
+      "ospf6": {
+        "area": "0.0.0.0",
+        "networks": [
+          "2001:db8:1::/64"
+        ]
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.1.1",
+            "state": "Established"
+          }
+        }
+      },
+      "ospf": {
+        "area": "0.0.0.0",
+        "networks": [
+          "192.168.1.0/24"
+        ]
+      },
+      "ospf6": {
+        "area": "0.0.0.0",
+        "networks": [
+          "2001:db8:1::/64"
+        ]
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r4": {
+            "remote_as": 65004,
+            "ipv4_address": "192.168.2.2",
+            "state": "Established"
+          }
+        }
+      },
+      "ospf": {
+        "area": "0.0.0.0",
+        "networks": [
+          "192.168.2.0/24"
+        ]
+      },
+      "ospf6": {
+        "area": "0.0.0.0",
+        "networks": [
+          "2001:db8:2::/64"
+        ]
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65004,
+        "neighbors": {
+          "r3": {
+            "remote_as": 65003,
+            "ipv4_address": "192.168.2.1",
+            "state": "Established"
+          }
+        }
+      },
+      "ospf": {
+        "area": "0.0.0.0",
+        "networks": [
+          "192.168.2.0/24"
+        ]
+      },
+      "ospf6": {
+        "area": "0.0.0.0",
+        "networks": [
+          "2001:db8:2::/64"
+        ]
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "bgp_neighbors": true,
+      "ospf": true,
+      "ospf6": true
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth0",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "192.168.2.0/24",
+      "bgp_neighbors": true,
+      "ospf": true,
+      "ospf6": true
+    }
+  ]
+}

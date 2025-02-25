@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "script_name": "test_zebra_rib.py",
+    "description": "Test cases for zebra and kernel interactions",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.210.1"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "192.168.211.2"
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "ipv4": "192.168.212.2"
+        },
+        "eth3": {
+          "connected_to": "s4",
+          "ipv4": "192.168.213.2"
+        },
+        "eth0-macvlan": {
+          "connected_to": "s1",
+          "type": "macvlan"
+        }
+      },
+      "zebra": {
+        "routes": {
+          "3.5.1.0/24": {
+            "via": "192.168.210.1",
+            "dev": "r1-eth0"
+          },
+          "4.5.1.0/24": {
+            "via": "192.168.210.2",
+            "dev": "r1-eth0",
+            "metric": 4294967295
+          },
+          "4.5.2.0/24": {
+            "via": "192.168.211.2",
+            "dev": "r1-eth1",
+            "metric": 16777217
+          },
+          "4.5.3.0/24": {
+            "via": "192.168.212.2",
+            "dev": "r1-eth2",
+            "metric": 16777210
+          },
+          "4.5.3.0/24 (alt)": {
+            "via": "192.168.213.2",
+            "dev": "r1-eth3",
+            "metric": 268435456
+          },
+          "10.100.100.100/32": {
+            "via": "192.168.216.3"
+          },
+          "10.100.100.101/32": {
+            "via": "10.0.0.44"
+          },
+          "10.0.0.0/8": {
+            "via": "192.168.216.3",
+            "metric": 500
+          }
+        }
+      },
+      "sharp": {
+        "routes": {
+          "10.0.0.0/8": {
+            "via": "192.168.216.3",
+            "metric": 500
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s8": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "s1",
+      "interface_source": "r1-eth0",
+      "interface_target": "s1"
+    },
+    {
+      "source": "r1",
+      "target": "s1",
+      "interface_source": "r1-eth0-macvlan",
+      "interface_target": "s1",
+      "type": "macvlan"
+    },
+    {
+      "source": "r1",
+      "target": "s2",
+      "interface_source": "r1-eth1",
+      "interface_target": "s2"
+    },
+    {
+      "source": "r1",
+      "target": "s3",
+      "interface_source": "r1-eth2",
+      "interface_target": "s3"
+    },
+    {
+      "source": "r1",
+      "target": "s4",
+      "interface_source": "r1-eth3",
+      "interface_target": "s4"
+    },
+    {
+      "source": "r1",
+      "target": "s5",
+      "interface_source": "r1-eth4",
+      "interface_target": "s5"
+    },
+    {
+      "source": "r1",
+      "target": "s6",
+      "interface_source": "r1-eth5",
+      "interface_target": "s6"
+    },
+    {
+      "source": "r1",
+      "target": "s7",
+      "interface_source": "r1-eth6",
+      "interface_target": "s7"
+    },
+    {
+      "source": "r1",
+      "target": "s8",
+      "interface_source": "r1-eth7",
+      "interface_target": "s8"
+    }
+  ]
+}

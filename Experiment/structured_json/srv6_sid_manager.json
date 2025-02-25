@@ -1,0 +1,387 @@
+{
+  "metadata": {
+    "script_name": "test_srv6_sid_manager.py",
+    "description": "SRv6 SID Manager topology with multiple routers and switches. The network includes several VRFs and SRv6 interfaces. Inferred from Python code.",
+    "conf_files": {
+      "rt1": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ],
+      "rt2": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ],
+      "rt3": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ],
+      "rt4": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ],
+      "rt5": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ],
+      "rt6": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ],
+      "dst": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf",
+        "sharpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "rt1": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw1": {
+          "connected_to": "s1"
+        },
+        "eth-rt1": {
+          "connected_to": "ce1"
+        },
+        "eth-ce1": {
+          "connected_to": "ce1"
+        },
+        "eth-ce3": {
+          "connected_to": "ce3"
+        },
+        "eth-ce5": {
+          "connected_to": "ce5"
+        },
+        "sr0": {
+          "ipv6": "2001:db8::1/128"
+        }
+      },
+      "vrf": {
+        "10": [
+          "eth-ce1",
+          "eth-ce3"
+        ],
+        "20": [
+          "eth-ce5"
+        ]
+      }
+    },
+    "rt2": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw1": {
+          "connected_to": "s1"
+        },
+        "eth-rt4-1": {
+          "connected_to": "s2"
+        },
+        "eth-rt2-1": {
+          "connected_to": "s2"
+        },
+        "eth-rt4-2": {
+          "connected_to": "s3"
+        },
+        "eth-rt2-2": {
+          "connected_to": "s3"
+        },
+        "sr0": {
+          "ipv6": "2001:db8::2/128"
+        }
+      }
+    },
+    "rt3": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw1": {
+          "connected_to": "s1"
+        },
+        "eth-rt5-1": {
+          "connected_to": "s4"
+        },
+        "eth-rt3-1": {
+          "connected_to": "s4"
+        },
+        "eth-rt5-2": {
+          "connected_to": "s5"
+        },
+        "eth-rt3-2": {
+          "connected_to": "s5"
+        },
+        "sr0": {
+          "ipv6": "2001:db8::3/128"
+        }
+      }
+    },
+    "rt4": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt2-1": {
+          "connected_to": "s2"
+        },
+        "eth-rt2-2": {
+          "connected_to": "s3"
+        },
+        "eth-rt5": {
+          "connected_to": "s6"
+        },
+        "eth-rt6": {
+          "connected_to": "s7"
+        },
+        "sr0": {
+          "ipv6": "2001:db8::4/128"
+        }
+      }
+    },
+    "rt5": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt3-1": {
+          "connected_to": "s4"
+        },
+        "eth-rt3-2": {
+          "connected_to": "s5"
+        },
+        "eth-rt4": {
+          "connected_to": "s6"
+        },
+        "eth-rt6": {
+          "connected_to": "s8"
+        },
+        "sr0": {
+          "ipv6": "2001:db8::5/128"
+        }
+      }
+    },
+    "rt6": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt4": {
+          "connected_to": "s7"
+        },
+        "eth-rt5": {
+          "connected_to": "s8"
+        },
+        "eth-dst": {
+          "connected_to": "s9"
+        },
+        "eth-ce2": {
+          "connected_to": "ce2"
+        },
+        "eth-ce4": {
+          "connected_to": "ce4"
+        },
+        "eth-ce6": {
+          "connected_to": "ce6"
+        },
+        "sr0": {
+          "ipv6": "2001:db8::6/128"
+        }
+      },
+      "vrf": {
+        "10": [
+          "eth-ce2"
+        ],
+        "20": [
+          "eth-ce4",
+          "eth-ce6"
+        ]
+      }
+    },
+    "dst": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt6": {
+          "connected_to": "s9"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt2",
+        "rt3"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt2",
+        "rt4"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt2",
+        "rt4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt3",
+        "rt5"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt3",
+        "rt5"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt4",
+        "rt5"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt4",
+        "rt6"
+      ]
+    },
+    "s8": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt5",
+        "rt6"
+      ]
+    },
+    "s9": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt6",
+        "dst"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "rt1",
+      "target": "rt2",
+      "interface_source": "eth-sw1",
+      "interface_target": "eth-sw1",
+      "subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "rt2",
+      "target": "rt3",
+      "interface_source": "eth-sw1",
+      "interface_target": "eth-sw1",
+      "subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "rt2",
+      "target": "rt4",
+      "interface_source": "eth-rt4-1",
+      "interface_target": "eth-rt2-1",
+      "subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "rt2",
+      "target": "rt4",
+      "interface_source": "eth-rt4-2",
+      "interface_target": "eth-rt2-2",
+      "subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "rt3",
+      "target": "rt5",
+      "interface_source": "eth-rt5-1",
+      "interface_target": "eth-rt3-1",
+      "subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "rt3",
+      "target": "rt5",
+      "interface_source": "eth-rt5-2",
+      "interface_target": "eth-rt3-2",
+      "subnet": "10.0.5.0/24"
+    },
+    {
+      "source": "rt4",
+      "target": "rt5",
+      "interface_source": "eth-rt5",
+      "interface_target": "eth-rt4",
+      "subnet": "10.0.6.0/24"
+    },
+    {
+      "source": "rt4",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-rt4",
+      "subnet": "10.0.7.0/24"
+    },
+    {
+      "source": "rt5",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-rt5",
+      "subnet": "10.0.8.0/24"
+    },
+    {
+      "source": "rt6",
+      "target": "dst",
+      "interface_source": "eth-dst",
+      "interface_target": "eth-rt6",
+      "subnet": "10.0.10.0/24"
+    },
+    {
+      "source": "ce1",
+      "target": "rt1",
+      "interface_source": "eth-rt1",
+      "interface_target": "eth-ce1"
+    },
+    {
+      "source": "ce2",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-ce2"
+    },
+    {
+      "source": "ce3",
+      "target": "rt1",
+      "interface_source": "eth-rt1",
+      "interface_target": "eth-ce3"
+    },
+    {
+      "source": "ce4",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-ce4"
+    },
+    {
+      "source": "ce5",
+      "target": "rt1",
+      "interface_source": "eth-rt1",
+      "interface_target": "eth-ce5"
+    },
+    {
+      "source": "ce6",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-ce6"
+    }
+  ]
+}

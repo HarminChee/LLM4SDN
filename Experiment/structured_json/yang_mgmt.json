@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Test script for various FRR configuration management commands including commit check, commit apply, commit abort, delete config, and chaos tests.",
+    "conf_files": {
+      "r1": [
+        "yang_mgmt.json"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "static_routes": {
+        "192.1.1.20/32": {
+          "next_hop": "Null0"
+        },
+        "192.1.1.3/32": {
+          "next_hop": "Null0"
+        },
+        "192.168.1.3/32": {
+          "next_hop": "Null0"
+        },
+        "192.1.11.200/32": {
+          "next_hop": "Null0"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "static_routes": {
+        "1192.1.1.2/32": {
+          "next_hop": "Null0"
+        },
+        "192.1.1.20/32": {
+          "next_hop": "Null0"
+        },
+        "192.1.1.3/32": {
+          "next_hop": "Null0"
+        },
+        "192.168.1.3/32": {
+          "next_hop": "Null0"
+        },
+        "192.1.11.200/32": {
+          "next_hop": "Null0"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "protocols": [
+        "static"
+      ],
+      "ipv4_subnet": "11.0.20.0/24",
+      "ipv6_subnet": "2::/64"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "static"
+      ],
+      "ipv4_subnet": "11.0.20.0/24",
+      "ipv6_subnet": "2::/64"
+    }
+  ]
+}
