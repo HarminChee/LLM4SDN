@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "script_name": "test_isis_lsp_bits_topo1.py",
+    "description": "Topology with multiple switches and routers using ISIS. This JSON is an inferred structure from the original Python code.",
+    "conf_files": {
+      "rt1": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt2": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt3": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt4": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt5": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt6": [
+        "zebra.conf",
+        "isisd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "rt1": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw1": {
+          "connected_to": "s1",
+          "ipv4": "1.1.1.1",
+          "ipv6": "10.0.1.1/24"
+        }
+      },
+      "isis": {
+        "level": "L1"
+      }
+    },
+    "rt2": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw1": {
+          "connected_to": "s1",
+          "ipv4": "2.2.2.2",
+          "ipv6": "10.0.1.2/24"
+        },
+        "eth-rt4": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.1/24"
+        }
+      },
+      "isis": {
+        "level": "L1|L2"
+      }
+    },
+    "rt3": {
+      "type": "router",
+      "interfaces": {
+        "eth-sw1": {
+          "connected_to": "s1",
+          "ipv4": "3.3.3.3",
+          "ipv6": "10.0.1.3/24"
+        },
+        "eth-rt5": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.1/24"
+        }
+      },
+      "isis": {
+        "level": "L1|L2"
+      }
+    },
+    "rt4": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt2": {
+          "connected_to": "s2",
+          "ipv4": "4.4.4.4",
+          "ipv6": "10.0.2.2/24"
+        },
+        "eth-rt5": {
+          "connected_to": "s6",
+          "ipv4": "10.0.6.1/24"
+        },
+        "eth-rt6": {
+          "connected_to": "s7",
+          "ipv4": "10.0.7.1/24"
+        }
+      },
+      "isis": {
+        "level": "L1|L2"
+      }
+    },
+    "rt5": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt3": {
+          "connected_to": "s4",
+          "ipv4": "5.5.5.5",
+          "ipv6": "10.0.4.2/24"
+        },
+        "eth-rt4": {
+          "connected_to": "s6",
+          "ipv4": "10.0.6.2/24"
+        },
+        "eth-rt6": {
+          "connected_to": "s8",
+          "ipv4": "10.0.8.1/24"
+        }
+      },
+      "isis": {
+        "level": "L1|L2"
+      }
+    },
+    "rt6": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt4": {
+          "connected_to": "s7",
+          "ipv4": "6.6.6.6",
+          "ipv6": "10.0.7.2/24"
+        },
+        "eth-rt5": {
+          "connected_to": "s8",
+          "ipv4": "10.0.8.2/24"
+        }
+      },
+      "isis": {
+        "level": "L1"
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt2",
+        "rt3"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt2",
+        "rt4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt3",
+        "rt5"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt4",
+        "rt5"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt4",
+        "rt6"
+      ]
+    },
+    "s8": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt5",
+        "rt6"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "rt1",
+      "target": "rt2",
+      "interface_source": "eth-sw1",
+      "interface_target": "eth-sw1",
+      "ipv4_subnet": "10.0.1.0/24",
+      "isis_adjacency": true
+    },
+    {
+      "source": "rt1",
+      "target": "rt3",
+      "interface_source": "eth-sw1",
+      "interface_target": "eth-sw1",
+      "ipv4_subnet": "10.0.1.0/24",
+      "isis_adjacency": true
+    },
+    {
+      "source": "rt2",
+      "target": "rt4",
+      "interface_source": "eth-rt4",
+      "interface_target": "eth-rt2",
+      "ipv4_subnet": "10.0.2.0/24",
+      "isis_adjacency": true
+    },
+    {
+      "source": "rt3",
+      "target": "rt5",
+      "interface_source": "eth-rt5",
+      "interface_target": "eth-rt3",
+      "ipv4_subnet": "10.0.4.0/24",
+      "isis_adjacency": true
+    },
+    {
+      "source": "rt4",
+      "target": "rt5",
+      "interface_source": "eth-rt5",
+      "interface_target": "eth-rt4",
+      "ipv4_subnet": "10.0.6.0/24",
+      "isis_adjacency": true
+    },
+    {
+      "source": "rt4",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-rt4",
+      "ipv4_subnet": "10.0.7.0/24",
+      "isis_adjacency": true
+    },
+    {
+      "source": "rt5",
+      "target": "rt6",
+      "interface_source": "eth-rt6",
+      "interface_target": "eth-rt5",
+      "ipv4_subnet": "10.0.8.0/24",
+      "isis_adjacency": true
+    }
+  ]
+}

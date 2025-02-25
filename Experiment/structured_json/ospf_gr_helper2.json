@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "script_name": "ospf_gr_helper.py",
+    "description": "Topology with 1 switch (s1) and 4 routers (r0, r1, r2, r3) using OSPF with Graceful Restart Helper mode.",
+    "conf_files": {}
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {
+        "graceful-restart": {
+          "helper enable": [],
+          "opaque": true
+        },
+        "neighbors": {
+          "r1": {
+            "nbrState": "Full",
+            "role": "Backup"
+          },
+          "r2": {
+            "nbrState": "Full",
+            "role": "DROther"
+          },
+          "r3": {
+            "nbrState": "Full",
+            "role": "DROther"
+          }
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "ospf": {
+        "graceful-restart": {
+          "helper enable": [],
+          "opaque": true
+        },
+        "neighbors": {
+          "r0": {
+            "nbrState": "Full",
+            "role": "DR"
+          },
+          "r2": {
+            "nbrState": "2-Way",
+            "role": "DROther"
+          },
+          "r3": {
+            "nbrState": "2-Way",
+            "role": "DROther"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r0",
+        "r1",
+        "r2",
+        "r3"
+      ]
+    }
+  }
+}

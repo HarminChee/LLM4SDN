@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "script_name": "oper.py",
+    "description": "SDN network management and operations configuration",
+    "conf_files": {}
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 64512,
+        "neighbors": {
+          "r2": {
+            "remote_as": 64513,
+            "ipv4_address": "10.0.2.2",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.2/24"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 64513,
+        "neighbors": {
+          "r1": {
+            "remote_as": 64512,
+            "ipv4_address": "10.0.2.1",
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": 64514,
+            "ipv4_address": "10.0.3.2"
+          }
+        }
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.2/24"
+        }
+      },
+      "bgp": {
+        "local_as": 64514,
+        "neighbors": {
+          "r2": {
+            "remote_as": 64513,
+            "ipv4_address": "10.0.3.1",
+            "state": "Established"
+          }
+        }
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.0.2.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.3.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

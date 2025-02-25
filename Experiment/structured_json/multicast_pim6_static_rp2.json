@@ -1,0 +1,164 @@
+{
+  "metadata": {
+    "script_name": "your_script_name.py",
+    "description": "Topology to test Multicast basic functionality.",
+    "conf_files": {
+      "r0": [],
+      "r1": [
+        "pim6.conf"
+      ],
+      "r2": [
+        "pim6.conf"
+      ],
+      "r3": [
+        "pim6.conf"
+      ],
+      "r4": [],
+      "r5": []
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "fe80::1/64"
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r0",
+          "ipv6": "fe80::2/64"
+        },
+        "eth1": {
+          "connected_to": "r2",
+          "ipv6": "fe80::3/64"
+        },
+        "eth2": {
+          "connected_to": "r3",
+          "ipv6": "fe80::4/64"
+        },
+        "eth3": {
+          "connected_to": "r4",
+          "ipv6": "fe80::5/64"
+        }
+      },
+      "pim6": {
+        "rp": [
+          {
+            "rp_addr": "fe80::1/64",
+            "group_addr_range": "ffaa::/64"
+          }
+        ]
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "fe80::6/64"
+        }
+      },
+      "pim6": {
+        "rp": [
+          {
+            "rp_addr": "fe80::1/64",
+            "group_addr_range": "ffaa::/64"
+          }
+        ]
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "fe80::7/64"
+        },
+        "eth1": {
+          "connected_to": "r5",
+          "ipv6": "fe80::8/64"
+        }
+      },
+      "pim6": {
+        "rp": [
+          {
+            "rp_addr": "fe80::1/64",
+            "group_addr_range": "ffaa::/64"
+          }
+        ]
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv6": "fe80::9/64"
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3",
+          "ipv6": "fe80::10/64"
+        }
+      }
+    }
+  },
+  "links": [
+    {
+      "source": "r0",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv6_subnet": "fe80::/64",
+      "protocols": [
+        "pim6"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "ipv6_subnet": "fe80::/64",
+      "protocols": [
+        "pim6"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "eth2",
+      "interface_target": "eth0",
+      "ipv6_subnet": "fe80::/64",
+      "protocols": [
+        "pim6"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "interface_source": "eth3",
+      "interface_target": "eth0",
+      "ipv6_subnet": "fe80::/64",
+      "protocols": []
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "ipv6_subnet": "fe80::/64",
+      "protocols": []
+    }
+  ]
+}

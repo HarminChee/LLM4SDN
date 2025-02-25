@@ -1,0 +1,184 @@
+{
+  "metadata": {
+    "script_name": "multicast_pim_test.py",
+    "description": "SDN network configuration for testing multicast PIM functionality. Topology consists of 6 routers (r0-r5) interconnected in a specific setup to verify various multicast routing table updates and state transitions.",
+    "conf_files": {
+      "r0": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "r1": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "pimd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "pimd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "10.0.0.1/24"
+        }
+      },
+      "pim": {
+        "enabled": true,
+        "rp": null
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r0",
+          "ipv4": "10.0.0.2/24"
+        },
+        "eth1": {
+          "connected_to": "r2",
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth2": {
+          "connected_to": "r3",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth3": {
+          "connected_to": "r4",
+          "ipv4": "10.0.3.1/24"
+        },
+        "eth4": {
+          "connected_to": "r5",
+          "ipv4": "10.0.4.1/24"
+        }
+      },
+      "pim": {
+        "enabled": true,
+        "rp": "1.0.2.17"
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "10.0.1.2/24"
+        },
+        "lo": {
+          "ipv4": "1.0.2.17/32"
+        }
+      },
+      "pim": {
+        "enabled": true,
+        "rp": "1.0.2.17"
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "10.0.2.2/24"
+        },
+        "eth1": {
+          "connected_to": "r4",
+          "ipv4": "10.0.5.1/24"
+        }
+      },
+      "pim": {
+        "enabled": true,
+        "rp": null
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "10.0.3.2/24"
+        },
+        "eth1": {
+          "connected_to": "r3",
+          "ipv4": "10.0.5.2/24"
+        }
+      },
+      "pim": {
+        "enabled": true,
+        "rp": null
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "10.0.4.2/24"
+        }
+      },
+      "pim": {
+        "enabled": true,
+        "rp": null
+      }
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "r0",
+      "target": "r1",
+      "interface_source": "r0-eth0",
+      "interface_target": "r1-eth0",
+      "ipv4_subnet": "10.0.0.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth2",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "interface_source": "r1-eth3",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r5",
+      "interface_source": "r1-eth4",
+      "interface_target": "r5-eth0",
+      "ipv4_subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth1",
+      "ipv4_subnet": "10.0.5.0/24"
+    }
+  ]
+}

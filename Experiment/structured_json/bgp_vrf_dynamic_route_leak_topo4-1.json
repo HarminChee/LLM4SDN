@@ -1,0 +1,246 @@
+{
+  "metadata": {
+    "script_name": "bgp_multi_vrf_dynamic_route_leaking.py",
+    "description": "Test BGP Multi-VRF Dynamic Route Leaking with multiple tenant VRFs and dynamic import.",
+    "conf_files": {
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 2,
+        "vrfs": {
+          "RED": {
+            "redistribute": [
+              "static"
+            ],
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "redistribute": [
+                    {
+                      "redist_type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "GREEN": {
+            "import_vrf": [
+              "RED"
+            ],
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "import": {
+                    "vrf": "RED"
+                  }
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "import": {
+                    "vrf": "RED"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "static_routes": {
+        "RED": {
+          "ipv4": [
+            "22.22.22.2/32"
+          ],
+          "ipv6": [
+            "22:22::2/128"
+          ]
+        },
+        "GREEN": {
+          "ipv4": [
+            "22.22.22.2/32"
+          ],
+          "ipv6": [
+            "22:22::2/128"
+          ]
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        },
+        "eth1": {
+          "connected_to": "s4"
+        }
+      },
+      "bgp": {
+        "local_as": 3,
+        "import_vrf": [
+          "GREEN"
+        ],
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "import": {
+                "vrf": "GREEN"
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "import": {
+                "vrf": "GREEN"
+              }
+            }
+          }
+        }
+      },
+      "static_routes": {
+        "ipv4": [
+          "22.22.22.2/32"
+        ],
+        "ipv6": [
+          "22:22::2/128"
+        ]
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s5"
+        },
+        "eth1": {
+          "connected_to": "s6"
+        }
+      },
+      "bgp": {
+        "local_as": 4,
+        "vrfs": {
+          "BLUE": {
+            "import_vrf": [
+              "default"
+            ],
+            "address_family": {
+              "ipv4": {
+                "unicast": {
+                  "import": {
+                    "vrf": "default"
+                  }
+                }
+              },
+              "ipv6": {
+                "unicast": {
+                  "import": {
+                    "vrf": "default"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "static_routes": {
+        "BLUE": {
+          "ipv4": [
+            "22.22.22.2/32"
+          ],
+          "ipv6": [
+            "22:22::2/128"
+          ]
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "22.22.22.0/24",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "22.22.22.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

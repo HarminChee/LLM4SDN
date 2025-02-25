@@ -1,0 +1,146 @@
+{
+  "metadata": {
+    "script_name": "test_ospf_clientapi.py",
+    "description": "Test the OSPF client API. Topology with 4 switches (sw1..sw4) and 4 routers (r1,r2,r3,r4) using OSPF + Zebra.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ospfd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ospfd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "ospfd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "ospfd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "connected_to": "sw4"
+        }
+      },
+      "zebra": {},
+      "ospf": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "connected_to": "sw2"
+        }
+      },
+      "zebra": {},
+      "ospf": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "connected_to": "sw3"
+        }
+      },
+      "zebra": {},
+      "ospf": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw3"
+        },
+        "eth1": {
+          "connected_to": "sw4"
+        }
+      },
+      "zebra": {},
+      "ospf": {}
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth0",
+      "protocols": [
+        "ospf"
+      ]
+    },
+    {
+      "source": "r4",
+      "target": "r1",
+      "interface_source": "r4-eth1",
+      "interface_target": "r1-eth1",
+      "protocols": [
+        "ospf"
+      ]
+    }
+  ]
+}

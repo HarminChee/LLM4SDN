@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "script_name": "test_pim_bsm.py",
+    "description": "Verify PIM BSM processing basic functionality in a topology",
+    "conf_files": {
+      "b1": [
+        "pim.conf",
+        "zebra.conf"
+      ],
+      "b2": [
+        "pim.conf",
+        "zebra.conf"
+      ],
+      "s1": [
+        "pim.conf",
+        "zebra.conf"
+      ],
+      "f1": [
+        "pim.conf",
+        "zebra.conf"
+      ],
+      "i1": [
+        "pim.conf",
+        "zebra.conf"
+      ],
+      "l1": [
+        "pim.conf",
+        "zebra.conf"
+      ],
+      "r1": [
+        "pim.conf",
+        "zebra.conf"
+      ]
+    }
+  },
+  "routers": {
+    "b1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "i1"
+        }
+      },
+      "ipv4_address": "1.1.2.7/32"
+    },
+    "b2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "i1"
+        }
+      },
+      "ipv4_address": "10.2.1.1/32"
+    },
+    "s1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "b1"
+        },
+        "eth1": {
+          "connected_to": "f1"
+        },
+        "eth2": {
+          "connected_to": "i1"
+        },
+        "eth3": {
+          "connected_to": "l1"
+        }
+      },
+      "ipv4_address": "70.0.0.1/32"
+    },
+    "f1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "i1"
+        },
+        "eth2": {
+          "connected_to": "l1"
+        }
+      }
+    },
+    "i1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "f1"
+        },
+        "eth2": {
+          "connected_to": "l1"
+        }
+      }
+    },
+    "l1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "f1"
+        },
+        "eth2": {
+          "connected_to": "i1"
+        },
+        "eth3": {
+          "connected_to": "r1"
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "l1"
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "b1",
+      "target": "s1",
+      "interface_source": "b1-eth0",
+      "interface_target": "s1-eth0",
+      "ipv6_address": "1.1.2.7/32"
+    },
+    {
+      "source": "b2",
+      "target": "s1",
+      "interface_source": "b2-eth0",
+      "interface_target": "s1-eth0",
+      "ipv6_address": "10.2.1.1/32"
+    },
+    {
+      "source": "s1",
+      "target": "f1",
+      "interface_source": "s1-eth1",
+      "interface_target": "f1-eth0"
+    },
+    {
+      "source": "s1",
+      "target": "i1",
+      "interface_source": "s1-eth2",
+      "interface_target": "i1-eth0"
+    },
+    {
+      "source": "s1",
+      "target": "l1",
+      "interface_source": "s1-eth3",
+      "interface_target": "l1-eth0"
+    },
+    {
+      "source": "f1",
+      "target": "i1",
+      "interface_source": "f1-eth1",
+      "interface_target": "i1-eth1"
+    },
+    {
+      "source": "f1",
+      "target": "l1",
+      "interface_source": "f1-eth2",
+      "interface_target": "l1-eth1"
+    },
+    {
+      "source": "i1",
+      "target": "l1",
+      "interface_source": "i1-eth2",
+      "interface_target": "l1-eth2"
+    },
+    {
+      "source": "l1",
+      "target": "r1",
+      "interface_source": "l1-eth3",
+      "interface_target": "r1-eth0"
+    }
+  ]
+}

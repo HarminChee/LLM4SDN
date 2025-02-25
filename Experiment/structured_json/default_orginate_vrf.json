@@ -1,0 +1,118 @@
+{
+  "metadata": {
+    "script_name": "bgp_default_orginate_vrf.py",
+    "description": "This JSON representation is inferred from the provided Python code. The actual IP and ASNs are based on the script and partly guessed.",
+    "conf_files": {
+      "r0": [],
+      "r1": [],
+      "r2": [],
+      "r3": [],
+      "r4": []
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "topo['routers']['r0']['links']['lo']['ipv4']",
+          "ipv6": "topo['routers']['r0']['links']['lo']['ipv6']"
+        },
+        "r1": {
+          "connected_to": "r1",
+          "ipv4": "192.168.0.0/24",
+          "ipv6": "fd00::/64"
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "topo['routers']['r1']['links']['lo']['ipv4']",
+          "ipv6": "topo['routers']['r1']['links']['lo']['ipv6']"
+        },
+        "r2": {
+          "connected_to": "r2",
+          "ipv4": "192.168.1.0/24",
+          "ipv6": "fd00:0:0:1::/64"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "topo['routers']['r2']['links']['lo']['ipv4']",
+          "ipv6": "topo['routers']['r2']['links']['lo']['ipv6']"
+        },
+        "r1": {
+          "connected_to": "r1",
+          "ipv4": "192.168.1.0/24",
+          "ipv6": "fd00:0:0:1::/64"
+        },
+        "r3": {
+          "connected_to": "r3",
+          "ipv4": "192.168.2.0/24",
+          "ipv6": "fd00:0:0:2::/64"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "topo['routers']['r3']['links']['lo']['ipv4']",
+          "ipv6": "topo['routers']['r3']['links']['lo']['ipv6']"
+        },
+        "r2": {
+          "connected_to": "r2",
+          "ipv4": "192.168.2.0/24",
+          "ipv6": "fd00:0:0:2::/64"
+        },
+        "r4": {
+          "connected_to": "r4",
+          "ipv4": "192.168.3.0/24",
+          "ipv6": "fd00:0:0:3::/64"
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "topo['routers']['r4']['links']['lo']['ipv4']",
+          "ipv6": "topo['routers']['r4']['links']['lo']['ipv6']"
+        },
+        "r3": {
+          "connected_to": "r3",
+          "ipv4": "192.168.3.0/24",
+          "ipv6": "fd00:0:0:3::/64"
+        }
+      }
+    }
+  },
+  "switches": {},
+  "links": [],
+  "bgp": {
+    "local_as": 222,
+    "neighbors": {
+      "r1": {
+        "remote_as": 333,
+        "ipv6_address": "fd00:0:0:1::/64"
+      },
+      "r2": {
+        "remote_as": 444,
+        "ipv6_address": "fd00:0:0:2::/64"
+      },
+      "r3": {
+        "remote_as": 555,
+        "ipv6_address": "fd00:0:0:3::/64"
+      },
+      "r4": {
+        "remote_as": 666,
+        "ipv6_address": "fd00:0:0:4::/64"
+      }
+    }
+  }
+}

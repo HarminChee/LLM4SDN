@@ -1,0 +1,152 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_multiview_topo1.py",
+    "description": "Topology with 3 switches (sw0, sw1, sw2) and 4 routers (r1, r2, r3, r4). LDP and OSPF tested.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "ospfd.conf",
+        "ldpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw0",
+          "ipv4": "10.0.1.1/24"
+        }
+      },
+      "ospf": {},
+      "ldp": {},
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw0",
+          "ipv4": "10.0.1.2/24"
+        },
+        "eth1": {
+          "connected_to": "sw1",
+          "ipv4": "10.0.2.2/24"
+        },
+        "eth2": {
+          "connected_to": "sw2",
+          "ipv4": "10.0.3.2/24"
+        }
+      },
+      "ospf": {},
+      "ldp": {},
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "ipv4": "10.0.2.3/24"
+        },
+        "eth1": {
+          "connected_to": "sw2",
+          "ipv4": "10.0.3.3/24"
+        }
+      },
+      "ospf": {},
+      "ldp": {},
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1",
+          "ipv4": "10.0.2.4/24"
+        }
+      },
+      "ospf": {},
+      "ldp": {},
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "sw0": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3",
+        "r4"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.0.1.0/24",
+      "ospf": true,
+      "ldp": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.2.0/24",
+      "ospf": true,
+      "ldp": true
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth1",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "10.0.2.0/24",
+      "ospf": true,
+      "ldp": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth2",
+      "interface_target": "r3-eth1",
+      "ipv4_subnet": "10.0.3.0/24",
+      "ospf": true,
+      "ldp": true
+    }
+  ]
+}

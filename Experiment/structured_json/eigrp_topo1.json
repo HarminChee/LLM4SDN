@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "script_name": "test_eigrp_topo1.py",
+    "description": "Testing EIGRP topology with 4 switches and 3 routers. EIGRP and Zebra configuration.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "eigrpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "eigrpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "eigrpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "connected_to": "sw2"
+        }
+      },
+      "eigrp": {
+        "enabled": true,
+        "neighbors": {
+          "r2": {}
+        }
+      },
+      "zebra": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "connected_to": "sw3"
+        }
+      },
+      "eigrp": {
+        "enabled": true,
+        "neighbors": {
+          "r1": {},
+          "r3": {}
+        }
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw3"
+        },
+        "eth1": {
+          "connected_to": "sw4"
+        }
+      },
+      "eigrp": {
+        "enabled": true,
+        "neighbors": {
+          "r2": {}
+        }
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    }
+  },
+  "links": []
+}

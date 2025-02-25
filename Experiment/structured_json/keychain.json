@@ -1,0 +1,97 @@
+{
+  "metadata": {
+    "script_name": "test_rip_static_route.py",
+    "description": "Test static route functionality with key chain configuration and verification.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "key_chains": {
+        "kc": {
+          "keys": {
+            "1": {
+              "key_string": "theSecret",
+              "cryptographic_algorithm": "hmac-sha-256",
+              "send_lifetime": [
+                "00:00:00 Jan 1 2024",
+                "infinite"
+              ],
+              "accept_lifetime": [
+                "00:00:00 Jan 1 2024",
+                "infinite"
+              ],
+              "send_lifetime_active": false,
+              "accept_lifetime_active": false
+            },
+            "2": {
+              "key_string": "theSecret",
+              "cryptographic_algorithm": "hmac-sha-256",
+              "send_lifetime": [
+                "00:00:00 Jan 1 2024",
+                "duration 315360000"
+              ],
+              "accept_lifetime": [
+                "00:00:00 Jan 1 2024",
+                "duration 315360000"
+              ],
+              "send_lifetime_active": true,
+              "accept_lifetime_active": true
+            },
+            "3": {
+              "key_string": "theSecret",
+              "cryptographic_algorithm": "hmac-sha-256",
+              "send_lifetime": [
+                "00:00:00 Jan 1 2024",
+                "23:59:59 Dec 31 2034"
+              ],
+              "accept_lifetime": [
+                "00:00:00 Jan 1 2024",
+                "23:59:59 Dec 31 2034"
+              ],
+              "send_lifetime_active": true,
+              "accept_lifetime_active": true
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    }
+  ]
+}

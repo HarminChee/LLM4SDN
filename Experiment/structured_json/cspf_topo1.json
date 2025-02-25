@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "script_name": "test_cspf_topo1.py",
+    "description": "Topology to test FRR Constraint Shortest Path First algorithm with 4 routers and 5 switches. This JSON represents an inferred structure from the original Python code. Some IP and configuration data are assumed based on typical scenarios.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "isisd.conf",
+        "sharpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "isisd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.1/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "10.0.1.1/24",
+          "ipv6": "2001:db8:1::1/64"
+        }
+      },
+      "zebra": {},
+      "isis": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.2/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "10.0.1.2/24",
+          "ipv6": "2001:db8:1::2/64"
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.2/24",
+          "ipv6": "2001:db8:3::2/64"
+        },
+        "eth3": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.2/24"
+        }
+      },
+      "zebra": {},
+      "isis": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.3/24",
+          "ipv6": "2001:db8:3::3/64"
+        },
+        "eth1": {
+          "connected_to": "s5",
+          "ipv4": "10.0.5.3/24",
+          "ipv6": "2001:db8:5::3/64"
+        }
+      },
+      "zebra": {},
+      "isis": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.4/24"
+        },
+        "eth1": {
+          "connected_to": "s5",
+          "ipv4": "10.0.5.4/24",
+          "ipv6": "2001:db8:5::4/64"
+        }
+      },
+      "zebra": {},
+      "isis": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "10.0.0.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth1",
+      "ipv4_subnet": "10.0.1.0/24",
+      "ipv6_subnet": "2001:db8:1::/64"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth2",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.3.0/24",
+      "ipv6_subnet": "2001:db8:3::/64"
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth3",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth1",
+      "interface_target": "r4-eth1",
+      "ipv4_subnet": "10.0.5.0/24",
+      "ipv6_subnet": "2001:db8:5::/64"
+    }
+  ]
+}

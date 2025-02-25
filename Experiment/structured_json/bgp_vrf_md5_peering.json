@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_vrf_md5.py",
+    "description": "Test if BGP MD5 basic authentication works per-VRF.",
+    "conf_files": {
+      "r1": [
+        "r1/zebra.conf",
+        "r1/bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.1/24",
+          "vrf": "public"
+        }
+      },
+      "bgp": {
+        "local_as": 64512,
+        "neighbors": {
+          "peer1": {
+            "remote_as": 64513,
+            "ipv4_address": "10.0.0.2",
+            "vrf": "public",
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "peer1"
+      ]
+    }
+  }
+}

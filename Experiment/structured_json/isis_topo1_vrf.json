@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "script_name": "test_isis_topo1_vrf.py",
+    "description": "Test ISIS VRF topology with 5 routers and 4 switches.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "isisd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw1"
+        },
+        "eth1": {
+          "connected_to": "sw3"
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw2"
+        },
+        "eth1": {
+          "connected_to": "sw4"
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "sw3"
+        },
+        "eth1": {
+          "connected_to": "sw4"
+        }
+      }
+    }
+  },
+  "switches": {
+    "sw1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "sw2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "sw3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r5"
+      ]
+    },
+    "sw4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r5"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth0",
+      "interface_target": "r3-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth0",
+      "interface_target": "r4-eth0"
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "r3-eth1",
+      "interface_target": "r5-eth0"
+    },
+    {
+      "source": "r4",
+      "target": "r5",
+      "interface_source": "r4-eth1",
+      "interface_target": "r5-eth1"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "script_name": "ibgp_ecmp_topo3.py",
+    "description": "Topology utilizing iBGP with ECMP and BGP fast-convergence testing. The structure is inferred from the given Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "10.0.0.2"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.2/24"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "10.0.0.1"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "ipv4_address": "10.0.0.3"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.2/24"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "192.168.4.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "10.0.0.2"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.2.0/24"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.3.0/24"
+    }
+  ]
+}

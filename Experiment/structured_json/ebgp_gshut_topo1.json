@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "script_name": "ebgp_gshut_topo1.py",
+    "description": "Topology used for eBGP graceful-shutdown testing. Inferred from Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.1/24",
+          "ipv6": "fd00:0:0:1::1/64"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.1/24",
+          "ipv6": "fd00:0:0:2::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 101,
+        "neighbors": {
+          "r3": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.2.3",
+            "ipv6_address": "fd00:0:0:2::3",
+            "policies": [
+              "GSHUT-OUT"
+            ]
+          },
+          "r4": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.4.4",
+            "ipv6_address": "fd00:0:0:4::4",
+            "policies": [
+              "GSHUT-OUT"
+            ]
+          }
+        },
+        "community_lists": [
+          {
+            "type": "standard",
+            "name": "GSHUT",
+            "value": "graceful-shutdown"
+          }
+        ],
+        "route_maps": {
+          "GSHUT-OUT": [
+            {
+              "action": "permit",
+              "seq_id": "10",
+              "set": {
+                "community": "graceful-shutdown"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.2/24",
+          "ipv6": "fd00:0:0:1::2/64"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.2/24",
+          "ipv6": "fd00:0:0:3::2/64"
+        }
+      },
+      "bgp": {
+        "local_as": 101,
+        "neighbors": {
+          "r3": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.2.3",
+            "ipv6_address": "fd00:0:0:2::3"
+          },
+          "r4": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.4.4",
+            "ipv6_address": "fd00:0:0:4::4"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.3/24",
+          "ipv6": "fd00:0:0:2::3/64"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.3/24",
+          "ipv6": "fd00:0:0:3::3/64"
+        }
+      },
+      "bgp": {
+        "local_as": 101,
+        "neighbors": {
+          "r1": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.2.1",
+            "ipv6_address": "fd00:0:0:2::1"
+          },
+          "r4": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.4.4",
+            "ipv6_address": "fd00:0:0:4::4"
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.4/24",
+          "ipv6": "fd00:0:0:4::4/64"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.4/24",
+          "ipv6": "fd00:0:0:3::4/64"
+        }
+      },
+      "bgp": {
+        "local_as": 101,
+        "neighbors": {
+          "r1": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.2.1",
+            "ipv6_address": "fd00:0:0:2::1"
+          },
+          "r3": {
+            "remote_as": 101,
+            "ipv4_address": "10.0.2.3",
+            "ipv6_address": "fd00:0:0:2::3"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3",
+        "r4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "10.0.2.0/24",
+      "ipv6_subnet": "fd00:0:0:2::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "interface_source": "r1-eth1",
+      "interface_target": "r4-eth1",
+      "ipv4_subnet": "10.0.4.0/24",
+      "ipv6_subnet": "fd00:0:0:4::/64",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth1",
+      "ipv4_subnet": "10.0.3.0/24",
+      "ipv6_subnet": "fd00:0:0:3::/64",
+      "bgp_neighbors": true
+    }
+  ]
+}

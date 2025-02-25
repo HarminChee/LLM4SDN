@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "script_name": "test.py",
+    "description": "Testing PIM BSM processing basic functionality with a complex network topology.",
+    "conf_files": {
+      "b1": [],
+      "b2": [],
+      "s1": [],
+      "f1": [],
+      "i1": [],
+      "r1": []
+    }
+  },
+  "routers": {
+    "b1": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "1.1.2.7/32"
+        }
+      }
+    },
+    "b2": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "10.2.1.1/32"
+        }
+      }
+    },
+    "s1": {
+      "type": "router",
+      "interfaces": {}
+    },
+    "f1": {
+      "type": "router",
+      "interfaces": {
+        "f1-b2-eth1": {
+          "connected_to": "b2"
+        },
+        "f1-i1-eth2": {
+          "connected_to": "i1",
+          "ipv4": "next_hop_rp",
+          "bfd": true,
+          "bgp_neighbors": true
+        }
+      }
+    },
+    "i1": {
+      "type": "router",
+      "interfaces": {
+        "i1-l1-eth0": {
+          "connected_to": "l1"
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "Group Address: 225.1.1.1"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "b1",
+        "b2",
+        "s1",
+        "f1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "b1",
+      "target": "f1",
+      "interface_source": "lo",
+      "interface_target": "f1-b2-eth1",
+      "ipv6_subnet": "1.1.2.7/32",
+      "bfd": true,
+      "bgp_neighbors": true
+    },
+    {
+      "source": "b2",
+      "target": "f1",
+      "interface_source": "lo",
+      "interface_target": "f1-i1-eth2",
+      "ipv6_subnet": "10.2.1.1/32",
+      "bfd": true,
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r1",
+      "target": "f1",
+      "interface_source": "lo",
+      "interface_target": "f1-b2-eth1",
+      "ipv6_subnet": "Group Address: 225.1.1.1",
+      "bfd": true,
+      "bgp_neighbors": true
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_weighted_ecmp.py",
+    "description": "Test if weighted ECMP works and recursive weight (link bandwidth) is inherited to non-recursive next-hops.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "r3": [
+        "frr.conf"
+      ],
+      "r4": [
+        "frr.conf"
+      ],
+      "r5": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "nexthops": [
+          {
+            "ip": "192.168.24.4",
+            "active": true,
+            "recursive": true,
+            "weight": 203
+          },
+          {
+            "ip": "192.168.12.2",
+            "active": true,
+            "resolver": true,
+            "weight": 203
+          },
+          {
+            "ip": "192.168.35.5",
+            "active": true,
+            "recursive": true,
+            "weight": 254
+          },
+          {
+            "ip": "192.168.13.3",
+            "active": true,
+            "resolver": true,
+            "weight": 254
+          }
+        ]
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s4"
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r5"
+      ]
+    }
+  }
+}

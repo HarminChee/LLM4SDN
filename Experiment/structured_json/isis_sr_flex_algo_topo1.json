@@ -1,0 +1,146 @@
+{
+  "metadata": {
+    "script_name": "test_isis_sr_flex_algo_topo1.py",
+    "description": "Topology with 3 routers (rt1, rt2, rt3) connected in a ring with SR-MPLS IS-IS Flex-Algos. Inferred from Python code.",
+    "conf_files": {
+      "rt1": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt2": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "rt3": [
+        "zebra.conf",
+        "isisd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "rt1": {
+      "type": "router",
+      "interfaces": {
+        "eth-2": {
+          "connected_to": "s-rt1-rt2",
+          "mac_address": "52:54:00:1:2:1"
+        },
+        "eth-3": {
+          "connected_to": "s-rt1-rt3",
+          "mac_address": "52:54:00:1:3:1"
+        }
+      },
+      "isis": {
+        "flex_algos": {
+          "203": {
+            "status": "active",
+            "exclude_any": [
+              "green"
+            ],
+            "dataplane": "sr-mpls"
+          }
+        }
+      }
+    },
+    "rt2": {
+      "type": "router",
+      "interfaces": {
+        "eth-1": {
+          "connected_to": "s-rt1-rt2",
+          "mac_address": "52:54:00:1:2:2"
+        },
+        "eth-3": {
+          "connected_to": "s-rt2-rt3",
+          "mac_address": "52:54:00:2:3:2"
+        }
+      },
+      "isis": {
+        "flex_algos": {
+          "203": {
+            "status": "active",
+            "exclude_any": [
+              "green"
+            ],
+            "dataplane": "sr-mpls"
+          }
+        }
+      }
+    },
+    "rt3": {
+      "type": "router",
+      "interfaces": {
+        "eth-1": {
+          "connected_to": "s-rt2-rt3",
+          "mac_address": "52:54:00:2:3:3"
+        },
+        "eth-2": {
+          "connected_to": "s-rt1-rt3",
+          "mac_address": "52:54:00:1:3:3"
+        }
+      },
+      "isis": {
+        "flex_algos": {
+          "203": {
+            "status": "active",
+            "dataplane": "sr-mpls"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s-rt1-rt2": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt2"
+      ]
+    },
+    "s-rt2-rt3": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt2",
+        "rt3"
+      ]
+    },
+    "s-rt1-rt3": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "rt1",
+      "target": "rt2",
+      "interface_source": "eth-2",
+      "interface_target": "eth-1",
+      "mac_addresses": [
+        "52:54:00:1:2:1",
+        "52:54:00:1:2:2"
+      ]
+    },
+    {
+      "source": "rt2",
+      "target": "rt3",
+      "interface_source": "eth-3",
+      "interface_target": "eth-1",
+      "mac_addresses": [
+        "52:54:00:2:3:2",
+        "52:54:00:2:3:3"
+      ]
+    },
+    {
+      "source": "rt3",
+      "target": "rt1",
+      "interface_source": "eth-2",
+      "interface_target": "eth-3",
+      "mac_addresses": [
+        "52:54:00:1:3:3",
+        "52:54:00:1:3:1"
+      ]
+    }
+  ]
+}
