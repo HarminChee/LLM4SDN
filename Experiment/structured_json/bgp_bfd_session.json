@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_bfd_session.py",
+    "description": "Single router (r1) connected to a switch (s1). Loads FRR with zebra/mgmtd/bfd/bgpd. Two multi-hop BFD sessions from r1 (local=10.0.0.1) to remote peers 192.168.1.2 and 192.168.1.3, both in 'down' status.",
+    "conf_files": {
+      "r1": ["frr.conf"]  
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.1/24"
+        }
+      },
+
+      "zebra": {
+      },
+      "mgmtd": {
+      },
+      "bgp": {
+
+      },
+
+      "bfd": {
+
+        "sessions": [
+          {
+            "peer_ip": "192.168.1.2",
+            "local_ip": "10.0.0.1",
+            "multihop": true,
+            "status": "down",
+            "diagnostic": "ok",
+            "remote_diagnostic": "ok",
+            "type": "dynamic",
+            "minimum_ttl": 246
+          },
+          {
+            "peer_ip": "192.168.1.3",
+            "local_ip": "10.0.0.1",
+            "multihop": true,
+            "status": "down",
+            "diagnostic": "ok",
+            "remote_diagnostic": "ok",
+            "type": "dynamic",
+            "minimum_ttl": 236
+          }
+        ]
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1"]
+    }
+  },
+
+  "links": [
+  ]
+}

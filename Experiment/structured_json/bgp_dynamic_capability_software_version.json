@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_dynamic_capability_software_version.py",
+    "description": "Test if BGP software version capability is exchanged dynamically with 2 routers connected through 1 switch.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "192.168.1.2": {
+            "remote_as": 65002,
+            "capabilities": {
+              "software_version": {
+                "enabled": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "192.168.1.1": {
+            "remote_as": 65001,
+            "capabilities": {
+              "software_version": {
+                "enabled": false
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "bgp_neighbors": true
+    }
+  ]
+}

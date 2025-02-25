@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_dynamic_capability_fqdn.py",
+    "description": "Test if fqdn capability is exchanged dynamically.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "local_as": 64512,
+        "neighbors": {
+          "192.168.1.2": {
+            "remote_as": 64512,
+            "state": "Established",
+            "ipv4_address": "192.168.1.2",
+            "capability_fqdn": "advertisedAndReceived",
+            "hostName": {
+              "advHostName": "r1",
+              "rcvHostName": "r2"
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        }
+      },
+      "bgp": {
+        "local_as": 64512,
+        "neighbors": {
+          "192.168.1.1": {
+            "remote_as": 64512,
+            "state": "Established",
+            "ipv4_address": "192.168.1.1",
+            "capability_fqdn": "advertisedAndReceived",
+            "hostName": {
+              "advHostName": "r2",
+              "rcvHostName": "r1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "192.168.1.0/24"
+    }
+  ]
+}

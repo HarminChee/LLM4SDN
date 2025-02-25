@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_addpath_graceful_restart.py",
+    "description": "3 routers (r1,r2,r3) + 3 switches (s1,s2,s3). Two parallel links r1<->r2, one link r2<->r3. BGP addpath & graceful restart test. FRR config is frr.conf.",
+    "conf_files": {
+      "r1": ["frr.conf"],
+      "r2": ["frr.conf"],
+      "r3": ["frr.conf"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.1/24"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2_s1": {
+            "ipv4_address": "192.168.1.2"
+          },
+          "r2_s2": {
+            "ipv4_address": "192.168.2.2"
+          }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.2/24"
+        },
+        "eth2_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.2/24"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r1_s1": {
+            "ipv4_address": "192.168.1.1"
+          },
+          "r1_s2": {
+            "ipv4_address": "192.168.2.1"
+          },
+          "r3_s3": {
+            "ipv4_address": "192.168.3.3"
+          }
+        }
+      }
+    },
+
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.3.3/24"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2_s3": {
+            "ipv4_address": "192.168.3.2"
+          }
+        }
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1","r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": ["r1","r2"]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": ["r2","r3"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "192.168.1.0/24",
+      "protocols": ["bgp"]
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1_s2",
+      "interface_target": "eth1_s2",
+      "ipv4_subnet": "192.168.2.0/24",
+      "protocols": ["bgp"]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth2_s3",
+      "interface_target": "eth0_s3",
+      "ipv4_subnet": "192.168.3.0/24",
+      "protocols": ["bgp"]
+    }
+  ]
+}

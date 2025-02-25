@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_evpn_overlay_index_gateway.py",
+    "description": "Test EVPN gateway IP overlay index functionality with 2 PEs and 2 Hosts connected via IPv4/v6 BGP sessions and EVPN sessions.",
+    "conf_files": {
+      "PE1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "PE2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "host1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "host2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "PE1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "PE2",
+          "ipv4": "dhcp",
+          "ipv6": "dhcp"
+        },
+        "eth1": {
+          "connected_to": "host1",
+          "ipv4": "dhcp",
+          "ipv6": "dhcp"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "PE2": {
+            "remote_as": 100
+          }
+        }
+      },
+      "zebra": {},
+      "evpn": {
+        "type5_routes": true,
+        "vxlan": {
+          "vxlan100": {
+            "vtep_ip": "10.100.0.1",
+            "bridge_ip": "50.0.1.1/24",
+            "bridge_ipv6": "50:0:1::1/48"
+          },
+          "vxlan1000": {
+            "vtep_ip": "10.100.0.1"
+          }
+        }
+      }
+    },
+    "PE2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "PE1",
+          "ipv4": "dhcp",
+          "ipv6": "dhcp"
+        },
+        "eth1": {
+          "connected_to": "host2",
+          "ipv4": "dhcp",
+          "ipv6": "dhcp"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "PE1": {
+            "remote_as": 100
+          }
+        }
+      },
+      "zebra": {},
+      "evpn": {
+        "type5_routes": true,
+        "vxlan": {
+          "vxlan100": {
+            "vtep_ip": "10.100.0.2",
+            "bridge_ip": "50.0.1.2/24",
+            "bridge_ipv6": "50:0:1::2/48"
+          },
+          "vxlan1000": {
+            "vtep_ip": "10.100.0.2"
+          }
+        }
+      }
+    },
+    "host1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "PE1",
+          "ipv4": "dhcp",
+          "ipv6": "dhcp"
+        }
+      },
+      "bgp": {
+        "local_as": 111,
+        "neighbors": {
+          "PE1": {
+            "remote_as": 100
+          }
+        }
+      },
+      "zebra": {},
+      "evpn": {
+        "type2_routes": true
+      }
+    },
+    "host2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "PE2",
+          "ipv4": "dhcp",
+          "ipv6": "dhcp"
+        }
+      },
+      "bgp": {
+        "local_as": 111,
+        "neighbors": {
+          "PE2": {
+            "remote_as": 100
+          }
+        }
+      },
+      "zebra": {},
+      "evpn": {
+        "type2_routes": true
+      }
+    }
+  },
+  "switches": {},
+  "links": [
+    {
+      "source": "PE1",
+      "target": "PE2",
+      "interface_source": "eth0",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "PE1",
+      "target": "host1",
+      "interface_source": "eth1",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "PE2",
+      "target": "host2",
+      "interface_source": "eth1",
+      "interface_target": "eth0"
+    }
+  ]
+}

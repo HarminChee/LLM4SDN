@@ -1,0 +1,164 @@
+{
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "10.0.12.1/24"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "10.0.13.1/24"
+        }
+      },
+      "bgp": {
+
+        "neighbors": {
+          "r2_s1": { "ipv4_address": "10.0.12.2" },
+          "r3_s2": { "ipv4_address": "10.0.13.3" }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "10.0.12.2/24"
+        },
+        "eth1_s3": {
+          "connected_to": "s3",
+          "ipv4": "10.0.24.2/24"
+        }
+      },
+      "bgp": {
+
+        "neighbors": {
+          "r1_s1": { "ipv4_address": "10.0.12.1" },
+          "r4_s3": { "ipv4_address": "10.0.24.4" }
+        }
+      }
+    },
+
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "10.0.13.3/24"
+        },
+        "eth1_s4": {
+          "connected_to": "s4",
+          "ipv4": "10.0.34.3/24"
+        }
+      },
+      "bgp": {
+
+        "neighbors": {
+          "r1_s2": { "ipv4_address": "10.0.13.1" },
+          "r4_s4": { "ipv4_address": "10.0.34.4" }
+        }
+      }
+    },
+
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s3": {
+          "connected_to": "s3",
+          "ipv4": "10.0.24.4/24"
+        },
+        "eth1_s4": {
+          "connected_to": "s4",
+          "ipv4": "10.0.34.4/24"
+        }
+      },
+
+      "bgp": {
+        "neighbors": {
+          "r2_s3": { "ipv4_address": "10.0.24.2" },
+          "r3_s4": { "ipv4_address": "10.0.34.3" }
+        }
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r4"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "10.0.12.0/24",
+      "protocols": [ "bgp" ]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "eth1_s2",
+      "interface_target": "eth0_s2",
+      "ipv4_subnet": "10.0.13.0/24",
+      "protocols": [ "bgp" ]
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "eth1_s3",
+      "interface_target": "eth0_s3",
+      "ipv4_subnet": "10.0.24.0/24",
+      "protocols": [ "bgp" ]
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "eth1_s4",
+      "interface_target": "eth1_s4",
+      "ipv4_subnet": "10.0.34.0/24",
+      "protocols": [ "bgp" ]
+    }
+  ],
+
+  "metadata": {
+    "script_name": "test_bgp_always_compare_med.py",
+    "description": "4 routers (r1,r2,r3,r4) + 4 switches (s1..s4). eBGP among (r1<->r2), (r1<->r3), (r2<->r4), (r3<->r4). r4 used to redistribute static. Script tests 'bgp always-compare-med', multipath, etc.",
+    "conf_files": {
+      "r1": ["zebra.conf","bgpd.conf","ospfd.conf"],
+      "r2": ["zebra.conf","bgpd.conf","ospfd.conf"],
+      "r3": ["zebra.conf","bgpd.conf","ospfd.conf"],
+      "r4": ["zebra.conf","bgpd.conf","ospfd.conf"]
+    }
+  }
+}

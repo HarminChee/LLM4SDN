@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "script_name": "bgp_comm-list_delete.py",
+    "description": "Two routers (r1, r2) connected via switch s1. r1 originates 172.16.255.254/32 with community 333:333. A route-map on either r1 or r2 uses 'comm-list <x> delete' to strip this community before final advertisement. Test verifies that r2 sees the prefix without 333:333 community.",
+    "conf_files": {
+      "r1": ["zebra.conf", "bgpd.conf"],
+      "r2": ["zebra.conf", "bgpd.conf"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.255.1/24",
+          "description": "Interface toward switch s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "192.168.255.2": {
+            "remote_as": 65002,
+            "description": "BGP neighbor with r2"
+          }
+        },
+        "routes_originated": [
+          {
+            "prefix": "172.16.255.254/32",
+            "community": ["333:333"],
+            "note": "Injected with a community to test comm-list delete"
+          }
+        ],
+        "route_maps": {
+          "test": {
+            "action": "permit",
+            "sequence": 10,
+            "set_comm_list_delete": "COMM-DELETE",
+            "description": "Example route-map that deletes community 333:333 using comm-list"
+          }
+        },
+        "comm_lists": {
+          "COMM-DELETE": {
+            "type": "standard", 
+            "match": "333:333",
+            "action": "delete"
+          }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.255.2/24",
+          "description": "Interface toward switch s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "192.168.255.1": {
+            "remote_as": 65001,
+            "description": "BGP neighbor with r1"
+          }
+        },
+        "routes_received": [
+          {
+            "prefix": "172.16.255.254/32",
+            "expected_communities": [],
+            "note": "Community 333:333 should have been stripped by comm-list"
+          }
+        ]
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1", "r2"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv4_subnet": "192.168.255.0/24",
+      "bgp_neighbors": true,
+      "description": "r1<->r2 link via switch s1"
+    }
+  ]
+}

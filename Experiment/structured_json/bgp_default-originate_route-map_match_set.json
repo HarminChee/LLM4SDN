@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Test if default-originate works with match operations and verify if set operations work as well.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "zebra": {},
+      "bgp": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "bgp_neighbors": true
+    }
+  ]
+}

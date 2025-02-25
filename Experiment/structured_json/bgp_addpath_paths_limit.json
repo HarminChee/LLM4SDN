@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_addpath_paths_limit.py",
+    "description": "7 routers (r1..r7) + 3 switches (s1..s3). r2 connects to r1, r3, r4, r5, r6, r7. Testing BGP Add-Path paths-limit. FRR conf => frr.conf files.",
+    "conf_files": {
+      "r1": ["frr.conf"],
+      "r2": ["frr.conf"],
+      "r3": ["frr.conf"],
+      "r4": ["frr.conf"],
+      "r5": ["frr.conf"],
+      "r6": ["frr.conf"],
+      "r7": ["frr.conf"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2_s1": {
+            "ipv4_address": "192.168.1.2"
+          }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.2/24"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.2/24"
+        },
+        "eth2_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.7.2/24"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r1_s1": {
+            "ipv4_address": "192.168.1.1"
+          },
+          "r3_s2": {
+            "ipv4_address": "192.168.2.3"
+          },
+          "r4_s2": {
+            "ipv4_address": "192.168.2.4"
+          },
+          "r5_s2": {
+            "ipv4_address": "192.168.2.5"
+          },
+          "r6_s2": {
+            "ipv4_address": "192.168.2.6"
+          },
+          "r7_s3": {
+            "ipv4_address": "192.168.7.7"
+          }
+        }
+      }
+    },
+
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.3/24"
+        }
+      },
+      "bgp": {}
+    },
+
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.4/24"
+        }
+      },
+      "bgp": {}
+    },
+
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.5/24"
+        }
+      },
+      "bgp": {}
+    },
+
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.2.6/24"
+        }
+      },
+      "bgp": {}
+    },
+
+    "r7": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.7.7/24"
+        }
+      },
+      "bgp": {}
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1","r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": ["r2","r3","r4","r5","r6"]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": ["r7","r2"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "192.168.1.0/24",
+      "protocols": ["bgp"]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1_s2",
+      "interface_target": "eth0_s2",
+      "ipv4_subnet": "192.168.2.0/24",
+      "protocols": ["bgp"]
+    },
+    {
+      "source": "r2",
+      "target": "r7",
+      "interface_source": "eth2_s3",
+      "interface_target": "eth0_s3",
+      "ipv4_subnet": "192.168.7.0/24",
+      "protocols": ["bgp"]
+    }
+  ]
+}

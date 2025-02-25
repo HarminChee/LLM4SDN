@@ -1,0 +1,45 @@
+{
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "10.0.0.1/24"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "peer1_s1": {
+            "ipv4_address": "10.0.0.2"
+          }
+        }
+      }
+    }
+  },
+
+  "exabgp_peers": {
+    "peer1": {
+      "ip": "10.0.0.2",
+      "defaultRoute": "via 10.0.0.1"
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "peer1"
+      ]
+    }
+  },
+
+  "metadata": {
+    "script_name": "test_bgp_aspath_zero.py",
+    "description": "A FRR router r1 and an ExaBGP peer (peer1) both connected to switch s1 in 10.0.0.0/24. Script checks how BGP handles as-path=0 updates as withdrawals.",
+    "conf_files": {
+      "r1": ["zebra.conf", "bgpd.conf"]
+    }
+  }
+}

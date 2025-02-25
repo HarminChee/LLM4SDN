@@ -1,0 +1,151 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_evpn_route_map_match_route_type.py",
+    "description": "Topology with 3 switches (s1, s2, s3) and 3 routers (c1, r1, r2, c2) using BGP with EVPN and VXLAN. This JSON is an inferred structure from the original Python code. Actual IP/BGP info partially guessed.",
+    "conf_files": {
+      "c1": [
+        "frr.conf"
+      ],
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "c2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "c1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.10.10.1/24"
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ethernet": true
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "vxlan": {
+            "id": 10,
+            "port": 4789,
+            "local": "10.10.10.1",
+            "no_learning": true
+          },
+          "bridge": "br10"
+        }
+      },
+      "bgp": {
+        "local_as": 65000,
+        "neighbors": {
+          "192.168.1.2": {
+            "evpn_routes": {
+              "advertised_routes": [
+                "10.10.10.1:1",
+                "10.10.10.2:2"
+              ],
+              "total_prefix_counter": 2
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth1": {
+          "connected_to": "s2",
+          "ethernet": true
+        },
+        "eth2": {
+          "connected_to": "s3",
+          "vxlan": {
+            "id": 10,
+            "port": 4789,
+            "local": "10.10.10.2",
+            "no_learning": true
+          },
+          "bridge": "br10"
+        }
+      },
+      "bgp": {
+        "local_as": 65000,
+        "neighbors": {
+          "192.168.1.2": {
+            "evpn_routes": {
+              "advertised_routes": [
+                "10.10.10.1:1",
+                "10.10.10.2:2"
+              ],
+              "total_prefix_counter": 2
+            }
+          }
+        }
+      }
+    },
+    "c2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.10.10.2/24"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "c1",
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "c2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "c1",
+      "target": "r1",
+      "interface_source": "c1-eth0",
+      "interface_target": "r1-eth0"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth1",
+      "interface_target": "r2-eth2",
+      "vxlan": true,
+      "bgp_neighbors": true
+    },
+    {
+      "source": "r2",
+      "target": "c2",
+      "interface_source": "r2-eth1",
+      "interface_target": "c2-eth0"
+    }
+  ]
+}

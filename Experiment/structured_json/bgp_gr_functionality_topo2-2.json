@@ -1,0 +1,444 @@
+{
+  "metadata": {
+    "script_name": "test_bgp.py",
+    "description": "Test BGP Graceful Restart functionality across multiple scenarios. Topology with 7 routers (r1 to r7) and respective configurations.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r6": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r7": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2-eth0",
+          "ipv4": "192.168.0.1/24",
+          "ipv6": "fd00:0:0:1::1/64"
+        },
+        "eth1": {
+          "connected_to": "r3-eth0",
+          "ipv4": "192.168.1.1/24",
+          "ipv6": "fd00:0:0:2::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          },
+          "r3": {
+            "remote_as": 65003,
+            "address_family": {
+              "ipv4_unicast": {
+                "graceful_restart": true
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": {
+            "session_mode": "multihop",
+            "c_bit": true
+          },
+          "r3": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1-eth0",
+          "ipv4": "192.168.0.2/24",
+          "ipv6": "fd00:0:0:1::2/64"
+        },
+        "eth1": {
+          "connected_to": "r4-eth0",
+          "ipv4": "192.168.2.1/24",
+          "ipv6": "fd00:0:0:3::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          },
+          "r4": {
+            "remote_as": 65004,
+            "address_family": {
+              "ipv4_unicast": {
+                "graceful_restart": true
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r1": {
+            "session_mode": "multihop",
+            "c_bit": true
+          },
+          "r4": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1-eth1",
+          "ipv4": "192.168.1.2/24",
+          "ipv6": "fd00:0:0:2::2/64"
+        },
+        "eth1": {
+          "connected_to": "r5-eth0",
+          "ipv4": "192.168.3.1/24",
+          "ipv6": "fd00:0:0:4::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          },
+          "r5": {
+            "remote_as": 65005,
+            "address_family": {
+              "ipv4_unicast": {
+                "graceful_restart": true
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r1": {
+            "session_mode": "multihop",
+            "c_bit": true
+          },
+          "r5": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r2-eth1",
+          "ipv4": "192.168.2.2/24",
+          "ipv6": "fd00:0:0:3::2/64"
+        },
+        "eth1": {
+          "connected_to": "r6-eth0",
+          "ipv4": "192.168.5.1/24",
+          "ipv6": "fd00:0:0:5::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65004,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          },
+          "r6": {
+            "remote_as": 65006,
+            "address_family": {
+              "ipv4_unicast": {
+                "graceful_restart": true
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": {
+            "session_mode": "multihop",
+            "c_bit": true
+          },
+          "r6": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3-eth1",
+          "ipv4": "192.168.3.2/24",
+          "ipv6": "fd00:0:0:4::2/64"
+        },
+        "eth1": {
+          "connected_to": "r7-eth0",
+          "ipv4": "192.168.6.1/24",
+          "ipv6": "fd00:0:0:6::1/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65005,
+        "neighbors": {
+          "r3": {
+            "remote_as": 65003,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          },
+          "r7": {
+            "remote_as": 65007,
+            "address_family": {
+              "ipv4_unicast": {
+                "graceful_restart": true
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r3": {
+            "session_mode": "multihop",
+            "c_bit": true
+          },
+          "r7": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    },
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r4-eth1",
+          "ipv4": "192.168.5.2/24",
+          "ipv6": "fd00:0:0:5::2/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65006,
+        "neighbors": {
+          "r4": {
+            "remote_as": 65004,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r4": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    },
+    "r7": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r5-eth1",
+          "ipv4": "192.168.6.2/24",
+          "ipv6": "fd00:0:0:6::2/64"
+        }
+      },
+      "bgp": {
+        "local_as": 65007,
+        "neighbors": {
+          "r5": {
+            "remote_as": 65005,
+            "graceful_restart": true,
+            "address_family": {
+              "ipv4_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv6"
+              },
+              "ipv6_unicast": {
+                "next_hop_self": true,
+                "activate": "ipv4"
+              }
+            }
+          }
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r5": {
+            "session_mode": "multihop",
+            "c_bit": true
+          }
+        }
+      }
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.0.0/24",
+      "ipv6_subnet": "fd00:0:0:1::/64",
+      "bgp_neighbors": true,
+      "bfd": true
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth1",
+      "interface_target": "r3-eth0",
+      "ipv4_subnet": "192.168.1.0/24",
+      "ipv6_subnet": "fd00:0:0:2::/64",
+      "bgp_neighbors": true,
+      "bfd": true
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "r2-eth1",
+      "interface_target": "r4-eth0",
+      "ipv4_subnet": "192.168.2.0/24",
+      "ipv6_subnet": "fd00:0:0:3::/64",
+      "bgp_neighbors": true,
+      "bfd": true
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "r3-eth1",
+      "interface_target": "r5-eth0",
+      "ipv4_subnet": "192.168.3.0/24",
+      "ipv6_subnet": "fd00:0:0:4::/64",
+      "bgp_neighbors": true,
+      "bfd": true
+    },
+    {
+      "source": "r4",
+      "target": "r6",
+      "interface_source": "r4-eth1",
+      "interface_target": "r6-eth0",
+      "ipv4_subnet": "192.168.5.0/24",
+      "ipv6_subnet": "fd00:0:0:5::/64",
+      "bgp_neighbors": true,
+      "bfd": true
+    },
+    {
+      "source": "r5",
+      "target": "r7",
+      "interface_source": "r5-eth1",
+      "interface_target": "r7-eth0",
+      "ipv4_subnet": "192.168.6.0/24",
+      "ipv6_subnet": "fd00:0:0:6::/64",
+      "bgp_neighbors": true,
+      "bfd": true
+    }
+  ]
+}

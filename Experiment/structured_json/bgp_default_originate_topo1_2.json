@@ -1,0 +1,333 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_default_originate.py",
+    "description": "Verify BGP default originate with various route-maps and conditions",
+    "conf_files": {
+      "r0": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r0": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "r0_loopback_address_ipv4",
+          "ipv6": "r0_loopback_address_ipv6"
+        },
+        "r1": {
+          "ipv4": "r0_loopback_address_ipv4_nxt_hop",
+          "ipv6": "r0_loopback_address_ipv6_nxt_hop"
+        }
+      },
+      "bgp": {
+        "local_as": 64512,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                },
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                },
+                {
+                  "redist_type": "static"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": [
+            "1.1.1.1/32",
+            "2.1.1.1/32"
+          ],
+          "next_hop": "Null0"
+        }
+      ]
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "r1_loopback_address_ipv4",
+          "ipv6": "r1_loopback_address_ipv6"
+        },
+        "r2": {
+          "ipv4": "r1_loopback_address_ipv4_nxt_hop",
+          "ipv6": "r1_loopback_address_ipv6_nxt_hop"
+        }
+      },
+      "bgp": {
+        "local_as": 64513,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "default_originate": {
+                "r2": {}
+              },
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "default_originate": {
+                "r2": {}
+              },
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": [
+            "1.1.1.1/32",
+            "2.1.1.1/32"
+          ],
+          "next_hop": "Null0"
+        }
+      ],
+      "prefix_lists": {
+        "ipv4": [
+          {
+            "name": "Pv4",
+            "seqid": 1,
+            "network": "1.1.1.1/32",
+            "action": "permit"
+          },
+          {
+            "name": "Pv42",
+            "seqid": 1,
+            "network": "2.1.1.1/32",
+            "action": "deny"
+          }
+        ],
+        "ipv6": [
+          {
+            "name": "Pv6",
+            "seqid": 1,
+            "network": "1::1/128",
+            "action": "permit"
+          },
+          {
+            "name": "Pv62",
+            "seqid": 1,
+            "network": "2::1/128",
+            "action": "deny"
+          }
+        ]
+      },
+      "route_maps": {
+        "RMv4": [
+          {
+            "action": "permit",
+            "seq_id": 1,
+            "match": {
+              "ipv4": {
+                "prefix_lists": "Pv4"
+              }
+            }
+          },
+          {
+            "action": "deny",
+            "seq_id": 1,
+            "match": {
+              "ipv4": {
+                "prefix_lists": "Pv42"
+              }
+            }
+          }
+        ],
+        "RMv6": [
+          {
+            "action": "permit",
+            "seq_id": 1,
+            "match": {
+              "ipv6": {
+                "prefix_lists": "Pv6"
+              }
+            }
+          },
+          {
+            "action": "deny",
+            "seq_id": 1,
+            "match": {
+              "ipv6": {
+                "prefix_lists": "Pv62"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "r2_loopback_address_ipv4",
+          "ipv6": "r2_loopback_address_ipv6"
+        },
+        "r1": {
+          "ipv4": "r2_loopback_address_ipv4_nxt_hop",
+          "ipv6": "r2_loopback_address_ipv6_nxt_hop"
+        }
+      },
+      "bgp": {
+        "local_as": 64514,
+        "graceful_restart": true,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "r3_loopback_address_ipv4",
+          "ipv6": "r3_loopback_address_ipv6"
+        },
+        "r2": {
+          "ipv4": "r3_loopback_address_ipv4_nxt_hop",
+          "ipv6": "r3_loopback_address_ipv6_nxt_hop"
+        }
+      },
+      "bgp": {
+        "local_as": 64515,
+        "graceful_restart": {
+          "helper": true
+        },
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "default_originate": {
+                "r2": {}
+              },
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "default_originate": {
+                "r2": {}
+              },
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "lo": {
+          "ipv4": "r4_loopback_address_ipv4",
+          "ipv6": "r4_loopback_address_ipv6"
+        },
+        "r3": {
+          "ipv4": "r4_loopback_address_ipv4_nxt_hop",
+          "ipv6": "r4_loopback_address_ipv6_nxt_hop"
+        }
+      },
+      "bgp": {
+        "local_as": 64516,
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "redistribute": [
+                {
+                  "redist_type": "connected"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": [
+            "1.1.1.1/32",
+            "2.1.1.1/32"
+          ],
+          "next_hop": "Null0"
+        }
+      ]
+    }
+  },
+  "switches": {},
+  "links": []
+}
