@@ -1,354 +1,241 @@
 import os
-import json
-import random
-import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
 from torch.utils.data import Dataset, DataLoader
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.metrics.pairwise import cosine_similarity
+import json
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from numpy.linalg import norm
 
-########################################################
-# 1. 解析 JSON => 提取“文件级”特征向量
-#    这里扩充更多字段并做示例演示
-########################################################
-def parse_json_to_features(json_path):
-    """
-    从 JSON 中解析多种字段, 返回一个长度较高的特征向量 (numpy array).
-    如果 JSON 结构中缺少某些字段, 就用默认值/0 表示.
+# ================================
+# Step 1: Data Loading and Preprocessing
+# ================================
 
-    注意：你可以按需增/删特征，本示例仅做演示.
-    """
+class TopologyDataset(Dataset):
+    def __init__(self, json_files, input_dim):
+        self.json_files = json_files
+        self.input_dim = input_dim
+        self.data = self._prepare_data()
 
-    try:
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-    except:
-        return None
+    def _extract_topology_features(self, json_content):
+        features = []
+        logs = []
 
-    # 在此定义特征维度, 你可以自行再加. 
-    # 这里示例定义 15 维.
-    # 0: number of "routers"
-    # 1: number of "switches"
-    # 2: number of "nodes" (if "nodes" in data)
-    # 3: sum of node.interfaces across "nodes" dict
-    # 4: sum of router.interfaces across "routers" dict
-    # 5: number of "links"
-    # 6: sum of local_as in routers
-    # 7: count how many routers have BGP local_as
-    # 8: count how many routers have OSPF
-    # 9: count how many routers have OSPFv6 / ospf6
-    # 10: sum of static_routes across all routers
-    # 11: do we have address_types? (0 or number of address types)
-    # 12: count total "switches[x].connected_nodes"
-    # 13: has IPv4 base? (1 if "ipv4base" in data else 0)
-    # 14: has IPv6 base? (1 if "ipv6base" in data else 0)
+        for key, value in json_content.items():
+            if isinstance(value, dict):
+                features += self._process_dict_features(key, value, logs)
+            elif isinstance(value, list):
+                features += self._process_list_features(key, value, logs)
+            elif isinstance(value, (str, int)):
+                features.append(f"{key}: {value}")
+            else:
+                logs.append(f"Unhandled key '{key}' with type {type(value)}")
 
-    feat = np.zeros(15, dtype=float)
+        if logs:
+            print(f"File issues: {logs}")
 
-    # 1) routers
-    router_count = 0
-    router_data = {}
-    if "routers" in data and isinstance(data["routers"], dict):
-        router_data = data["routers"]
-        router_count = len(router_data)
-    feat[0] = float(router_count)
+        return features
 
-    # 2) switches
-    switch_count = 0
-    switch_data = {}
-    if "switches" in data and isinstance(data["switches"], dict):
-        switch_data = data["switches"]
-        switch_count = len(switch_data)
-    feat[1] = float(switch_count)
+    def _process_dict_features(self, parent_key, data, logs):
+        features = []
 
-    # 3) nodes
-    node_count = 0
-    node_data = {}
-    # 有些 JSON 用 "nodes"->dict, 有的用 "nodes"->list, 还有的干脆没有 "nodes"
-    # 这里仅演示如果是 dict
-    if "nodes" in data and isinstance(data["nodes"], dict):
-        node_data = data["nodes"]
-        node_count = len(node_data)
-    elif "nodes" in data and isinstance(data["nodes"], list):
-        node_list = data["nodes"]
-        node_count = len(node_list)
-    feat[2] = float(node_count)
+        if "links" in data and isinstance(data["links"], list):
+            for link in data["links"]:
+                if isinstance(link, dict) and "source" in link and "target" in link:
+                    features.append(f"{link['source']}->{link['target']}")
+                elif isinstance(link, dict):
+                    features.append(f"{link.get('to', 'unknown')} via {link.get('via', 'unknown')}")
+                else:
+                    logs.append(f"Invalid link format in '{parent_key}': {link}")
 
-    # 4) sum of node.interfaces across data["nodes"]
-    #    这里只示例: if "nodes":{ "r1":{interfaces:{...}},... }
-    node_if_sum = 0
-    for nd_id, nd_info in node_data.items():
-        if "interfaces" in nd_info and isinstance(nd_info["interfaces"], dict):
-            node_if_sum += len(nd_info["interfaces"])
-    feat[3] = float(node_if_sum)
+        if "interfaces" in data:
+            interfaces = data["interfaces"]
+            if isinstance(interfaces, list):
+                for iface in interfaces:
+                    if isinstance(iface, str):
+                        features.append(f"{parent_key}: {iface}")
+                    elif isinstance(iface, dict):
+                        connected_to = iface.get("connected_to", "unknown")
+                        features.append(f"{iface.get('interface', 'unknown')}->{connected_to}")
 
-    # 5) sum of router.interfaces across data["routers"]
-    router_if_sum = 0
-    for rid, rinfo in router_data.items():
-        if "interfaces" in rinfo:
-            if isinstance(rinfo["interfaces"], dict):
-                router_if_sum += len(rinfo["interfaces"])
-            elif isinstance(rinfo["interfaces"], list):
-                router_if_sum += len(rinfo["interfaces"])
-    feat[4] = float(router_if_sum)
+        for key, value in data.items():
+            if isinstance(value, dict):
+                features += self._process_dict_features(key, value, logs)
+            elif isinstance(value, list):
+                features += self._process_list_features(key, value, logs)
+            elif isinstance(value, (str, int)):
+                features.append(f"{parent_key}.{key}: {value}")
 
-    # 6) links
-    link_count = 0
-    if "links" in data and isinstance(data["links"], list):
-        link_count = len(data["links"])
-    feat[5] = float(link_count)
+        return features
 
-    # 7) BGP local_as
-    local_as_sum = 0
-    local_as_count = 0
-    # 8) OSPF count
-    ospf_count = 0
-    # 9) OSPFv6 or ospf6 count
-    ospf6_count = 0
-    # 10) sum of static_routes
-    static_count = 0
+    def _process_list_features(self, parent_key, data, logs):
+        features = []
+        for item in data:
+            if isinstance(item, dict):
+                features += self._process_dict_features(parent_key, item, logs)
+            elif isinstance(item, (str, int)):
+                features.append(f"{parent_key}: {item}")
+        return features
 
-    for rid, rinfo in router_data.items():
-        # BGP
-        bgp_obj = rinfo.get("bgp", {})
-        if isinstance(bgp_obj, dict):
-            possible_as = bgp_obj.get("local_as") or bgp_obj.get("as_number")
-            if possible_as:
-                try:
-                    val = float(possible_as)
-                    local_as_sum += val
-                    local_as_count += 1
-                except:
-                    pass
-            # 如果 "address_family" 下有 neighbor, static routes等可以再查
-            if "address_family" in bgp_obj and isinstance(bgp_obj["address_family"], dict):
-                # 也可数一数 neighbor
-                pass
-        # OSPF
-        if "ospf" in rinfo:
-            ospf_count += 1
-        if "ospf6" in rinfo:
-            ospf6_count += 1
+    def _vectorize(self, tokens, encoder):
+        encoded = encoder.transform(np.array(tokens).reshape(-1, 1))
+        return encoded.sum(axis=0)
 
-        # static_routes
-        if "static_routes" in rinfo and isinstance(rinfo["static_routes"], list):
-            static_count += len(rinfo["static_routes"])
+    def _prepare_data(self):
+        all_tokens = []
+        json_tokenized = []
 
-    feat[6] = float(local_as_sum)
-    feat[7] = float(local_as_count)
-    feat[8] = float(ospf_count)
-    feat[9] = float(ospf6_count)
-    feat[10] = float(static_count)
+        for jf in self.json_files:
+            try:
+                with open(jf, "r") as jfile:
+                    json_content = json.load(jfile)
+                    json_tokens = self._extract_topology_features(json_content)
 
-    # 11) address_types
-    # 如果 "address_types" in data => 记下其数量
-    if "address_types" in data and isinstance(data["address_types"], list):
-        feat[11] = float(len(data["address_types"]))
+                    if not json_tokens:
+                        print(f"Skipping file with no features: {jf}")
+                        continue
 
-    # 12) total "connected_nodes" in all switches
-    connected_nodes_sum = 0
-    for swid, swinfo in switch_data.items():
-        if "connected_nodes" in swinfo and isinstance(swinfo["connected_nodes"], list):
-            connected_nodes_sum += len(swinfo["connected_nodes"])
-    feat[12] = float(connected_nodes_sum)
+                    json_tokenized.append(json_tokens)
+                    all_tokens.extend(json_tokens)
 
-    # 13) has ipv4base
-    if "ipv4base" in data:
-        feat[13] = 1.0
-    # 14) has ipv6base
-    if "ipv6base" in data:
-        feat[14] = 1.0
+            except json.JSONDecodeError as e:
+                print(f"Skipping invalid JSON file: {jf} - Error: {e}")
+                continue
 
-    return feat
+        if not all_tokens:
+            raise ValueError("No valid features found in the provided JSON files.")
 
+        encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+        encoder.fit(np.array(all_tokens).reshape(-1, 1))
 
-########################################################
-# 2. 数据集: 先收集所有特征 => 做全局标准化 => 再返回
-########################################################
-class JSONDataset(Dataset):
-    def __init__(self, folder, max_files=None):
-        """
-        folder: json文件所在目录
-        max_files: 可选，只加载一定数量
-        """
-        self.filepaths = []
-        self.features = []
-        json_files = sorted([f for f in os.listdir(folder) if f.lower().endswith(".json")])
+        data = []
+        for j_tokens in json_tokenized:
+            j_vector = self._vectorize(j_tokens, encoder)
+            j_vector = j_vector[:self.input_dim]
+            j_vector = np.pad(j_vector, (0, max(0, self.input_dim - len(j_vector))), 'constant')
+            data.append(j_vector)
 
-        if max_files is not None and max_files < len(json_files):
-            random.shuffle(json_files)
-            json_files = json_files[:max_files]
-
-        # 先做第一遍：收集所有特征(不转 tensor)
-        all_feats = []
-        all_names = []
-        for fname in json_files:
-            path = os.path.join(folder, fname)
-            feat = parse_json_to_features(path)
-            if feat is not None:
-                all_feats.append(feat)
-                all_names.append((fname, path))
-
-        if not all_feats:
-            # 数据为空
-            self.filepaths = []
-            self.features = []
-            return
-
-        feats_arr = np.stack(all_feats, axis=0)  # shape=(N, F)
-
-        # 对 feats_arr 做标准化 => (x-mean)/std
-        mean_ = feats_arr.mean(axis=0, keepdims=True)
-        std_  = feats_arr.std(axis=0, keepdims=True)
-        std_[std_<1e-9] = 1.0  # 避免除0
-
-        feats_norm = (feats_arr - mean_)/std_
-
-        self.features = feats_norm
-        self.filepaths = all_names  # list of (fname, path)
+        return data
 
     def __len__(self):
-        return len(self.features)
+        return len(self.data)
 
     def __getitem__(self, idx):
-        """
-        返回 (filename, feat_tensor)
-        """
-        fname, _ = self.filepaths[idx]
-        feat_1d = self.features[idx]
-        feat_tensor = torch.tensor(feat_1d, dtype=torch.float)
-        return fname, feat_tensor
+        return torch.tensor(self.data[idx], dtype=torch.float32)
 
+# ================================
+# Step 2: Define the Autoencoder Model
+# ================================
 
-########################################################
-# 3. 简易 MLP AutoEncoder
-########################################################
-class MLPAutoEncoder(nn.Module):
-    def __init__(self, in_dim, hidden_dim=16):
-        super().__init__()
+class Autoencoder(nn.Module):
+    def __init__(self, input_dim, latent_dim):
+        super(Autoencoder, self).__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim),
+            nn.Linear(input_dim, 256),
             nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim)
+            nn.Linear(256, latent_dim)
         )
         self.decoder = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.Linear(latent_dim, 256),
             nn.ReLU(),
-            nn.Linear(hidden_dim, in_dim)
+            nn.Linear(256, input_dim)
         )
 
     def forward(self, x):
-        z = self.encoder(x)
-        x_recon = self.decoder(z)
-        return x_recon, z
+        latent = self.encoder(x)
+        reconstructed = self.decoder(latent)
+        return reconstructed, latent
 
+# ================================
+# Step 3: Train the Autoencoder
+# ================================
 
-########################################################
-# 4. 训练
-########################################################
-def train_ae(model, dataset, epochs=20, batch_size=8, lr=1e-3, device='cpu'):
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-    optimizer = optim.Adam(model.parameters(), lr=lr)
+def train_autoencoder(model, dataloader, epochs=50, lr=0.001):
     criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=lr)
 
-    model.train()
-    for ep in range(1, epochs+1):
-        total_loss = 0.0
-        count = 0
-        for batch_items in loader:
-            fnames, feats = batch_items
-            feats = feats.to(device)
+    for epoch in range(epochs):
+        total_loss = 0
+        for batch in dataloader:
+            inputs = batch
+
+            outputs, _ = model(inputs)
+            loss = criterion(outputs, inputs)
 
             optimizer.zero_grad()
-            x_recon, z = model(feats)
-            loss = criterion(x_recon, feats)
             loss.backward()
             optimizer.step()
 
             total_loss += loss.item()
-            count += 1
 
-        avg_loss = total_loss / count if count>0 else 0
-        print(f"Epoch {ep}/{epochs}, Loss={avg_loss:.6f}")
+        print(f"Epoch {epoch + 1}/{epochs}, Loss: {total_loss / len(dataloader)}")
 
+# ================================
+# Step 4: Generate Embeddings and Calculate Similarity
+# ================================
 
-########################################################
-# 5. 获取embedding & 画相似度热力图 (cos=1=>红, cos=-1=>蓝)
-########################################################
-def compute_embeddings(model, dataset, device='cpu'):
+def generate_embeddings(model, dataloader):
     model.eval()
-    name2emb = {}
+    embeddings = []
+
     with torch.no_grad():
-        for idx in range(len(dataset)):
-            fname, feat_tensor = dataset[idx]
-            feat_tensor = feat_tensor.unsqueeze(0).to(device)
-            x_recon, z = model(feat_tensor)
-            z_np = z.squeeze(0).cpu().numpy()
-            name2emb[fname] = z_np
-    return name2emb
+        for batch in dataloader:
+            _, latent = model(batch)
+            embeddings.append(latent)
 
+    return torch.cat(embeddings, dim=0)
 
-def show_similarity_heatmap(name2emb):
-    names = sorted(name2emb.keys())
-    if len(names)==0:
-        print("No data => can't show heatmap.")
-        return
+# ================================
+# Step 5: Output Pairs with High Similarity
+# ================================
 
-    emb_list = [name2emb[n] for n in names]
-    emb_mat  = np.stack(emb_list, axis=0)  # (N, hidden_dim)
-    N = emb_mat.shape[0]
+def save_high_similarity_pairs(similarity_matrix, json_files, threshold=0.9, output_path="C:\\Users\\harmi\\Desktop\\sdn\\similarity_pairs_1.json"):
+    file_names = [os.path.basename(file) for file in json_files]
+    pairs = []
 
-    sim_mat = np.zeros((N,N), dtype=float)
-    for i in range(N):
-        for j in range(N):
-            dot_ij = np.dot(emb_mat[i], emb_mat[j])
-            norm_i = norm(emb_mat[i])
-            norm_j = norm(emb_mat[j])
-            if norm_i<1e-9 or norm_j<1e-9:
-                sim_mat[i,j] = 0
-            else:
-                sim_mat[i,j] = dot_ij/(norm_i*norm_j)
+    for i in range(len(file_names)):
+        for j in range(len(file_names)):
+            if i != j and similarity_matrix[i, j] > threshold:
+                pairs.append({"file1": file_names[i], "file2": file_names[j], "similarity": float(similarity_matrix[i, j])})
 
-    # 让 cos=+1 => 红, cos=-1 => 蓝
-    # 可以使用 "coolwarm" 或 "bwr" colormap
-    # "coolwarm" 在 vmax=1 时是红色，vmin=-1 时是蓝色
-    plt.figure(figsize=(10,8))
-    sns.heatmap(
-        sim_mat, 
-        xticklabels=names, 
-        yticklabels=names,
-        cmap="coolwarm",
-        vmin=-1, vmax=1
-    )
-    plt.title("Cosine Similarity of JSON-based embeddings (autoencoder)")
-    plt.tight_layout()
+    with open(output_path, "w") as outfile:
+        json.dump(pairs, outfile, indent=4)
+
+    print(f"High-similarity pairs saved to {output_path}")
+
+    # Plot heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(similarity_matrix, annot=False, cmap="coolwarm", xticklabels=file_names, yticklabels=file_names)
+    plt.title("Topology Similarity Matrix")
+    plt.xlabel("JSON Files")
+    plt.ylabel("JSON Files")
     plt.show()
 
+# ================================
+# Main Function
+# ================================
 
-########################################################
-# 6. 主函数
-########################################################
-if __name__=="__main__":
-    import sys
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("Using device:", device)
+if __name__ == "__main__":
+    input_dim = 512
+    latent_dim = 128
+    batch_size = 16
+    epochs = 50
 
-    # 你可以按需修改
-    json_folder = r"C:\Users\harmi\Desktop\sdn\json_clear"
-    dataset = JSONDataset(json_folder, max_files=50)  # 例如加载50个
-    print(f"Loaded {len(dataset)} json files => dataset samples.")
-    if len(dataset) == 0:
-        sys.exit("No data => stop.")
+    json_folder = r"C:\\Users\\harmi\\Desktop\\sdn\\json_clear2"
+    json_files = [os.path.join(json_folder, f) for f in os.listdir(json_folder) if f.endswith(".json")]
+    json_files.sort()
 
-    feat_dim = len(dataset[0][1])  # (filename, feat_tensor) => feat_tensor长度
-    model = MLPAutoEncoder(in_dim=feat_dim, hidden_dim=16).to(device)
+    dataset = TopologyDataset(json_files, input_dim)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
-    # 调低学习率, 以免loss波动过大; 数据已做标准化 => loss不会那么夸张
-    train_ae(model, dataset, epochs=20, batch_size=8, lr=5e-4, device=device)
+    model = Autoencoder(input_dim, latent_dim)
+    train_autoencoder(model, dataloader, epochs=epochs)
 
-    name2emb = compute_embeddings(model, dataset, device=device)
-    show_similarity_heatmap(name2emb)
+    embeddings = generate_embeddings(model, dataloader)
+    similarity_matrix = cosine_similarity(embeddings.numpy(), embeddings.numpy())
+
+    save_high_similarity_pairs(similarity_matrix, json_files)
