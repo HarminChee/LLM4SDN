@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "script_name": "test_bfd_topo2.py",
+    "description": "Topology with 4 routers (r1..r4) + 3 switches (s1..s3). BFD + BGP + OSPF/OSPF6 tested. Inferred IP scheme from standard patterns.",
+    "conf_files": {
+      "r1": ["zebra.conf", "bfdd.conf", "bgpd.conf", "ospfd.conf", "ospf6d.conf?"],
+      "r2": ["zebra.conf", "bfdd.conf", "bgpd.conf", "ospfd.conf", "ospf6d.conf?"],
+      "r3": ["zebra.conf", "bfdd.conf", "bgpd.conf", "ospfd.conf"],
+      "r4": ["zebra.conf", "bfdd.conf", "bgpd.conf", "ospf6d.conf"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.12.1/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65101,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65102,
+            "ipv4_address": "192.168.12.2"
+          }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.12.2/24"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.23.2/24"
+        },
+        "eth2_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.24.2/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r1": { "status_expected": "up" },
+          "r3": { "status_expected": "up" },
+          "r4": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65102,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65101,
+            "ipv4_address": "192.168.12.1"
+          }
+        }
+      },
+      "ospf": {
+        "neighbors": ["r3"],
+        "router_id": "2.2.2.2"
+      },
+      "ospf6": {
+        "neighbors": ["r4"],
+        "router_id": "2.2.2.2"
+      }
+    },
+
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.23.3/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65103,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65102,
+            "ipv4_address": "192.168.23.2"
+          }
+        }
+      },
+      "ospf": {
+        "neighbors": ["r2"],
+        "router_id": "3.3.3.3"
+      }
+    },
+
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.24.4/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65104,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65102,
+            "ipv4_address": "192.168.24.2"
+          }
+        }
+      },
+      "ospf6": {
+        "neighbors": ["r2"],
+        "router_id": "4.4.4.4"
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1","r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": ["r2","r3"]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": ["r2","r4"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "192.168.12.0/24",
+      "protocols": ["bfd","bgp"]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1_s2",
+      "interface_target": "eth0_s2",
+      "ipv4_subnet": "192.168.23.0/24",
+      "protocols": ["bfd","bgp","ospf"]
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "eth2_s3",
+      "interface_target": "eth0_s3",
+      "ipv4_subnet": "192.168.24.0/24",
+      "protocols": ["bfd","bgp","ospf6"]
+    }
+  ]
+}

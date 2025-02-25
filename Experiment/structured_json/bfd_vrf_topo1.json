@@ -1,0 +1,202 @@
+{
+  "metadata": {
+    "script_name": "test_bfd_vrf_topo1.py",
+    "description": "Topology with 4 routers (r1..r4) & 3 switches (s1..s3), each router interface put into VRF netns rX-bfd-cust1. BFD + BGP tested in VRF context.",
+    "conf_files": {
+      "r1": ["zebra.conf --vrfwnetns", "bfdd.conf", "bgpd.conf", "mgmtd?"],
+      "r2": ["zebra.conf --vrfwnetns", "bfdd.conf", "bgpd.conf", "mgmtd?"],
+      "r3": ["zebra.conf --vrfwnetns", "bfdd.conf", "bgpd.conf", "mgmtd?"],
+      "r4": ["zebra.conf --vrfwnetns", "bfdd.conf", "bgpd.conf", "mgmtd?"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "vrfs": {
+        "r1-bfd-cust1": {
+          "interfaces": ["eth0_s1"]
+        }
+      },
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.12.1/24",
+          "vrf_name": "r1-bfd-cust1"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65001,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "192.168.12.2"
+          }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "vrfs": {
+        "r2-bfd-cust1": {
+          "interfaces": ["eth0_s1", "eth1_s2", "eth2_s3"]
+        }
+      },
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.12.2/24",
+          "vrf_name": "r2-bfd-cust1"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.23.2/24",
+          "vrf_name": "r2-bfd-cust1"
+        },
+        "eth2_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.24.2/24",
+          "vrf_name": "r2-bfd-cust1"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r1": { "status_expected": "up" },
+          "r3": { "status_expected": "up" },
+          "r4": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65002,
+        "neighbors": {
+          "r1": {
+            "remote_as": 65001,
+            "ipv4_address": "192.168.12.1"
+          },
+          "r3": {
+            "remote_as": 65003,
+            "ipv4_address": "192.168.23.3"
+          },
+          "r4": {
+            "remote_as": 65004,
+            "ipv4_address": "192.168.24.4"
+          }
+        }
+      }
+    },
+
+    "r3": {
+      "type": "router",
+      "vrfs": {
+        "r3-bfd-cust1": {
+          "interfaces": ["eth0_s2"]
+        }
+      },
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "192.168.23.3/24",
+          "vrf_name": "r3-bfd-cust1"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65003,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "192.168.23.2"
+          }
+        }
+      }
+    },
+
+    "r4": {
+      "type": "router",
+      "vrfs": {
+        "r4-bfd-cust1": {
+          "interfaces": ["eth0_s3"]
+        }
+      },
+      "interfaces": {
+        "eth0_s3": {
+          "connected_to": "s3",
+          "ipv4": "192.168.24.4/24",
+          "vrf_name": "r4-bfd-cust1"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "r2": { "status_expected": "up" }
+        }
+      },
+      "bgp": {
+        "local_as": 65004,
+        "neighbors": {
+          "r2": {
+            "remote_as": 65002,
+            "ipv4_address": "192.168.24.2"
+          }
+        }
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1","r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": ["r2","r3"]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": ["r2","r4"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "192.168.12.0/24",
+      "vrf_source": "r1-bfd-cust1",
+      "vrf_target": "r2-bfd-cust1",
+      "protocols": ["bfd","bgp"]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1_s2",
+      "interface_target": "eth0_s2",
+      "ipv4_subnet": "192.168.23.0/24",
+      "vrf_source": "r2-bfd-cust1",
+      "vrf_target": "r3-bfd-cust1",
+      "protocols": ["bfd","bgp"]
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "eth2_s3",
+      "interface_target": "eth0_s3",
+      "ipv4_subnet": "192.168.24.0/24",
+      "vrf_source": "r2-bfd-cust1",
+      "vrf_target": "r4-bfd-cust1",
+      "protocols": ["bfd","bgp"]
+    }
+  ]
+}

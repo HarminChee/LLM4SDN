@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "script_name": "bgp_ipv4_class_e_peer.py",
+    "description": "Check if the peering works by using IPv4 Class E IP ranges, and if we don't treat next-hop as martian in such a case.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "240.0.0.1": {
+            "bgpState": "Established",
+            "addressFamilyInfo": {
+              "ipv4Unicast": {
+                "acceptedPrefixCounter": 2
+              }
+            }
+          }
+        },
+        "paths": [
+          {
+            "valid": true,
+            "nexthops": [
+              {
+                "ip": "240.0.0.1",
+                "accessible": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    }
+  ]
+}

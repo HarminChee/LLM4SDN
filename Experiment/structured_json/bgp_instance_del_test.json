@@ -1,0 +1,10 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Test cases for various network functionalities using ltemplate.",
+    "conf_files": {}
+  },
+  "routers": {},
+  "switches": {},
+  "links": []
+}

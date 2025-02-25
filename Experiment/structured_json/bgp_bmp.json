@@ -1,0 +1,125 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_bmp.py",
+    "description": "Topology with 2 routers (r1, r2) exchanging prefixes (IPv4 and IPv6). r1 also connects to a BMP server (bmp1) via switch s1 and has BMP monitoring enabled, logging updates/withdraws in bmp1. Tests BGP + BMP functionality.",
+    "conf_files": {
+      "r1": ["zebra.conf", "bgpd.conf"],
+      "r2": ["zebra.conf", "bgpd.conf"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.0.2.1/24"
+
+        },
+        "eth1": {
+          "connected_to": "r2",
+          "ipv4": "192.168.0.1/24",
+          "ipv6": "192:168::1/64"
+
+        }
+      },
+      "bgp": {
+        "local_as": 65501,
+        "neighbors": {
+          "192.168.0.2": {
+            "remote_as": 65502,
+            "ipv6_address": "192:168::2",
+            "description": "BGP neighbor with r2",
+            "bmp_monitored": true
+          }
+        },
+        "bmp": {
+          "enabled": true,
+          "monitored_peers": ["192.168.0.2", "192:168::2"],
+          "description": "BMP is configured to monitor BGP sessions from r1's perspective."
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "192.168.0.2/24",
+          "ipv6": "192:168::2/64"
+
+        }
+      },
+      "bgp": {
+        "local_as": 65502,
+        "neighbors": {
+          "192.168.0.1": {
+            "remote_as": 65501,
+            "ipv6_address": "192:168::1",
+            "description": "BGP neighbor with r1"
+          }
+        },
+        "routes_originated": [
+
+          {
+            "prefix": "172.31.0.15/32",
+            "active_state": "Tested with 'update' or 'withdraw'",
+            "note": "Example prefix announced to r1"
+          },
+          {
+            "prefix": "2001::1111/128",
+            "active_state": "Tested with 'update' or 'withdraw'",
+            "note": "Example IPv6 prefix announced to r1"
+          }
+        ]
+      }
+    }
+  },
+
+  "bmp_servers": {
+    "bmp1": {
+      "type": "bmp_server",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.0.2.10/24",
+          "default_route": "via 192.0.2.1"
+        }
+      },
+      "logging": {
+        "log_file": "/path/to/bmp.log",
+        "description": "BMP server logs are stored here, parsed by the script to check messages."
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1", "bmp1"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "s1",
+      "interface_source": "eth0",
+      "interface_target": "eth0",
+      "ipv4_subnet": "192.0.2.0/24",
+      "description": "Connection between r1 and BMP server via s1"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "ipv4_subnet": "192.168.0.0/24",
+      "ipv6_subnet": "192:168::/64",
+      "bgp_neighbors": true,
+      "description": "Direct link r1<->r2 for BGP prefix exchange"
+    }
+  ]
+}

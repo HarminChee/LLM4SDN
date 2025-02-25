@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "script_name": "test_bfd_isis_topo1.py",
+    "description": "Topology with 5 routers (rt1..rt5) and 5 switches (s1..s5). BFD + IS-IS tested. Inferred from python code + ASCII diagram. IP subnets are 10.0.X.0/24 with .1 & .2 on each side.",
+    "conf_files": {
+      "rt1": ["zebra.conf", "bfdd.conf", "isisd.conf"],
+      "rt2": ["zebra.conf", "bfdd.conf", "isisd.conf"],
+      "rt3": ["zebra.conf", "bfdd.conf", "isisd.conf"],
+      "rt4": ["zebra.conf", "bfdd.conf", "isisd.conf"],
+      "rt5": ["zebra.conf", "bfdd.conf", "isisd.conf"]
+    }
+  },
+
+  "routers": {
+    "rt1": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt2": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth-rt3": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.1/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "rt2": {
+            "status_expected": "up"
+          },
+          "rt3": {
+            "status_expected": "up"
+          }
+        }
+      },
+      "isis": {
+        "process_id": 1,
+        "router_id": "1.1.1.1",
+        "neighbors": ["rt2","rt3"]
+      }
+    },
+
+    "rt2": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt1": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.2/24"
+        },
+        "eth-rt5": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.1/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "rt1": {"status_expected": "up"},
+          "rt5": {"status_expected": "up"}
+        }
+      },
+      "isis": {
+        "process_id": 1,
+        "router_id": "2.2.2.2",
+        "neighbors": ["rt1","rt5"]
+      }
+    },
+
+    "rt3": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt1": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.2/24"
+        },
+        "eth-rt4": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.1/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "rt1": {"status_expected": "up"},
+          "rt4": {"status_expected": "up"}
+        }
+      },
+      "isis": {
+        "process_id": 1,
+        "router_id": "3.3.3.3",
+        "neighbors": ["rt1","rt4"]
+      }
+    },
+
+    "rt4": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt3": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.2/24"
+        },
+        "eth-rt5": {
+          "connected_to": "s5",
+          "ipv4": "10.0.5.1/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "rt3": {"status_expected": "up"},
+          "rt5": {"status_expected": "up"}
+        }
+      },
+      "isis": {
+        "process_id": 1,
+        "router_id": "4.4.4.4",
+        "neighbors": ["rt3","rt5"]
+      }
+    },
+
+    "rt5": {
+      "type": "router",
+      "interfaces": {
+        "eth-rt2": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.2/24"
+        },
+        "eth-rt4": {
+          "connected_to": "s5",
+          "ipv4": "10.0.5.2/24"
+        }
+      },
+      "bfd": {
+        "peers": {
+          "rt2": {"status_expected": "up"},
+          "rt4": {"status_expected": "up"}
+        }
+      },
+      "isis": {
+        "process_id": 1,
+        "router_id": "5.5.5.5",
+        "neighbors": ["rt2","rt4"]
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt1",
+        "rt3"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt2",
+        "rt5"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt3",
+        "rt4"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "rt4",
+        "rt5"
+      ]
+    }
+  },
+
+  "links": [
+    {
+      "source": "rt1",
+      "target": "rt2",
+      "interface_source": "eth-rt2",
+      "interface_target": "eth-rt1",
+      "ipv4_subnet": "10.0.1.0/24",
+      "protocols": ["bfd","isis"]
+    },
+    {
+      "source": "rt1",
+      "target": "rt3",
+      "interface_source": "eth-rt3",
+      "interface_target": "eth-rt1",
+      "ipv4_subnet": "10.0.2.0/24",
+      "protocols": ["bfd","isis"]
+    },
+    {
+      "source": "rt2",
+      "target": "rt5",
+      "interface_source": "eth-rt5",
+      "interface_target": "eth-rt2",
+      "ipv4_subnet": "10.0.3.0/24",
+      "protocols": ["bfd","isis"]
+    },
+    {
+      "source": "rt3",
+      "target": "rt4",
+      "interface_source": "eth-rt4",
+      "interface_target": "eth-rt3",
+      "ipv4_subnet": "10.0.4.0/24",
+      "protocols": ["bfd","isis"]
+    },
+    {
+      "source": "rt4",
+      "target": "rt5",
+      "interface_source": "eth-rt5",
+      "interface_target": "eth-rt4",
+      "ipv4_subnet": "10.0.5.0/24",
+      "protocols": ["bfd","isis"]
+    }
+  ]
+}

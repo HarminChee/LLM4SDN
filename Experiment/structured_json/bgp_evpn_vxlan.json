@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_evpn_vxlan.py",
+    "description": "Topology with 4 switches (s1, s2, s3, s4) and 5 routers (P1, PE1, PE2, host1, host2) using VXLAN EVPN MAC route signalling over BGP. Inferred from Python code.",
+    "conf_files": {
+      "P1": [
+        "zebra.conf",
+        "ospfd.conf",
+        "bgpd.conf"
+      ],
+      "PE1": [
+        "zebra.conf",
+        "ospfd.conf",
+        "bgpd.conf"
+      ],
+      "PE2": [
+        "zebra.conf",
+        "ospfd.conf",
+        "bgpd.conf"
+      ],
+      "host1": [
+        "zebra.conf",
+        "ospfd.conf",
+        "bgpd.conf"
+      ],
+      "host2": [
+        "zebra.conf",
+        "ospfd.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "P1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      }
+    },
+    "PE1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "master": "br101"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "vxlan": {
+        "vxlan101": {
+          "id": 101,
+          "dstport": 4789,
+          "local": "10.10.10.10",
+          "nolearning": true,
+          "master": "br101"
+        }
+      },
+      "bridge": {
+        "br101": {
+          "ipv4": "10.10.1.1/24",
+          "stp_state": 0
+        }
+      }
+    },
+    "PE2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "master": "br101"
+        }
+      },
+      "vxlan": {
+        "vxlan101": {
+          "id": 101,
+          "dstport": 4789,
+          "local": "10.30.30.30",
+          "nolearning": true,
+          "master": "br101"
+        }
+      },
+      "bridge": {
+        "br101": {
+          "ipv4": "10.10.1.3/24",
+          "stp_state": 0
+        }
+      }
+    },
+    "host1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "host2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "host1",
+        "PE1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "PE1",
+        "P1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "P1",
+        "PE2"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "PE2",
+        "host2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "host1",
+      "target": "PE1",
+      "interface_source": "host1-eth0",
+      "interface_target": "PE1-eth0"
+    },
+    {
+      "source": "PE1",
+      "target": "P1",
+      "interface_source": "PE1-eth1",
+      "interface_target": "P1-eth0"
+    },
+    {
+      "source": "P1",
+      "target": "PE2",
+      "interface_source": "P1-eth1",
+      "interface_target": "PE2-eth1"
+    },
+    {
+      "source": "PE2",
+      "target": "host2",
+      "interface_source": "PE2-eth0",
+      "interface_target": "host2-eth0"
+    }
+  ]
+}

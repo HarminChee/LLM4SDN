@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_evpn_maximum_prefix.py",
+    "description": "Topology with 3 switches (s1, s2, s3) and 3 routers (c1, r1, r2, c2). BGP EVPN with maximum prefixes test.",
+    "conf_files": {
+      "c1": [
+        "frr.conf"
+      ],
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "c2": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "c1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      }
+    },
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "enabled": true
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        }
+      },
+      "bgp": {
+        "enabled": true
+      }
+    },
+    "c2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "c1",
+        "r1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "c2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "c1",
+      "target": "r1",
+      "interface_source": "eth0",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth0"
+    },
+    {
+      "source": "r2",
+      "target": "c2",
+      "interface_source": "eth1",
+      "interface_target": "eth0"
+    }
+  ]
+}

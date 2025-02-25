@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_conditional_advertisements_static_route.py",
+    "description": "Test if static route with BGP conditional advertisement works correctly by modifying prefix-lists.",
+    "conf_files": {
+      "r1": [
+        "frr.conf"
+      ],
+      "r2": [
+        "frr.conf"
+      ],
+      "r3": [
+        "frr.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "ipv4_address": "192.168.1.1",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r1": {
+            "remote_as": 65000,
+            "ipv4_address": "192.168.1.2",
+            "state": "Established"
+          },
+          "r3": {
+            "remote_as": 65000,
+            "ipv4_address": "192.168.1.3",
+            "state": "Established"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "neighbors": {
+          "r2": {
+            "remote_as": 65000,
+            "ipv4_address": "192.168.1.4",
+            "state": "Established"
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth1",
+      "interface_target": "r3-eth0"
+    }
+  ]
+}

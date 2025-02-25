@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "script_name": "test_script.py",
+    "description": "Verify BGP aggregation functionality with route summarization and as-set for redistributed routes.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "10.1.1.1/24",
+          "ipv6": "10:1::1:1/120"
+        },
+        "eth1": {
+          "connected_to": "s2",
+          "ipv4": "10.1.2.1/24",
+          "ipv6": "10:1::2:1/120"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "address_families": {
+          "ipv4": {
+            "unicast": {
+              "networks": [
+                "10.1.1.0/24",
+                "10.1.2.0/24"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10.1.0.0/20",
+                  "summary": true
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "networks": [
+                "10:1::1:0/120",
+                "10:1::2:0/120"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10:1::/96",
+                  "summary": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2",
+          "ipv4": "10.1.3.2/24",
+          "ipv6": "10:1::3:2/120"
+        },
+        "eth1": {
+          "connected_to": "s3",
+          "ipv4": "10.1.4.2/24",
+          "ipv6": "10:1::4:2/120"
+        }
+      },
+      "bgp": {
+        "local_as": 200,
+        "address_families": {
+          "ipv4": {
+            "unicast": {
+              "networks": [
+                "10.1.3.0/24",
+                "10.1.4.0/24"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10.1.0.0/20",
+                  "summary": true
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "networks": [
+                "10:1::3:0/120",
+                "10:1::4:0/120"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10:1::/96",
+                  "summary": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3",
+          "ipv4": "10.1.5.3/24",
+          "ipv6": "10:1::5:3/120"
+        },
+        "eth1": {
+          "connected_to": "s4",
+          "ipv4": "10.1.6.3/24",
+          "ipv6": "10:1::6:3/120"
+        }
+      },
+      "bgp": {
+        "local_as": 300,
+        "address_families": {
+          "ipv4": {
+            "unicast": {
+              "networks": [
+                "10.1.5.0/24",
+                "10.1.6.0/24"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10.1.0.0/20",
+                  "summary": true
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "networks": [
+                "10:1::5:0/120",
+                "10:1::6:0/120"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10:1::/96",
+                  "summary": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4",
+          "ipv4": "10.1.7.4/24",
+          "ipv6": "10:1::7:4/120"
+        },
+        "eth1": {
+          "connected_to": "s1",
+          "ipv4": "10.1.8.4/24",
+          "ipv6": "10:1::8:4/120"
+        }
+      },
+      "bgp": {
+        "local_as": 400,
+        "address_families": {
+          "ipv4": {
+            "unicast": {
+              "networks": [
+                "10.1.7.0/24",
+                "10.1.8.0/24"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10.1.0.0/20",
+                  "summary": true
+                }
+              ]
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "networks": [
+                "10:1::7:0/120",
+                "10:1::8:0/120"
+              ],
+              "aggregate_address": [
+                {
+                  "network": "10:1::/96",
+                  "summary": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r4"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "r2",
+        "r3"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r4"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "10.1.3.0/24",
+      "ipv6_subnet": "10:1::3:0/120"
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "10.1.5.0/24",
+      "ipv6_subnet": "10:1::5:0/120"
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "10.1.7.0/24",
+      "ipv6_subnet": "10:1::7:0/120"
+    },
+    {
+      "source": "r4",
+      "target": "r1",
+      "interface_source": "eth1",
+      "interface_target": "eth0",
+      "protocols": [
+        "bgp"
+      ],
+      "ipv4_subnet": "10.1.1.0/24",
+      "ipv6_subnet": "10:1::1:0/120"
+    }
+  ]
+}

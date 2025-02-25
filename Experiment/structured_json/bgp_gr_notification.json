@@ -1,0 +1,78 @@
+{
+  "metadata": {
+    "script_name": "bgp_gr_notification.py",
+    "description": "Test BGP Graceful Restart Notifications. Contains tests to disable link and check for Hold Timer Expired notifications and to trigger clear bgp for Administrative Reset.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r2": {
+            "remote_as": null,
+            "ipv4_address": "192.168.255.2",
+            "state": "Established",
+            "lastNotificationReason": "Cease/Administrative Reset",
+            "lastNotificationHardReset": false
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": null,
+        "neighbors": {
+          "r1": {
+            "remote_as": null,
+            "ipv4_address": "192.168.255.1",
+            "state": "Established",
+            "lastNotificationReason": "Hold Timer Expired",
+            "acceptedPrefixCounter": 2
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp"
+      ]
+    }
+  ]
+}

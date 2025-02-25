@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "script_name": "test_basic_grpc.py",
+    "description": "Test Basic gRPC for r1 and r2 connected via s1. Uses zebra and static grpc modules. Inferred structure from the provided Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf"
+      ],
+      "r2": [
+        "zebra.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1",
+          "ipv4": "192.168.1.1/24"
+        }
+      },
+      "grpc": {
+        "modules": {
+          "zebra": {
+            "port": 50051
+          },
+          "staticd": {
+            "port": 50052
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "grpc": {
+        "modules": {
+          "zebra": {
+            "port": 50051
+          },
+          "staticd": {
+            "port": 50052
+          }
+        }
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "ipv4_subnet": "192.168.1.0/24"
+    }
+  ]
+}

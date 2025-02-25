@@ -1,0 +1,289 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_admin_distance.py",
+    "description": "Script to test BGP admin distance functionality with various configurations.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3",
+          "ipv4": "192.168.20.1/32",
+          "ipv6": "fc07:50::1/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.21.1/32",
+            "ipv6_address": "fc07:150::1/128"
+          }
+        }
+      }
+    },
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "192.168.21.1/32",
+          "ipv6": "fc07:150::1/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r1": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.20.1/32",
+            "ipv6_address": "fc07:50::1/128"
+          },
+          "r3": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.22.1/32",
+            "ipv6_address": "fc07:1::1/128"
+          }
+        }
+      }
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r1",
+          "ipv4": "192.168.22.1/32",
+          "ipv6": "fc07:1::1/128"
+        },
+        "eth1": {
+          "connected_to": "r4",
+          "ipv4": "192.168.22.2/32",
+          "ipv6": "fc07:1::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r2": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.21.1/32",
+            "ipv6_address": "fc07:150::1/128"
+          },
+          "r4": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.22.2/32",
+            "ipv6_address": "fc07:1::2/128"
+          },
+          "r5": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.21.2/32",
+            "ipv6_address": "fc07:150::2/128"
+          }
+        },
+        "address_family": {
+          "ipv4": {
+            "unicast": {
+              "distance": {
+                "ebgp": 200,
+                "ibgp": 200,
+                "local": 200
+              }
+            }
+          },
+          "ipv6": {
+            "unicast": {
+              "distance": {
+                "ebgp": 200,
+                "ibgp": 200,
+                "local": 200
+              }
+            }
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "192.168.22.1/32",
+          "next_hop": "Null0",
+          "admin_distance": 254
+        }
+      ],
+      "prefix_lists": {
+        "ipv4": {
+          "pf_ls_1": [
+            {
+              "seqid": 10,
+              "network": "192.168.20.1/32",
+              "le": "32",
+              "action": "permit"
+            }
+          ]
+        },
+        "ipv6": {
+          "pf_ls_1_ipv6": [
+            {
+              "seqid": 100,
+              "network": "fc07:50::1/128",
+              "le": "128",
+              "action": "permit"
+            }
+          ]
+        }
+      },
+      "route_maps": {
+        "RMAP_WEIGHT": [
+          {
+            "action": "permit",
+            "match": {
+              "ipv4": {
+                "prefix_lists": "pf_ls_1"
+              }
+            },
+            "set": {
+              "weight": 200
+            }
+          },
+          {
+            "action": "permit",
+            "match": {
+              "ipv6": {
+                "prefix_lists": "pf_ls_1_ipv6"
+              }
+            },
+            "set": {
+              "weight": 200
+            }
+          }
+        ]
+      }
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3",
+          "ipv4": "192.168.21.2/32",
+          "ipv6": "fc07:150::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r3": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.22.2/32",
+            "ipv6_address": "fc07:1::2/128"
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "192.168.20.1/32",
+          "next_hop": "Null0"
+        }
+      ]
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "r3",
+          "ipv4": "192.168.21.2/32",
+          "ipv6": "fc07:150::2/128"
+        }
+      },
+      "bgp": {
+        "local_as": 100,
+        "neighbors": {
+          "r3": {
+            "remote_as": 100,
+            "ipv4_address": "192.168.22.2/32",
+            "ipv6_address": "fc07:1::2/128"
+          }
+        }
+      },
+      "static_routes": [
+        {
+          "network": "192.168.20.2/32",
+          "next_hop": "Null0"
+        }
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "r1-eth0",
+      "interface_target": "r2-eth0",
+      "protocols": [
+        "bgp",
+        "ibgp"
+      ]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth0",
+      "interface_target": "r3-eth0",
+      "protocols": [
+        "bgp",
+        "ibgp"
+      ]
+    },
+    {
+      "source": "r2",
+      "target": "r3",
+      "interface_source": "r2-eth0",
+      "interface_target": "r3-eth0",
+      "protocols": [
+        "bgp",
+        "ibgp"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r4",
+      "interface_source": "r3-eth0",
+      "interface_target": "r4-eth0",
+      "protocols": [
+        "bgp",
+        "ebgp"
+      ]
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "r3-eth0",
+      "interface_target": "r5-eth0",
+      "protocols": [
+        "bgp",
+        "ebgp"
+      ]
+    }
+  ]
+}

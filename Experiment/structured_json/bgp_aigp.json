@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_aigp.py",
+    "description": "8 routers (r1..r8) + 8 switches (s1..s8). BGP AIGP scenario: r7 sets initial AIGP=71/72, r6,r2,r3 each add increments, r1 uses best AIGP path, r8 checks MED. OSPF + BGP in zebra/ospfd/bgpd conf.",
+    "conf_files": {
+      "r1": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r2": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r3": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r4": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r5": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r6": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r7": ["zebra.conf","ospfd.conf","bgpd.conf"],
+      "r8": ["zebra.conf","ospfd.conf","bgpd.conf"]
+    }
+  },
+
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.1/24"
+        },
+        "eth1_s2": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.1/24"
+        },
+        "eth2_s8": {
+          "connected_to": "s8",
+          "ipv4": "10.0.8.1/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r2_s1": { "ipv4_address": "10.0.1.2" },
+          "r3_s2": { "ipv4_address": "10.0.2.3" },
+          "r8_s8": { "ipv4_address": "10.0.8.8" }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "10.0.1.2/24"
+        },
+        "eth1_s3": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.2/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r1_s1": { "ipv4_address": "10.0.1.1" },
+          "r4_s3": { "ipv4_address": "10.0.3.4" }
+        }
+      }
+    },
+
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s2": {
+          "connected_to": "s2",
+          "ipv4": "10.0.2.3/24"
+        },
+        "eth1_s4": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.3/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r1_s2": { "ipv4_address": "10.0.2.1" },
+          "r5_s4": { "ipv4_address": "10.0.4.5" }
+        }
+      }
+    },
+
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s3": {
+          "connected_to": "s3",
+          "ipv4": "10.0.3.4/24"
+        },
+        "eth1_s5": {
+          "connected_to": "s5",
+          "ipv4": "10.0.5.4/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r2_s3": { "ipv4_address": "10.0.3.2" },
+          "r6_s5": { "ipv4_address": "10.0.5.6" }
+        }
+      }
+    },
+
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s4": {
+          "connected_to": "s4",
+          "ipv4": "10.0.4.5/24"
+        },
+        "eth1_s6": {
+          "connected_to": "s6",
+          "ipv4": "10.0.6.5/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r3_s4": { "ipv4_address": "10.0.4.3" },
+          "r6_s6": { "ipv4_address": "10.0.6.6" }
+        }
+      }
+    },
+
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s5": {
+          "connected_to": "s5",
+          "ipv4": "10.0.5.6/24"
+        },
+        "eth1_s6": {
+          "connected_to": "s6",
+          "ipv4": "10.0.6.6/24"
+        },
+        "eth2_s7": {
+          "connected_to": "s7",
+          "ipv4": "10.0.7.6/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r4_s5": { "ipv4_address": "10.0.5.4" },
+          "r5_s6": { "ipv4_address": "10.0.6.5" },
+          "r7_s7": { "ipv4_address": "10.0.7.7" }
+        }
+      }
+    },
+
+    "r7": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s7": {
+          "connected_to": "s7",
+          "ipv4": "10.0.7.7/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r6_s7": { "ipv4_address": "10.0.7.6" }
+        }
+      }
+    },
+
+    "r8": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s8": {
+          "connected_to": "s8",
+          "ipv4": "10.0.8.8/24"
+        }
+      },
+      "ospf": {},
+      "bgp": {
+
+        "neighbors": {
+          "r1_s8": { "ipv4_address": "10.0.8.1" }
+        }
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": ["r1","r2"]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": ["r1","r3"]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": ["r2","r4"]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": ["r3","r5"]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": ["r4","r6"]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": ["r5","r6"]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": ["r6","r7"]
+    },
+    "s8": {
+      "type": "switch",
+      "connected_nodes": ["r1","r8"]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "10.0.1.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "eth1_s2",
+      "interface_target": "eth0_s2",
+      "ipv4_subnet": "10.0.2.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r2",
+      "target": "r4",
+      "interface_source": "eth1_s3",
+      "interface_target": "eth0_s3",
+      "ipv4_subnet": "10.0.3.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "eth1_s4",
+      "interface_target": "eth0_s4",
+      "ipv4_subnet": "10.0.4.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r4",
+      "target": "r6",
+      "interface_source": "eth1_s5",
+      "interface_target": "eth0_s5",
+      "ipv4_subnet": "10.0.5.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r5",
+      "target": "r6",
+      "interface_source": "eth1_s6",
+      "interface_target": "eth1_s6",
+      "ipv4_subnet": "10.0.6.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r6",
+      "target": "r7",
+      "interface_source": "eth2_s7",
+      "interface_target": "eth0_s7",
+      "ipv4_subnet": "10.0.7.0/24",
+      "protocols": ["bgp","ospf"]
+    },
+    {
+      "source": "r1",
+      "target": "r8",
+      "interface_source": "eth2_s8",
+      "interface_target": "eth0_s8",
+      "ipv4_subnet": "10.0.8.0/24",
+      "protocols": ["bgp"]
+
+    }
+  ]
+}

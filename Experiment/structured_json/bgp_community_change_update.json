@@ -1,0 +1,221 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_community_update_path_change.py",
+    "description": "Topology with 7 switches (s1..s7) and 6 routers (z1, y1, y2, y3, x1, c1). BGP tested with community and next-hop changes.",
+    "conf_files": {
+      "z1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "y1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "y2": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "y3": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "x1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ],
+      "c1": [
+        "zebra.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "z1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s6"
+        },
+        "eth1": {
+          "connected_to": "s7"
+        }
+      }
+    },
+    "y1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s2"
+        },
+        "eth1": {
+          "connected_to": "s3"
+        },
+        "eth2": {
+          "connected_to": "s4"
+        }
+      }
+    },
+    "y2": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s3"
+        },
+        "eth1": {
+          "connected_to": "s5"
+        },
+        "eth2": {
+          "connected_to": "s6"
+        }
+      }
+    },
+    "y3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        },
+        "eth1": {
+          "connected_to": "s5"
+        },
+        "eth2": {
+          "connected_to": "s7"
+        }
+      }
+    },
+    "x1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s2"
+        }
+      },
+      "bgp": {
+        "local_as": 65001
+      }
+    },
+    "c1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        }
+      },
+      "bgp": {
+        "local_as": 65002
+      }
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "c1",
+        "x1"
+      ]
+    },
+    "s2": {
+      "type": "switch",
+      "connected_nodes": [
+        "x1",
+        "y1"
+      ]
+    },
+    "s3": {
+      "type": "switch",
+      "connected_nodes": [
+        "y1",
+        "y2"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "y1",
+        "y3"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "y2",
+        "y3"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "y2",
+        "z1"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "y3",
+        "z1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "c1",
+      "target": "x1",
+      "interface_source": "c1-eth0",
+      "interface_target": "x1-eth0",
+      "ipv4_subnet": "10.0.1.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "x1",
+      "target": "y1",
+      "interface_source": "x1-eth1",
+      "interface_target": "y1-eth0",
+      "ipv4_subnet": "10.0.2.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "y1",
+      "target": "y2",
+      "interface_source": "y1-eth1",
+      "interface_target": "y2-eth0",
+      "ipv4_subnet": "10.0.3.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "y1",
+      "target": "y3",
+      "interface_source": "y1-eth2",
+      "interface_target": "y3-eth0",
+      "ipv4_subnet": "10.0.4.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "y2",
+      "target": "y3",
+      "interface_source": "y2-eth1",
+      "interface_target": "y3-eth1",
+      "ipv4_subnet": "10.0.5.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "y2",
+      "target": "z1",
+      "interface_source": "y2-eth2",
+      "interface_target": "z1-eth0",
+      "ipv4_subnet": "10.0.6.0/30",
+      "bgp_neighbors": true
+    },
+    {
+      "source": "y3",
+      "target": "z1",
+      "interface_source": "y3-eth2",
+      "interface_target": "z1-eth1",
+      "ipv4_subnet": "10.0.7.0/30",
+      "bgp_neighbors": true
+    }
+  ]
+}

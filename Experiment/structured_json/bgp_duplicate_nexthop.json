@@ -1,0 +1,266 @@
+{
+  "metadata": {
+    "script_name": "test_bgp_duplicate_nexthop.py",
+    "description": "Topology with multiple switches (s1..s14) and 5 routers (r1, r3, r4, r5, r6). BGP, Zebra, and ISIS tested. JSON structure inferred from Python code.",
+    "conf_files": {
+      "r1": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf"
+      ],
+      "r3": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf"
+      ],
+      "r4": [
+        "zebra.conf",
+        "isisd.conf"
+      ],
+      "r5": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf"
+      ],
+      "r6": [
+        "zebra.conf",
+        "isisd.conf",
+        "bgpd.conf"
+      ]
+    }
+  },
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s1"
+        },
+        "eth1": {
+          "connected_to": "s14"
+        }
+      },
+      "bgp": {
+        "local_as": 64512
+      },
+      "isis": {
+        "area": "0.0.0.0"
+      },
+      "zebra": {}
+    },
+    "r3": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s6"
+        },
+        "eth1": {
+          "connected_to": "s8"
+        }
+      },
+      "bgp": {
+        "local_as": 64513
+      },
+      "isis": {
+        "area": "0.0.0.0"
+      },
+      "zebra": {}
+    },
+    "r4": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s7"
+        },
+        "eth1": {
+          "connected_to": "s10"
+        }
+      },
+      "isis": {
+        "area": "0.0.0.0"
+      },
+      "zebra": {}
+    },
+    "r5": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s4"
+        },
+        "eth1": {
+          "connected_to": "s12"
+        }
+      },
+      "bgp": {
+        "local_as": 64514
+      },
+      "isis": {
+        "area": "0.0.0.0"
+      },
+      "zebra": {}
+    },
+    "r6": {
+      "type": "router",
+      "interfaces": {
+        "eth0": {
+          "connected_to": "s5"
+        },
+        "eth1": {
+          "connected_to": "s13"
+        }
+      },
+      "bgp": {
+        "local_as": 64515
+      },
+      "isis": {
+        "area": "0.0.0.0"
+      },
+      "zebra": {}
+    }
+  },
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    },
+    "s4": {
+      "type": "switch",
+      "connected_nodes": [
+        "r5"
+      ]
+    },
+    "s5": {
+      "type": "switch",
+      "connected_nodes": [
+        "r6"
+      ]
+    },
+    "s6": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r3"
+      ]
+    },
+    "s7": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r4"
+      ]
+    },
+    "s8": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r5"
+      ]
+    },
+    "s9": {
+      "type": "switch",
+      "connected_nodes": [
+        "r3",
+        "r6"
+      ]
+    },
+    "s10": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r6"
+      ]
+    },
+    "s11": {
+      "type": "switch",
+      "connected_nodes": [
+        "r4",
+        "r5"
+      ]
+    },
+    "s12": {
+      "type": "switch",
+      "connected_nodes": [
+        "r5"
+      ]
+    },
+    "s13": {
+      "type": "switch",
+      "connected_nodes": [
+        "r6"
+      ]
+    },
+    "s14": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1"
+      ]
+    }
+  },
+  "links": [
+    {
+      "source": "r1",
+      "target": "r3",
+      "interface_source": "r1-eth0",
+      "interface_target": "r3-eth0",
+      "protocols": [
+        "isis",
+        "bgp"
+      ],
+      "ipv4_subnet": "10.0.1.0/24"
+    },
+    {
+      "source": "r1",
+      "target": "r4",
+      "interface_source": "r1-eth1",
+      "interface_target": "r4-eth0",
+      "protocols": [
+        "isis"
+      ],
+      "ipv4_subnet": "10.0.2.0/24"
+    },
+    {
+      "source": "r3",
+      "target": "r5",
+      "interface_source": "r3-eth1",
+      "interface_target": "r5-eth0",
+      "protocols": [
+        "isis",
+        "bgp"
+      ],
+      "ipv4_subnet": "10.0.3.0/24"
+    },
+    {
+      "source": "r3",
+      "target": "r6",
+      "interface_source": "r3-eth2",
+      "interface_target": "r6-eth0",
+      "protocols": [
+        "isis",
+        "bgp"
+      ],
+      "ipv4_subnet": "10.0.4.0/24"
+    },
+    {
+      "source": "r4",
+      "target": "r6",
+      "interface_source": "r4-eth1",
+      "interface_target": "r6-eth1",
+      "protocols": [
+        "isis"
+      ],
+      "ipv4_subnet": "10.0.5.0/24"
+    },
+    {
+      "source": "r4",
+      "target": "r5",
+      "interface_source": "r4-eth2",
+      "interface_target": "r5-eth1",
+      "protocols": [
+        "isis"
+      ],
+      "ipv4_subnet": "10.0.6.0/24"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "routers": {
+    "r1": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.255.1/24"
+        }
+      },
+      "bgp": {
+
+        "neighbors": {
+          "r2_s1": {
+            "ipv4_address": "192.168.255.2"
+          }
+        }
+      }
+    },
+
+    "r2": {
+      "type": "router",
+      "interfaces": {
+        "eth0_s1": {
+          "connected_to": "s1",
+          "ipv4": "192.168.255.2/24"
+        }
+      },
+      "bgp": {
+
+        "neighbors": {
+          "r1_s1": {
+            "ipv4_address": "192.168.255.1"
+          }
+        }
+      }
+    }
+  },
+
+  "switches": {
+    "s1": {
+      "type": "switch",
+      "connected_nodes": [
+        "r1",
+        "r2"
+      ]
+    }
+  },
+
+  "links": [
+    {
+      "source": "r1",
+      "target": "r2",
+      "interface_source": "eth0_s1",
+      "interface_target": "eth0_s1",
+      "ipv4_subnet": "192.168.255.0/24",
+      "protocols": ["bgp"]
+    }
+  ],
+
+  "metadata": {
+    "script_name": "test_bgp_asdot_regex.py",
+    "description": "2 routers (r1, r2) in a single LAN with addresses 192.168.255.1/24 and 192.168.255.2/24, used to test asdot-based BGP config, regex behavior, etc.",
+    "conf_files": {
+      "r1": ["zebra.conf", "bgpd.conf"],
+      "r2": ["zebra.conf", "bgpd.conf"]
+    }
+  }
+}
