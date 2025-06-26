@@ -12,8 +12,6 @@ Automated SDN Pytest & Edge Model Correction via Socket Communication
     - Directory/Node .conf summary
 - Sends the prompt to distributed LLM (e.g., Raspberry Pi cluster) over socket.
 - Receives new py code, replaces, and re-runs pytest.
-- No API key or online LLM involved; all edge inference is via socket.
-- All paths and parameters are generic for open source usage.
 ===============================================================================
 """
 
