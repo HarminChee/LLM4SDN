@@ -52,7 +52,7 @@ def handle_client(conn, addr):
                 size_line += conn.recv(1)
             filesize = int(size_line.strip())
             received = 0
-            os.makedirs(BASE_DIR, exist_ok=True)
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
             with open(filepath, 'wb') as f:
                 while received < filesize:
                     chunk = conn.recv(min(4096, filesize - received))
