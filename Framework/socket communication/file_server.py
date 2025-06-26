@@ -52,6 +52,10 @@ def handle_client(conn, addr):
                 size_line += conn.recv(1)
             filesize = int(size_line.strip())
             received = 0
+                # === NOTE ===
+                # This line ensures that any subdirectory in filename (e.g., case42/r1/r1.conf)
+                # will be automatically created if not present, so that files are always saved
+                # in the intended nested structure.
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
             with open(filepath, 'wb') as f:
                 while received < filesize:
